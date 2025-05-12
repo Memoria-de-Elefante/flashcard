@@ -1,8 +1,10 @@
 import { Text, Image, SafeAreaView, StyleSheet, Dimensions } from "react-native";
 import CustomButton from "../components/CustomButton";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { router, useRouter } from 'expo-router';
 
 const { width } = Dimensions.get('window');
+const Stack = createNativeStackNavigator();
 
 export default function Index({}) {
   return (
@@ -28,6 +30,8 @@ export default function Index({}) {
     </SafeAreaView>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
