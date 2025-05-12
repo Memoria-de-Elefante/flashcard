@@ -1,25 +1,44 @@
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
-import { TouchableOpacityProps } from "react-native-gesture-handler";
+import React from 'react';
+import { TouchableOpacity, Text, Dimensions, StyleSheet, StyleProp, ViewStyle, TextStyle} from 'react-native';
 
-type Props = TouchableOpacityProps& {
-    text: string,
-}
+type Props = {
+    title?: string;
+    textStyle?: StyleProp<TextStyle>;
+    style?: StyleProp<ViewStyle>;
+    onPress: () => void;
+};
 
-export function CustomButton({ text, ...rest }: Props) {
+const { width } = Dimensions.get('window');
+
+const CustomButton = ({ title, onPress, style, textStyle}: Props) => {
     return (
-        <TouchableOpacity {...rest}>
-            <Text style={styles.text}>{text}</Text>
+        <TouchableOpacity
+            style={[styles.button, style]}
+            onPress={onPress}
+            activeOpacity={0.8}
+        >
+            <Text style={[styles.text, textStyle]}>{title}</Text>
         </TouchableOpacity>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
+    button: {
+        backgroundColor: "#F5F5F5",
+        padding: 5,
+        borderRadius: 8,
+        justifyContent: "center",
+        alignItems: "center",
+        marginVertical: 0.005,
+        width: width * 0.20,
+        height: width * 0.05,
+        marginTop: 10,
+    },
     text: {
-        color: "blue",
-        backgroundColor: "orange",
-        fontSize: 20,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 5,
-    }
-})
+        color: '#000000',
+        fontWeight: 'bold',
+        fontSize: 18,
+    },
+});
+
+export default CustomButton;
