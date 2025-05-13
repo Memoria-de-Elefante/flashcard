@@ -1,17 +1,17 @@
 {
   "done": true,
   "migration": {
-    "name": "mig_d05ftei5emce0bnj6t40",
+    "name": "mig_d099qb2unsp1bris4iag",
     "operations": [
       {
         "create_table": {
-          "name": "alunos",
+          "name": "exemplo_user",
           "columns": [
             {
               "name": "xata_id",
               "type": "text",
               "check": {
-                "name": "alunos_xata_id_length_xata_id",
+                "name": "exemplo_user_xata_id_length_xata_id",
                 "constraint": "length(\"xata_id\") < 256"
               },
               "unique": true,
@@ -37,21 +37,21 @@
       },
       {
         "sql": {
-          "up": "ALTER TABLE \"alunos\" REPLICA IDENTITY FULL",
+          "up": "ALTER TABLE \"exemplo_user\" REPLICA IDENTITY FULL",
           "onComplete": true
         }
       },
       {
         "sql": {
-          "up": "CREATE TRIGGER xata_maintain_metadata_trigger_pgroll\n  BEFORE INSERT OR UPDATE\n  ON \"alunos\"\n  FOR EACH ROW\n  EXECUTE FUNCTION xata_private.maintain_metadata_trigger_pgroll()",
+          "up": "CREATE TRIGGER xata_maintain_metadata_trigger_pgroll\n  BEFORE INSERT OR UPDATE\n  ON \"exemplo_user\"\n  FOR EACH ROW\n  EXECUTE FUNCTION xata_private.maintain_metadata_trigger_pgroll()",
           "onComplete": true
         }
       }
     ]
   },
   "migrationType": "pgroll",
-  "name": "mig_d05ftei5emce0bnj6t40",
-  "parent": "mig_d05fosn1875465e5c5u0",
+  "name": "mig_d099qb2unsp1bris4iag",
+  "parent": "mig_d099je2do80pli9qlj80",
   "schema": "public",
-  "startedAt": "2025-04-25T03:17:15.756124Z"
+  "startedAt": "2025-04-30T21:59:09.102113Z"
 }

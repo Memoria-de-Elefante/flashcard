@@ -1,0 +1,28 @@
+{
+    "materia": 
+    {
+    
+        "submateria_teste1":
+        [
+            {
+                "pergunta": "pergunta_teste",
+                "resposta": "respostas_teste",
+                "dificuldade": ""
+            },
+            {
+                "pergunta": "pergunta_teste1",
+                "resposta": "respostas_teste1",
+                "dificuldade": ""
+            }
+        ],
+        "submateria_teste2": 
+        [
+            {
+                "pergunta": "pergunta_teste",
+                "resposta": "respostas_teste",
+                "dificuldade": ""
+            }
+        ]
+        
+    }
+}

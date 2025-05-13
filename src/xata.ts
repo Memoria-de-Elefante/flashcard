@@ -5,33 +5,153 @@ import type {
   SchemaInference,
   XataRecord,
 } from "@xata.io/client";
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'
 dotenv.config()
 
 const tables = [
   {
-    name: "alunos",
+    name: "cards",
     checkConstraints: {
-      alunos_xata_id_length_xata_id: {
-        name: "alunos_xata_id_length_xata_id",
+      cards_xata_id_length_xata_id: {
+        name: "cards_xata_id_length_xata_id",
         columns: ["xata_id"],
         definition: "CHECK ((length(xata_id) < 256))",
       },
-      alunos_xata_string_length_nome: {
-        name: "alunos_xata_string_length_nome",
-        columns: ["nome"],
-        definition: "CHECK ((length(nome) <= 2048))",
+      cards_xata_text_length_dificuldade: {
+        name: "cards_xata_text_length_dificuldade",
+        columns: ["dificuldade"],
+        definition: "CHECK ((octet_length(dificuldade) <= 204800))",
+      },
+      cards_xata_text_length_materia: {
+        name: "cards_xata_text_length_materia",
+        columns: ["materia"],
+        definition: "CHECK ((octet_length(materia) <= 204800))",
+      },
+      cards_xata_text_length_pergunta: {
+        name: "cards_xata_text_length_pergunta",
+        columns: ["pergunta"],
+        definition: "CHECK ((octet_length(pergunta) <= 204800))",
+      },
+      cards_xata_text_length_resposta: {
+        name: "cards_xata_text_length_resposta",
+        columns: ["resposta"],
+        definition: "CHECK ((octet_length(resposta) <= 204800))",
+      },
+      cards_xata_text_length_submateria: {
+        name: "cards_xata_text_length_submateria",
+        columns: ["submateria"],
+        definition: "CHECK ((octet_length(submateria) <= 204800))",
       },
     },
     foreignKeys: {},
     primaryKey: [],
     uniqueConstraints: {
-      _pgroll_new_alunos_xata_id_key: {
-        name: "_pgroll_new_alunos_xata_id_key",
+      _pgroll_new_cards_xata_id_key: {
+        name: "_pgroll_new_cards_xata_id_key",
         columns: ["xata_id"],
       },
-      alunos__pgroll_new_email_key: {
-        name: "alunos__pgroll_new_email_key",
+    },
+    columns: [
+      {
+        name: "acertos",
+        type: "int",
+        notNull: true,
+        unique: false,
+        defaultValue: null,
+        comment: "",
+      },
+      {
+        name: "dificuldade",
+        type: "text",
+        notNull: true,
+        unique: false,
+        defaultValue: "'medio'::text",
+        comment: '{"xata.type":"text"}',
+      },
+      {
+        name: "materia",
+        type: "text",
+        notNull: true,
+        unique: false,
+        defaultValue: null,
+        comment: '{"xata.type":"text"}',
+      },
+      {
+        name: "pergunta",
+        type: "text",
+        notNull: true,
+        unique: false,
+        defaultValue: null,
+        comment: '{"xata.type":"text"}',
+      },
+      {
+        name: "resposta",
+        type: "text",
+        notNull: true,
+        unique: false,
+        defaultValue: null,
+        comment: '{"xata.type":"text"}',
+      },
+      {
+        name: "submateria",
+        type: "text",
+        notNull: true,
+        unique: false,
+        defaultValue: null,
+        comment: '{"xata.type":"text"}',
+      },
+      {
+        name: "xata_createdat",
+        type: "datetime",
+        notNull: true,
+        unique: false,
+        defaultValue: "now()",
+        comment: "",
+      },
+      {
+        name: "xata_id",
+        type: "text",
+        notNull: true,
+        unique: true,
+        defaultValue: "('rec_'::text || (xata_private.xid())::text)",
+        comment: "",
+      },
+      {
+        name: "xata_updatedat",
+        type: "datetime",
+        notNull: true,
+        unique: false,
+        defaultValue: "now()",
+        comment: "",
+      },
+      {
+        name: "xata_version",
+        type: "int",
+        notNull: true,
+        unique: false,
+        defaultValue: "0",
+        comment: "",
+      },
+    ],
+  },
+  {
+    name: "users",
+    checkConstraints: {
+      users_xata_id_length_xata_id: {
+        name: "users_xata_id_length_xata_id",
+        columns: ["xata_id"],
+        definition: "CHECK ((length(xata_id) < 256))",
+      },
+    },
+    foreignKeys: {},
+    primaryKey: [],
+    uniqueConstraints: {
+      _pgroll_new_users_xata_id_key: {
+        name: "_pgroll_new_users_xata_id_key",
+        columns: ["xata_id"],
+      },
+      users__pgroll_new_email_key: {
+        name: "users__pgroll_new_email_key",
         columns: ["email"],
       },
     },
@@ -46,11 +166,11 @@ const tables = [
       },
       {
         name: "nome",
-        type: "string",
+        type: "text",
         notNull: true,
         unique: false,
         defaultValue: null,
-        comment: '{"xata.type":"string"}',
+        comment: "",
       },
       {
         name: "senha",
@@ -99,18 +219,22 @@ const tables = [
 export type SchemaTables = typeof tables;
 export type InferredTypes = SchemaInference<SchemaTables>;
 
-export type Alunos = InferredTypes["alunos"];
-export type AlunosRecord = Alunos & XataRecord;
+export type Cards = InferredTypes["cards"];
+export type CardsRecord = Cards & XataRecord;
+
+export type Users = InferredTypes["users"];
+export type UsersRecord = Users & XataRecord;
 
 export type DatabaseSchema = {
-  alunos: AlunosRecord;
+  cards: CardsRecord;
+  users: UsersRecord;
 };
 
 const DatabaseClient = buildClient();
 
 const defaultOptions = {
   databaseURL:
-    "https://Leonardo-s-workspace-t1va0i.us-east-1.xata.sh/db/PI2025_3_teste",
+    "https://PII---Poliedro---2025-s-workspace-crv4k8.us-east-1.xata.sh/db/PI",
 };
 
 export class XataClient extends DatabaseClient<DatabaseSchema> {
@@ -127,6 +251,6 @@ export const getXataClient = () => {
   instance = new XataClient({
     apiKey: process.env.XATA_API_KEY,
     branch: process.env.XATA_BRANCH,
-  })
+  });
   return instance;
 };
