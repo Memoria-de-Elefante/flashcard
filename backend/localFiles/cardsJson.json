@@ -1,0 +1,11 @@
+{
+  "matemática": {
+    "álgebra": {
+      "card1": {
+        "pergunta": "pergunta teste",
+        "resposta": "resposta teste",
+        "dificuldade": "médio"
+      }
+    }
+  }
+}

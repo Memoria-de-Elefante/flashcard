@@ -5,7 +5,7 @@ import type {
   SchemaInference,
   XataRecord,
 } from "@xata.io/client";
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 dotenv.config()
 
 const tables = [
@@ -17,15 +17,16 @@ const tables = [
         columns: ["xata_id"],
         definition: "CHECK ((length(xata_id) < 256))",
       },
+      cards_xata_multiple_length_materia: {
+        name: "cards_xata_multiple_length_materia",
+        columns: ["materia"],
+        definition:
+          "CHECK ((octet_length(array_to_string(materia, ''::text)) < 65536))",
+      },
       cards_xata_text_length_dificuldade: {
         name: "cards_xata_text_length_dificuldade",
         columns: ["dificuldade"],
         definition: "CHECK ((octet_length(dificuldade) <= 204800))",
-      },
-      cards_xata_text_length_materia: {
-        name: "cards_xata_text_length_materia",
-        columns: ["materia"],
-        definition: "CHECK ((octet_length(materia) <= 204800))",
       },
       cards_xata_text_length_pergunta: {
         name: "cards_xata_text_length_pergunta",
@@ -70,11 +71,11 @@ const tables = [
       },
       {
         name: "materia",
-        type: "text",
+        type: "multiple",
         notNull: true,
         unique: false,
         defaultValue: null,
-        comment: '{"xata.type":"text"}',
+        comment: "",
       },
       {
         name: "pergunta",
@@ -251,6 +252,6 @@ export const getXataClient = () => {
   instance = new XataClient({
     apiKey: process.env.XATA_API_KEY,
     branch: process.env.XATA_BRANCH,
-  });
+  })
   return instance;
 };

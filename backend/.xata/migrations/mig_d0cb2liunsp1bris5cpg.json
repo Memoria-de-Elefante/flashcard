@@ -1,0 +1,84 @@
+{
+  "done": true,
+  "migration": {
+<<<<<<<< HEAD:backend/.xata/migrations/mig_d099qb2unsp1bris4iag.json
+    "name": "mig_d099qb2unsp1bris4iag",
+    "operations": [
+      {
+        "create_table": {
+          "name": "exemplo_user",
+========
+    "name": "mig_d0cb2liunsp1bris5cpg",
+    "operations": [
+      {
+        "create_table": {
+          "name": "users",
+>>>>>>>> 783ed6976ff4adf554a90656007553d48714875b:backend/.xata/migrations/mig_d0cb2liunsp1bris5cpg.json
+          "columns": [
+            {
+              "name": "xata_updatedat",
+              "type": "timestamptz",
+              "default": "now()"
+            },
+            {
+              "name": "xata_id",
+              "type": "text",
+              "check": {
+<<<<<<<< HEAD:backend/.xata/migrations/mig_d099qb2unsp1bris4iag.json
+                "name": "exemplo_user_xata_id_length_xata_id",
+========
+                "name": "users_xata_id_length_xata_id",
+>>>>>>>> 783ed6976ff4adf554a90656007553d48714875b:backend/.xata/migrations/mig_d0cb2liunsp1bris5cpg.json
+                "constraint": "length(\"xata_id\") < 256"
+              },
+              "unique": true,
+              "default": "'rec_' || xata_private.xid()"
+            },
+            {
+              "name": "xata_version",
+              "type": "integer",
+              "default": "0"
+            },
+            {
+              "name": "xata_createdat",
+              "type": "timestamptz",
+              "default": "now()"
+            }
+          ]
+        }
+      },
+      {
+        "sql": {
+<<<<<<<< HEAD:backend/.xata/migrations/mig_d099qb2unsp1bris4iag.json
+          "up": "ALTER TABLE \"exemplo_user\" REPLICA IDENTITY FULL",
+========
+          "up": "ALTER TABLE \"users\" REPLICA IDENTITY FULL",
+>>>>>>>> 783ed6976ff4adf554a90656007553d48714875b:backend/.xata/migrations/mig_d0cb2liunsp1bris5cpg.json
+          "onComplete": true
+        }
+      },
+      {
+        "sql": {
+<<<<<<<< HEAD:backend/.xata/migrations/mig_d099qb2unsp1bris4iag.json
+          "up": "CREATE TRIGGER xata_maintain_metadata_trigger_pgroll\n  BEFORE INSERT OR UPDATE\n  ON \"exemplo_user\"\n  FOR EACH ROW\n  EXECUTE FUNCTION xata_private.maintain_metadata_trigger_pgroll()",
+========
+          "up": "CREATE TRIGGER xata_maintain_metadata_trigger_pgroll\n  BEFORE INSERT OR UPDATE\n  ON \"users\"\n  FOR EACH ROW\n  EXECUTE FUNCTION xata_private.maintain_metadata_trigger_pgroll()",
+>>>>>>>> 783ed6976ff4adf554a90656007553d48714875b:backend/.xata/migrations/mig_d0cb2liunsp1bris5cpg.json
+          "onComplete": true
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+<<<<<<<< HEAD:backend/.xata/migrations/mig_d099qb2unsp1bris4iag.json
+  "name": "mig_d099qb2unsp1bris4iag",
+  "parent": "mig_d099je2do80pli9qlj80",
+  "schema": "public",
+  "startedAt": "2025-04-30T21:59:09.102113Z"
+========
+  "name": "mig_d0cb2liunsp1bris5cpg",
+  "parent": "mig_d0cb20ido80pli9qmfo0",
+  "schema": "public",
+  "startedAt": "2025-05-05T12:38:46.465423Z"
+>>>>>>>> 783ed6976ff4adf554a90656007553d48714875b:backend/.xata/migrations/mig_d0cb2liunsp1bris5cpg.json
+}

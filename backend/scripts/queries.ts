@@ -1,5 +1,5 @@
 import { getXataClient } from '../src/xata';
-import * as cardsJson from '../cardsV1.json';
+import * as cardsJson from '../cardsV2.json';
 
 const client = getXataClient();
 

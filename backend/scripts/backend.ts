@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { getXataClient } from '../src/xata';
 import { SelectedPick, SelectableColumn, EditableData } from '@xata.io/client';
-import { UsersRecord } from '../src/xata';
+import { UsersRecord, CardsRecord } from '../src/xata';
 
 dotenv.config()
 const app = express();
@@ -10,12 +10,10 @@ const PORT: number = Number(process.env.PORT) || 3000;
 
 // Datbase
 const xata = getXataClient();
-const fields: SelectableColumn<UsersRecord>[] = ['xata_id', 'nome', 'senha'];
-type aluno = EditableData<SelectedPick<UsersRecord, typeof fields>>;
-
-async function conectarAoBD() {
-
-}
+const userFields: SelectableColumn<UsersRecord>[] = ['xata_id', 'nome', 'email', 'senha'];
+const cardFields: SelectableColumn<CardsRecord>[] = ['xata_id', 'pergunta', 'resposta', 'materia', 'submateria', 'dificuldade', 'acertos'];
+type aluno = EditableData<SelectedPick<UsersRecord, typeof userFields>>;
+type card = EditableData<SelectedPick<CardsRecord, typeof cardFields>>;
 
 // Informações das portas
 app.listen(PORT, () => {

@@ -1,28 +1,35 @@
 {
     "materia": 
     {
-    
-        "submateria_teste1":
-        [
+        "submateria_teste1": 
+        {
+            "card1":
             {
                 "pergunta": "pergunta_teste",
                 "resposta": "respostas_teste",
                 "dificuldade": ""
             },
+            "card2":
             {
                 "pergunta": "pergunta_teste1",
                 "resposta": "respostas_teste1",
                 "dificuldade": ""
             }
-        ],
+        },
         "submateria_teste2": 
-        [
+        {
+            "card1":
             {
                 "pergunta": "pergunta_teste",
                 "resposta": "respostas_teste",
                 "dificuldade": ""
             }
-        ]
-        
+        },
+        "card1":
+        {
+            "pergunta": "",
+            "resposta": "",
+            "dificuldade": ""
+        }
     }
 }
