@@ -16,7 +16,7 @@ Clone o repositório, mude o diretório e instale as dependências.
 ```bash
 git clone https://github.com/Memoria-de-Elefante/flashcard.git
 cd flashcard/frontend
-npm i
+npm i --legacy-peer-deps
 ```
 
 ## Desenvolvimento
