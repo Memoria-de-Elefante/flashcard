@@ -4,11 +4,13 @@ import { TouchableOpacity, Text, StyleSheet, Dimensions, View, TextInput, Image 
 type Props = {
     title: string;
     onPress: () => void;
+    value: string;
+    onChangeText: (text: string) => void;
 };
 
 const { width } = Dimensions.get('window');
 
-const SenhaButton = ({ title, onPress }: Props) => {
+const SenhaButton = ({ title, onPress, value, onChangeText }: Props) => {
     const [senhaVisivel, setSenhaVisivel] = useState(false);
 
     const toggleSenhaVisivel = () => {
@@ -20,9 +22,12 @@ const SenhaButton = ({ title, onPress }: Props) => {
             <TextInput
                 style={[styles.input, { flex: 1 }]}
                 placeholder="Digite sua senha aqui"
-                // value={senha}
-                // onChangeText={setSenha}
+                placeholderTextColor="#7C7C7C"
+                value={value}
+                onChangeText={onChangeText}
                 secureTextEntry={!senhaVisivel}
+                autoCorrect={false}
+                autoCapitalize='none'
             />
             <TouchableOpacity onPress={toggleSenhaVisivel}>
                 <Image
@@ -41,17 +46,20 @@ const SenhaButton = ({ title, onPress }: Props) => {
 const styles = StyleSheet.create({
     passwordContainer: {
         backgroundColor: '#eee',
-        borderRadius: 10,
-        padding: 10,
+        borderRadius: 25,
+        padding: 15,
         marginBottom: 15,
         flexDirection: 'row',
         alignItems: 'center',
-        width: width * 0.5,
-        height: width *0.027,
+        width: width * 0.7,
+        height: width * 0.13,
     },
     input: {
         backgroundColor: '#eee',
-        height: width *0.02,
+        color: '#000', // <- Certifique-se de definir a cor do texto
+        height: width * 0.12,    // <- Aumente a altura para algo razoável
+        paddingHorizontal: width * 0.01,
+        fontSize: 16,  // <- Deixe legível
     },
     image: {
         width: 24,
