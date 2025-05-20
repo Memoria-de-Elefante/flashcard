@@ -29,15 +29,15 @@ function adicionarMateria(materia: string) {
 
 // Este código é responsável por adicionar novos elementos submatérias no cardsJson
 // Ele é feito de tal maneira que só possível adicionar submatérias a uma matéria, e não a outra submatéria
-function adicionarSubmateria(materia: string, submateria: string) {
-    try {
-        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-        data[materia] = {[submateria]: {}}
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
-    } catch (err) {
-        console.error(err)
-    }
-}
+// function adicionarSubmateria(materia: string, submateria: string) {
+//     try {
+//         const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+//         data[materia] = {[submateria]: {}}
+//         fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
+//     } catch (err) {
+//         console.error(err)
+//     }
+// }
 
 // Este código é responsável por adicionar novos elementos flashcards no cardsJson
 function adicionarFlashcard(materia: string, pergunta: string, resposta: string, dificuldade: string, imagem: string) {
@@ -45,7 +45,7 @@ function adicionarFlashcard(materia: string, pergunta: string, resposta: string,
         const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
         // if (submateria == '') {
         let tamanho = Object.keys(data[materia]).length
-        data[materia][`card${tamanho}`] = {pergunta: pergunta, resposta: resposta, dificuldade: dificuldade, imagem: imagem}
+        data[materia].push({pergunta: pergunta, resposta: resposta, dificuldade: dificuldade, imagem: imagem})
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
         // }
         // else {   
@@ -59,17 +59,59 @@ function adicionarFlashcard(materia: string, pergunta: string, resposta: string,
 }
 
 // Códigos referentes a busca de elementos ao Json
-function buscarFlashcard(materia: string, submateria:string) {
+type Card = {
+    pergunta: string;
+    resposta: string;
+    dificuldade: string;
+    imagem: string;
+}
+function buscarFlashcard(materia: string, pergunta: string) {
     try {
         const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-        const rawCards = data[materia][submateria]
-        const cards = Object.values(rawCards)
-        cards.forEach((card: { pergunta: string }) => {
-            console.log(card.pergunta);
-        });
+        const rawCards = data[materia]
+        if (!rawCards) {
+            return undefined
+        }
+        const cards = Object.values(rawCards) as Card[]
+        for (const card of cards) {
+            if (card.pergunta === pergunta) {  
+                return card
+            }
+        }
+        return undefined
+    } catch (err) {
+        console.error(err)
+        return undefined
+    }
+}
+
+function deletarFlashcard(materia: string, pergunta: string) {
+    try {
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+        const rawCards = data[materia]
+        console.log(rawCards)
+        if (!rawCards) {
+            return undefined
+        }
+        const cards = Object.values(rawCards) as Card[]
+        
+        for (const card of cards) {
+            if (card.pergunta === pergunta) {
+                console.log(card)
+                cards.splice(cards.indexOf(card), 1)
+            }
+        }
+
+        data[materia] = cards
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
+        console.log('deleção bem-sucedida')
     } catch (err) {
         console.error(err)
     }
 }
 
-buscarFlashcard('matemática', 'álgebra')
+//function buscarTodosFlashcards() {}
+//function buscarTodasMaterias() {}
+
+// const card = buscarFlashcard('matemática')
+// console.log(card)

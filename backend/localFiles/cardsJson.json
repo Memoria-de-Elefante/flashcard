@@ -1,21 +1,22 @@
 {
-  "matemática": {
-    "álgebra": {
-      "card1": {
-        "pergunta": "pergunta teste",
-        "resposta": "resposta teste",
-        "dificuldade": "médio"
-      }
-    },
-    "card2": {
-      "pergunta": "pergunta teste",
+  "matemática": [
+    {
+      "pergunta": "pergunta teste2",
       "resposta": "resposta teste",
-      "dificuldade": "médio"
+      "dificuldade": "médio",
+      "imagem": ""
     },
-    "card3": {
-      "pergunta": "pergunta teste",
+    {
+      "pergunta": "pergunta teste3",
       "resposta": "resposta teste",
-      "dificuldade": "médio"
+      "dificuldade": "médio",
+      "imagem": ""
+    },
+    {
+      "pergunta": "pergunta teste1",
+      "resposta": "resposta teste",
+      "dificuldade": "médio",
+      "imagem": ""
     }
-  }
+  ]
 }
