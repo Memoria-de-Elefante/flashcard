@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 8,
         marginVertical: 10,
-        width: width * 0.2,
+        width: width * 0.7,
+        height: width * 0.15,
       },
       innerContent: {
         flexDirection: 'row',
@@ -51,8 +52,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
       },
       image: {
-        width: width * 0.03,
-        height: width * 0.03,
+        width: width * 0.085,
+        height: width * 0.1,
         resizeMode: 'contain',
         marginBottom: 0, 
       },
