@@ -1,19 +1,34 @@
 import React from 'react';
-import { TouchableOpacity, Text, Dimensions, StyleSheet, StyleProp, ViewStyle, TextStyle} from 'react-native';
+import { TouchableOpacity, Text, Dimensions, StyleSheet, TextStyle } from 'react-native';
 
 type Props = {
     title?: string;
-    textStyle?: StyleProp<TextStyle>;
-    style?: StyleProp<ViewStyle>;
     onPress: () => void;
+    width?: number;
+    height?: number;
+    borderRadius?: number;
+    marginVertical?: number;
+    marginTop?: number;
+    padding?: number;
+    textStyle?: TextStyle;
 };
 
-const { width } = Dimensions.get('window');
+const { width: screenWidth } = Dimensions.get('window');
 
-const CustomButton = ({ title, onPress, style, textStyle}: Props) => {
+const CustomButton = ({ title, onPress, width, height, borderRadius, marginVertical, marginTop, padding, textStyle }: Props) => {
     return (
         <TouchableOpacity
-            style={[styles.button, style]}
+            style={[
+                styles.button,
+                {
+                    width: width ?? screenWidth * 0.45,
+                    height: height ?? screenWidth * 0.15,
+                    borderRadius: borderRadius ?? 15,
+                    marginVertical: marginVertical ?? screenWidth * 0.045,
+                    marginTop: marginTop ?? screenWidth * 0.1,
+                    padding: padding ?? screenWidth * 0.02,
+                }
+            ]}
             onPress={onPress}
             activeOpacity={0.8}
         >
@@ -25,14 +40,8 @@ const CustomButton = ({ title, onPress, style, textStyle}: Props) => {
 const styles = StyleSheet.create({
     button: {
         backgroundColor: "#F5F5F5",
-        padding: 5,
-        borderRadius: 8,
         justifyContent: "center",
         alignItems: "center",
-        marginVertical: 0.005,
-        width: width * 0.20,
-        height: width * 0.05,
-        marginTop: 10,
     },
     text: {
         color: '#000000',
