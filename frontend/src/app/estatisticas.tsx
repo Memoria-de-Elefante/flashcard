@@ -14,6 +14,7 @@ interface Props {
 
 const Estatisticas = ({ acertos, erros }: Props) => {
   const total = acertos + erros;
+  
 
 
   const data = [
