@@ -1,10 +1,17 @@
+import React, { useState} from 'react';
 import { Text, Image, SafeAreaView, StyleSheet, Dimensions, ScrollView, View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import EdicaoButton from "../components/EdicaoButton";
+import ModalComponent from "../components/ModalComponent";
 
 const { width, height } = Dimensions.get('window');
 
 export default function edicao({}) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    
+    const openModal = () => {setIsModalOpen(true)}
+    const closeModal = () => {setIsModalOpen(false)}
+
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.text}>SUA COLEÇÃO DE PALAVRAS</Text>
@@ -50,9 +57,10 @@ export default function edicao({}) {
                 </ScrollView>
             </View>
 
+            <ModalComponent isOpen={isModalOpen} onClose={closeModal} onSave={() => console.log("Salvando...")}/>
             <CustomButton
                 title="+"
-                onPress={() => alert("Criação de deck")}
+                onPress={openModal}
                 borderRadius={5}
                 marginTop={50}
                 textStyle={{ fontSize: 30 }}
