@@ -1,20 +1,24 @@
 import React, { useState, useRef, useImperativeHandle, forwardRef } from "react";
-import { View, Text, TextInput, StyleSheet, ScrollView, Animated, TouchableWithoutFeedback } from "react-native";
-import CustomButton from "./CustomButton";
+import { View, Text, TextInput, StyleSheet, ScrollView, Animated, TouchableWithoutFeedback, TouchableOpacity, Image } from "react-native";
 
 type Props = {
     frontText: string;
     backText: string;
     width: number;
     height: number;
+    paddingTop?: number;
     borderRadius: number;
 };
+
+export type CardRef = {
+    flipCard: () => void;
+}
 
 const Card = forwardRef(function Card(
     props: Props,
     ref: React.ForwardedRef<{ flipCard: () => void }>
 ) {
-    const { width: cardWidth, height: cardHeight, borderRadius } = props;
+    const { width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop } = props;
 
     const [front, setFront] = useState(props.frontText);
     const [back, setBack] = useState(props.backText);
@@ -61,13 +65,21 @@ const Card = forwardRef(function Card(
     };
 
     return (
-        <View style={[styles.card, { width: cardWidth, height: cardHeight, borderRadius }]}>
+        <View style={[styles.card, { width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop }]}>
             {/* Front do card */}
             <Animated.View
                 pointerEvents={flipped ? 'none' : 'auto'}
                 style={[styles.cardFace, { opacity: frontOpacity, transform: [{ rotateY: interpolatedRotation }] }]}
             >
                 <Text style={styles.sideLabel}>FRONT</Text>
+                <View style={styles.iconRow}>
+                    <TouchableOpacity onPress={() => alert('Adiciona imagem')} style={{ marginLeft: 10 }}>
+                        <Image source={require('../../assets/images/camera.png')} style={styles.image} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => alert('Exclui deck')} style={{ marginLeft: 10 }}>
+                        <Image source={require('../../assets/images/Deletar.png')} style={styles.image} />
+                    </TouchableOpacity>                
+                </View>
                 <TouchableWithoutFeedback onPress={() => setEditingFront(true)}>
                     {editingFront ? (
                         <ScrollView style={styles.inputContainer} contentContainerStyle={styles.scrollContent}>
@@ -95,6 +107,14 @@ const Card = forwardRef(function Card(
                 style={[styles.cardFace, { opacity: 1, transform: [{ rotateY: backRotation }] }]}
             >
                 <Text style={styles.sideLabel}>BACK</Text>
+                <View style={styles.iconRow}>
+                    <TouchableOpacity onPress={() => alert('Adiciona imagem')} style={{ marginLeft: 10 }}>
+                        <Image source={require('../../assets/images/camera.png')} style={styles.image} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => alert('Exclui deck')} style={{ marginLeft: 10 }}>
+                        <Image source={require('../../assets/images/Deletar.png')} style={styles.image} />
+                    </TouchableOpacity>                
+                </View>
                 <TouchableWithoutFeedback onPress={() => setEditingBack(true)}>
                     {editingBack ? (
                         <ScrollView style={styles.inputContainer} contentContainerStyle={styles.scrollContent}>
@@ -121,15 +141,15 @@ const Card = forwardRef(function Card(
 
 const styles = StyleSheet.create({
     card: {
-        justifyContent: 'center', 
-        alignItems: 'center', 
+        justifyContent: 'center',
+        alignItems: 'center',
         overflow: 'hidden',
         position: 'relative',
     },
     cardFace: {
         position: 'absolute',
-        justifyContent: 'center', 
-        alignItems: 'center', 
+        justifyContent: 'center',
+        alignItems: 'center',
         backfaceVisibility: 'hidden',
         width: '100%',
         height: '100%',
@@ -175,6 +195,20 @@ const styles = StyleSheet.create({
     scrollContent: {
         paddingBottom: 10,
     },
+    iconRow: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        flexDirection: 'row',
+        gap: 10,
+        zIndex: 2,
+    },
+    image: {
+        width: 24,
+        height: 24,
+        resizeMode: 'contain',
+        marginBottom: 0, 
+      },
 });
 
 export default Card;
