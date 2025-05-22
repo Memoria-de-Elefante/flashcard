@@ -13,7 +13,7 @@ const Index = () => {
         duration: 1000,
         useNativeDriver: true,
       }),
-      Animated.delay(1500), // tempo visível após fade-in
+      Animated.delay(1500), 
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 1000,
