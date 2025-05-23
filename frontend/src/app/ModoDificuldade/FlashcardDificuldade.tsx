@@ -12,6 +12,8 @@ export default function FlashcardDificuldade() {
         height={400}
         borderRadius={10}
         flashcardType="dificuldade" // Passando o tipo para o Flashcard
+        showFlipButton={true} // Caso queira que o botão flip apareça ou não
+        editable={false}
       />
     </SafeAreaView>
   );

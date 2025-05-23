@@ -1,6 +1,7 @@
 import { Text, Image, SafeAreaView, StyleSheet, Dimensions, ScrollView, View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import EdicaoButton from "../components/EdicaoButton";
+import { router } from "expo-router";
 
 const { width, height } = Dimensions.get('window');
 
@@ -13,38 +14,32 @@ export default function edicao({}) {
                 <ScrollView>
                     <EdicaoButton 
                         title="Matemática" 
-                        onPress={() => alert("Abre o deck Matemática")} 
-                        onEdit={() => alert("Editar deck")} 
+                        onPress={() => router.push('/TelaSelecaoCards')}  
                         onDelete={() => alert("Deletar deck")}
                     />
                     <EdicaoButton 
                         title="Português" 
-                        onPress={() => alert("Abre o deck Português")} 
-                        onEdit={() => alert("Editar deck")} 
+                        onPress={() => router.push('/TelaSelecaoCards')}  
                         onDelete={() => alert("Deletar deck")}
                     />
                     <EdicaoButton 
                         title="História" 
-                        onPress={() => alert("Abre o deck História")} 
-                        onEdit={() => alert("Editar deck")} 
+                        onPress={() => router.push('/TelaSelecaoCards')}  
                         onDelete={() => alert("Deletar deck")}
                     />
                     <EdicaoButton 
                         title="Biologia" 
-                        onPress={() => alert("Abre o deck Biologia")} 
-                        onEdit={() => alert("Editar deck")} 
+                        onPress={() => router.push('/TelaSelecaoCards')}  
                         onDelete={() => alert("Deletar deck")}
                     />
                     <EdicaoButton 
                         title="Química" 
-                        onPress={() => alert("Abre o deck Química")} 
-                        onEdit={() => alert("Editar deck")} 
+                    onPress={() => router.push('/TelaSelecaoCards')}  
                         onDelete={() => alert("Deletar deck")}
                     />
                     <EdicaoButton 
                         title="Física" 
-                        onPress={() => alert("Abre o deck Física")} 
-                        onEdit={() => alert("Editar deck")} 
+                onPress={() => router.push('/TelaSelecaoCards')}  
                         onDelete={() => alert("Deletar deck")}
                     />
                 </ScrollView>
