@@ -35,6 +35,12 @@ export default function TelaLogin({ }) {
                 onPress={() => alert("Altera a visibilidade da senha")}
             />
 
+            <Link href="/TelaCadastro"> {/* Alterar a rota */}
+                <Text style={styles.link}>
+                    Esqueci a Senha
+                </Text>
+            </Link>
+
             <CustomButton
                 title="Login"
                 width={200}

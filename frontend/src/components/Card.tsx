@@ -1,6 +1,8 @@
 import React, { useState, useRef, useImperativeHandle, forwardRef } from "react";
-import { View, Text, TextInput, StyleSheet, ScrollView, Animated, TouchableWithoutFeedback } from "react-native";
-import CustomButton from "./CustomButton";
+import {
+    View, Text, TextInput, StyleSheet, ScrollView,
+    Animated, TouchableWithoutFeedback
+} from "react-native";
 
 type Props = {
     frontText: string;
@@ -8,19 +10,20 @@ type Props = {
     width: number;
     height: number;
     borderRadius: number;
+    editable?: boolean;
+    onPress?: () => void;
 };
 
 const Card = forwardRef(function Card(
     props: Props,
     ref: React.ForwardedRef<{ flipCard: () => void }>
 ) {
-    const { width: cardWidth, height: cardHeight, borderRadius } = props;
+    const { frontText, backText, width: cardWidth, height: cardHeight, borderRadius, editable, onPress } = props;
 
-    const [front, setFront] = useState(props.frontText);
-    const [back, setBack] = useState(props.backText);
+    const [front, setFront] = useState(frontText);
+    const [back, setBack] = useState(backText);
     const [editingFront, setEditingFront] = useState(false);
     const [editingBack, setEditingBack] = useState(false);
-
     const [flipped, setFlipped] = useState(false);
     const rotation = useRef(new Animated.Value(0)).current;
 
@@ -52,84 +55,91 @@ const Card = forwardRef(function Card(
         outputRange: ['180deg', '360deg'],
     });
 
-    const renderVerticalText = (text: string) => {
-        return text.split("").map((char, index) => (
-            <Text key={index} style={styles.verticalChar}>
-                {char}
-            </Text>
-        ));
-    };
-
+    // Envolve tudo com Touchable para permitir navegação quando não for editable
     return (
-        <View style={[styles.card, { width: cardWidth, height: cardHeight, borderRadius }]}>
-            {/* Front do card */}
-            <Animated.View
-                pointerEvents={flipped ? 'none' : 'auto'}
-                style={[styles.cardFace, { opacity: frontOpacity, transform: [{ rotateY: interpolatedRotation }] }]}
-            >
-                <Text style={styles.sideLabel}>FRONT</Text>
-                <TouchableWithoutFeedback onPress={() => setEditingFront(true)}>
-                    {editingFront ? (
-                        <ScrollView style={styles.inputContainer} contentContainerStyle={styles.scrollContent}>
-                            <TextInput
-                                value={front}
-                                onChangeText={setFront}
-                                onBlur={() => setEditingFront(false)}
-                                style={styles.input}
-                                autoFocus
-                                multiline
-                                textAlignVertical="top"
-                            />
-                        </ScrollView>
-                    ) : (
-                        <View>
-                            <Text style={styles.text}>{front}</Text>
+        <TouchableWithoutFeedback
+            onPress={() => {
+                if (!editable && onPress) onPress();
+            }}
+        >
+            <View style={[styles.card, { width: cardWidth, height: cardHeight, borderRadius }]}>
+                {/* Front do card */}
+                <Animated.View
+                    pointerEvents={flipped ? 'none' : 'auto'}
+                    style={[styles.cardFace, { opacity: frontOpacity, transform: [{ rotateY: interpolatedRotation }] }]}
+                >
+                    <TouchableWithoutFeedback onPress={() => editable ? setEditingFront(true) : props.onPress?.()}>
+                        <View style={styles.clickableArea}>
+                            <Text style={styles.sideLabel}>FRONT</Text>
+                            {editingFront ? (
+                                <ScrollView style={styles.inputContainer} contentContainerStyle={styles.scrollContent}>
+                                    <TextInput
+                                        value={front}
+                                        onChangeText={setFront}
+                                        onBlur={() => setEditingFront(false)}
+                                        style={styles.input}
+                                        autoFocus
+                                        multiline
+                                        textAlignVertical="top"
+                                    />
+                                </ScrollView>
+                            ) : (
+                                <View style={styles.textWrapper}>
+                                    <Text style={styles.text}>{front}</Text>
+                                </View>
+                            )}
                         </View>
-                    )}
-                </TouchableWithoutFeedback>
-            </Animated.View>
+                    </TouchableWithoutFeedback>
+                </Animated.View>
 
-            {/* Back do card */}
-            <Animated.View
-                pointerEvents={flipped ? 'auto' : 'none'}
-                style={[styles.cardFace, { opacity: 1, transform: [{ rotateY: backRotation }] }]}
-            >
-                <Text style={styles.sideLabel}>BACK</Text>
-                <TouchableWithoutFeedback onPress={() => setEditingBack(true)}>
-                    {editingBack ? (
-                        <ScrollView style={styles.inputContainer} contentContainerStyle={styles.scrollContent}>
-                            <TextInput
-                                value={back}
-                                onChangeText={setBack}
-                                onBlur={() => setEditingBack(false)}
-                                style={styles.input}
-                                autoFocus
-                                multiline
-                                textAlignVertical="top"
-                            />
-                        </ScrollView>
-                    ) : (
-                        <View>
-                            <Text style={styles.text}>{back}</Text>
+
+
+                {/* Back do card */}
+                <Animated.View
+                    pointerEvents={flipped ? 'auto' : 'none'}
+                    style={[styles.cardFace, { opacity: 1, transform: [{ rotateY: backRotation }] }]}
+                >
+                    <TouchableWithoutFeedback onPress={() => editable ? setEditingBack(true) : props.onPress?.()}>
+                        <View style={styles.clickableArea}>
+                            <Text style={styles.sideLabel}>BACK</Text>
+                            {editingBack ? (
+                                <ScrollView style={styles.inputContainer} contentContainerStyle={styles.scrollContent}>
+                                    <TextInput
+                                        value={back}
+                                        onChangeText={setBack}
+                                        onBlur={() => setEditingBack(false)}
+                                        style={styles.input}
+                                        autoFocus
+                                        multiline
+                                        textAlignVertical="top"
+                                    />
+                                </ScrollView>
+                            ) : (
+                                <View style={styles.textWrapper}>
+                                    <Text style={styles.text}>{back}</Text>
+                                </View>
+                            )}
                         </View>
-                    )}
-                </TouchableWithoutFeedback>
-            </Animated.View>
-        </View>
+                    </TouchableWithoutFeedback>
+                </Animated.View>
+
+
+            </View>
+        </TouchableWithoutFeedback>
     );
 });
 
 const styles = StyleSheet.create({
     card: {
-        justifyContent: 'center', 
-        alignItems: 'center', 
+        justifyContent: 'center',
+        alignItems: 'center',
         overflow: 'hidden',
         position: 'relative',
     },
     cardFace: {
         position: 'absolute',
-        justifyContent: 'center', 
-        alignItems: 'center', 
+        justifyContent: 'center',
+        alignItems: 'center',
         backfaceVisibility: 'hidden',
         width: '100%',
         height: '100%',
@@ -162,12 +172,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         zIndex: 1,
     },
-    verticalChar: {
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "#000",
-        lineHeight: 24,
-    },
     inputContainer: {
         maxHeight: 200,
         width: '100%',
@@ -175,6 +179,18 @@ const styles = StyleSheet.create({
     scrollContent: {
         paddingBottom: 10,
     },
+    clickableArea: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+    },
+    textWrapper: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
 });
 
 export default Card;
