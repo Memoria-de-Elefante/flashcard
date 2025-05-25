@@ -3,9 +3,6 @@ import { SafeAreaView, StyleSheet, Text } from "react-native";
 import CustomButton from "../components/CustomButton"; // Ajuste o caminho conforme necessário
 import { useRouter } from "expo-router";
 
-// Roteador do expo-router
-const router = useRouter();
-
 export default function TelaEdu() {
   return (
     <SafeAreaView style={styles.container}>

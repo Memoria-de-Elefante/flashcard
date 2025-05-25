@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { View, StyleSheet, Dimensions, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { View, StyleSheet, Dimensions, TouchableWithoutFeedback, Keyboard, StyleProp, ViewStyle } from "react-native";
 import CustomButton from "./CustomButton";
 import Card from "./Card";
 
@@ -18,9 +18,10 @@ type Props = {
     showFlipButton?: boolean;
     editable? : boolean;
     onPress?: () => void;
+    style?: StyleProp<ViewStyle>;
 };
 
-export default function Flashcard({ frontText, backText, width, height, borderRadius, flashcardType, showFlipButton, onPress, editable }: Props) {
+export default function Flashcard({ frontText, backText, width, height, borderRadius, flashcardType, showFlipButton, onPress, editable, style }: Props) {
     const cardRef = useRef<{ flipCard: () => void }>(null);
     const [isFlipped, setIsFlipped] = useState(false); // Estado para controlar se o cartão foi virado
 
@@ -56,7 +57,7 @@ export default function Flashcard({ frontText, backText, width, height, borderRa
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.container}>
+            <View style={[styles.container, style]}>
                 <Card
                     ref={cardRef}
                     frontText={frontText}
@@ -96,8 +97,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         width: '100%',
-        marginBottom: 0,
-        marginTop: 20,
+        marginBottom: -15,
+        marginTop: 5,
         marginLeft: -15,
         marginRight: 15,
     },
@@ -105,9 +106,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         width: '100%',
-        marginBottom: -10,
-        marginTop: 30,
-        marginLeft: -63,
+        marginBottom: -15,
+        marginTop: 5,
+        marginLeft: -60,
         marginRight: 15,
     },
 });
