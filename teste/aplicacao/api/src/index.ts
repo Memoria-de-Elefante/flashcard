@@ -42,17 +42,40 @@ app.get('/get_all_data', async (req: Request, res: Response): Promise<void> => {
     res.json({ results: result });
 });
 
-app.post('/create_data', async (req: Request, res: Response): Promise<void> => {
-    const newUser: Omit<UsersRecord, 'xata_id' | 'senha'> = req.body; // Recebe todos os dados, exceto id e senha (trataremos a senha separadamente)
+app.post('/cadastro_usuario', async (req: Request, res: Response): Promise<void> => {
+    const newUser: Omit<UsersRecord, 'xata_id' | 'senha'> = req.body; // Recebe todos os dados, exceto senha (trataremos a senha separadamente)
     const senha = req.body.senha; // Extrai a senha do corpo da requisição
+    try {
+        if (!newUser.nome || !newUser.email) {
+            res.status(400).json({ error: 'Por favor, forneça nome, email e senha.' });
+            return;
+        } else if (!senha) {
+            res.status(400).json({ error: 'Por favor, forneça nome, email e senha.' });
+            return;
+        }
 
-    // 1. Criptografar a senha usando bcrypt
-    const saltRounds = 5; // Número de rounds para o hash (mais alto = mais seguro, mais lento)
-    const hashedPassword = await bcrypt.hash(senha, saltRounds);
+        // 1. Checa e o email inserido já existe
+        const existingUser = await client.db.users.filter({
+            email: newUser.email
+        }).getFirst();
+        
+        if (existingUser) {
+            // Retorna 409 'Conflict status'
+            res.status(409).json({error: 'Este email já está cadastrado! Por favor, utilize outro email ou faça login.'});
+            return; // Retorno para a execução desse código
+        }
 
-    // 2. Criar o novo usuário com a senha criptografada
-    const createUser = await client.db.users.create({ ...newUser, senha: hashedPassword });
-    res.json({results: createUser})
+        // 1. Criptografar a senha usando bcrypt
+        const saltRounds = 5; // Número de rounds para o hash (mais alto = mais seguro, mais lento)
+        const hashedPassword = await bcrypt.hash(senha, saltRounds);
+    
+        // 2. Criar o novo usuário com a senha criptografada
+        const createUser = await client.db.users.create({ ...newUser, senha: hashedPassword });
+        res.status(200).json({ message: 'Login bem-sucedido!', results: createUser});
+    } catch (error: any) {
+        console.error("Erro ao fazer cadastro de usuário!", error.message);
+        res.status(500).json({error: 'Erro ao fazer cadastro de usuário!'});
+    }
 })
 
 app.post('/login_usuario', async (req: Request, res: Response) => {

@@ -90,6 +90,19 @@ export interface User {
   xata_version: number;
 }
 
+export const cadastroUser = async (set:Partial<User>) => {
+  try {
+    const response = await api.post('/cadastro_usuario', {nome: set.nome,  email: set.email, senha: set.senha });
+    const { user: { email, nome, xata_id }, token } = response.data;
+    const userData = { user: { email, nome, xata_id}, token};
+    await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
+    return userData;
+  } catch (error: any) {
+    console.error('Erro na requisição: ', error);
+    throw error;
+  }
+};
+
 export const loginUser = async (set: Partial<User>) => {
   try {
     const response = await api.post('/login_usuario', { email: set.email, senha: set.senha });
