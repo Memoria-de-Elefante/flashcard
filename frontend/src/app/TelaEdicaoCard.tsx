@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { SafeAreaView, StyleSheet, Dimensions, TouchableOpacity, Text } from "react-native";
-import Flashcard from "../components/FlashcardEdicao";
+import Flashcard from "../components/Flashcard";
 import CustomButton from "../components/CustomButton";
 
 const { width, height } = Dimensions.get('window');
@@ -20,11 +20,12 @@ export default function edicao() {
             </TouchableOpacity>
             <Flashcard
                 ref={cardRef}
-                frontText="Pergunta Dificuldade"
-                backText="Resposta"
+                frontText="Pergunta de Edição"
+                backText="Resposta de Edição"
                 width={300}
                 height={400}
                 borderRadius={10}
+                editable={true}
                 flashcardType="edicao"
             />
             <TouchableOpacity style={styles.arrowRight} onPress={handleFlip}>
