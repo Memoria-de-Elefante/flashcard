@@ -1,0 +1,28 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d0e4g2aunsp1bris5rl0",
+    "operations": [
+      {
+        "add_column": {
+          "up": "''",
+          "table": "cards",
+          "column": {
+            "name": "materia",
+            "type": "text",
+            "check": {
+              "name": "cards_xata_text_length_materia",
+              "constraint": "OCTET_LENGTH(\"materia\") <= 204800"
+            },
+            "comment": "{\"xata.type\":\"text\"}"
+          }
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d0e4g2aunsp1bris5rl0",
+  "parent": "mig_d0e4fk2unsp1bris5rk0",
+  "schema": "public",
+  "startedAt": "2025-05-08T05:58:34.646773Z"
+}
