@@ -1,40 +1,31 @@
-import React, { useState } from "react";
-import { Text, SafeAreaView, StyleSheet, Dimensions } from "react-native";
-import CustomButton from "../../components/CustomButton";
-import OptionButton from "../../components/OptionButton";
+import React from "react";
+import { Image, SafeAreaView, StyleSheet, Dimensions } from "react-native";
+import CustomButton from "../../components/CustomButton"; // Ajuste o caminho de acordo com a estrutura
 import { router } from "expo-router";
 
 // Pegando a largura da tela
 const { width } = Dimensions.get('window');
 
 export default function TelaModoDificuldade() {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
   return (
     <SafeAreaView style={styles.container}>
-    <Text style={styles.text}>Selecione o deck que você deseja estudar</Text> 
-    <OptionButton
-      label="Questões Fáceis"
-      value="facil"
-      isSelected={selectedOption === 'facil'}
-      onPress={setSelectedOption}
-    />
-    <OptionButton
-      label="Questões Médias"
-      value="medio"
-      isSelected={selectedOption === 'medio'}
-      onPress={setSelectedOption}
-    />
-    <OptionButton
-      label="Questões Difíceis"
-      value="dificil"
-      isSelected={selectedOption === 'dificil'}
-      onPress={setSelectedOption}
-    />
-      <CustomButton 
-        title="Estudar" 
-        marginVertical={42}
-        marginTop={115}
-        onPress={() => router.push('./FlashcardDificuldade')} 
+      <Image
+        source={require('../../../assets/images/Poliedro.png')}
+        style={styles.image}
+      />
+      <CustomButton
+        title="Iniciar Sessão"
+        width={250}
+        borderRadius={10}
+        marginVertical={60}
+        onPress={() => router.push('./FlashcardDificuldade')}
+      />
+      <CustomButton
+        title="Ver Estatísticas"
+        width={250}
+        borderRadius={10}
+        marginVertical={60}
+        onPress={() => console.log("Indo para Estatísticas")}
       />
     </SafeAreaView>
   );
@@ -51,12 +42,11 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     flexDirection: 'column', // Garantir que os itens se organizem verticalmente
   },
-  text: {
-    color: "#FFFFFF",
-    fontSize: width * 0.065,
-    fontWeight: "bold",
-    marginTop: width * 0.15,
-    marginBottom: width * 0.05,
-    textAlign: "center",
+  image: {
+    width: width * 0.6,
+    height: width * 0.5,
+    resizeMode: 'contain', // Ajuste a forma de exibição da imagem
+    marginBottom: 0,
+    marginTop: width * 0.07,
   },
 });

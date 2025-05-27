@@ -4,23 +4,19 @@ import { Dimensions } from "react-native";
 type Props = {
     title: string;
     onPress: () => void;
-    onEdit: () => void;
     onDelete: () => void;
 };
 
 const { width } = Dimensions.get('window');
 
-const EdicaoButton = ({ title, onPress, onEdit, onDelete}: Props) => {
+const EdicaoButton = ({ title, onPress, onDelete}: Props) => {
     return (
         <TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={0.8}>
             <SafeAreaView style={styles.innerContent}>
                 <Text style={styles.text}>{title}</Text>
                 <SafeAreaView style={styles.iconGroup}>
-                    <TouchableOpacity onPress={onEdit}>
-                        <Image source={require('../../assets/images/Editar.png')} style={styles.image}/>
-                    </TouchableOpacity>
                     <TouchableOpacity onPress={onDelete} style={{ marginLeft: 10 }}>
-                        <Image source={require('../../assets/images/Deletar.png')} style={styles.image}/>
+                        <Image source={require('../../assets/images/IconDeletar.png')} style={styles.image}/>
                     </TouchableOpacity>
                 </SafeAreaView>
             </SafeAreaView>

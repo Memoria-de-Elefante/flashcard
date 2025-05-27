@@ -21,7 +21,7 @@ export default function TelaSelecaoModo() {
       <CustomButton 
         title="Modo Dificuldade" 
         marginVertical={42}
-        onPress={() => router.push('/ModoDificuldade/TelaModoDificuldade')} 
+        onPress={() => router.push('/ModoDificuldade/TelaOpcoesDificuldade')}
       />
       <CustomButton 
         title="Modo Desafio" 
