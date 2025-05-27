@@ -10,7 +10,7 @@ export default function Index() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Tela Inicial Temporária</Text>
-      <CustomButton title="Ir para login" 
+      <CustomButton title="Ir login" 
         onPress={() => router.push("/TelaLogin")} // Direciona para a nova tela
         marginVertical={42}
       />

@@ -14,7 +14,7 @@ export default function FlashcardDificuldade() {
         flashcardType="dificuldade" // Passando o tipo para o Flashcard
         showFlipButton={true} // Caso queira que o botão flip apareça ou não
         editable={false}
-        style={{ marginTop: 80 }}
+        style={{ marginTop: 60 }}
       />
     </SafeAreaView>
   );

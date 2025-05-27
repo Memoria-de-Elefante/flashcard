@@ -1,17 +1,31 @@
 import React from "react";
-import { Image, SafeAreaView, StyleSheet, Dimensions } from "react-native";
+import { Image, SafeAreaView, StyleSheet, useWindowDimensions } from "react-native";
 import CustomButton from "../../components/CustomButton"; // Ajuste o caminho de acordo com a estrutura
 import { router } from "expo-router";
 
-// Pegando a largura da tela
-const { width } = Dimensions.get('window');
-
 export default function TelaModoDesafio() {
+
+  const { width: windowWidth } = useWindowDimensions();
+
+  // responsividade para a imagem
+  const largura_imagem = windowWidth < 600 ? windowWidth * 0.6 : 300;
+  const altura_imagem = windowWidth < 600 ? windowWidth * 0.45 : 100;
+  const marginBottom_imagem = windowWidth < 600 ? windowWidth * 0.05 : 0;
+  const marginTop_imagem = windowWidth < 600 ? windowWidth * 0.07 : 10;
+
   return (
     <SafeAreaView style={styles.container}>
       <Image
         source={require('../../../assets/images/Poliedro.png')}
-        style={styles.image}
+        style={[
+          styles.image,
+          {
+            width: largura_imagem,
+            height: altura_imagem,
+            marginBottom: marginBottom_imagem,
+            marginTop: marginTop_imagem,
+          }
+        ]}
       />
       <CustomButton
         title="Iniciar Sessão"
@@ -47,10 +61,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column', // Garantir que os itens se organizem verticalmente
   },
   image: {
-    width: width * 0.6,
-    height: width * 0.5,
-    resizeMode: 'contain', // Ajuste a forma de exibição da imagem
-    marginBottom: 0, 
-    marginTop: width * 0.07,
+    resizeMode: 'contain', 
   },
 });

@@ -1,34 +1,63 @@
-import { Text, Image, SafeAreaView, StyleSheet, Dimensions } from "react-native";
+import { Text, Image, SafeAreaView, StyleSheet, useWindowDimensions } from "react-native";
 import CustomButton from "../components/CustomButton";
 import { router } from 'expo-router';
 
-const { width } = Dimensions.get('window');
+export default function Index({ }) {
 
-export default function Index({}) {
+  const { width: windowWidth } = useWindowDimensions();
+
+  // responsividade para a imagem
+  const largura_imagem = windowWidth < 600 ? windowWidth * 0.6 : 300;
+  const altura_imagem = windowWidth < 600 ? windowWidth * 0.45 : 100;
+  const marginBottom_imagem = windowWidth < 600 ? windowWidth * 0.05 : 0;
+
+  // responsividade para o texto
+  const fontSize_texto = windowWidth < 600 ? windowWidth * 0.08 : 30;
+  const marginTop_texto = windowWidth < 600 ? windowWidth * 0 : 10;
+  const marginBottom_texto = windowWidth < 600 ? windowWidth * 0 : 0;
+  const marginTop_imagem = windowWidth < 600 ? windowWidth * 0.07 : 10;
+
   return (
     <SafeAreaView style={styles.container}>
       <Image
         source={require('../../assets/images/Poliedro.png')}
-        style={styles.image}
+        style={[
+          styles.image,
+          {
+            width: largura_imagem,
+            height: altura_imagem,
+            marginBottom: marginBottom_imagem,
+            marginTop: marginTop_imagem,
+          }
+        ]}
       />
-      <Text style={styles.text}>Bem-vindo, aluno!</Text>
-      <CustomButton 
-        title="Jogar" 
+      <Text style={[
+                styles.text,
+                {
+                    fontSize: fontSize_texto,
+                    marginTop: marginTop_texto,
+                    marginBottom: marginBottom_texto,
+                }
+            ]}>Bem-vindo, aluno!</Text> 
+            {/* Colocar um parâmetro para puxar o nome do usuário pelo token */}
+
+      <CustomButton
+        title="Jogar"
         marginVertical={20}
         borderRadius={5}
-        onPress={() => router.push('/TelaSelecaoModo')}  
+        onPress={() => router.push('/TelaSelecaoModo')}
       />
-      <CustomButton 
-        title="Editar Decks" 
+      <CustomButton
+        title="Editar Decks"
         marginVertical={20}
         borderRadius={5}
-        onPress={() => router.push('/TelaEdicao')} 
+        onPress={() => router.push('/TelaEdicao')}
       />
-      <CustomButton 
-        title="Sair da Conta" 
+      <CustomButton
+        title="Sair da Conta"
         marginVertical={20}
         borderRadius={5}
-        onPress={() => console.log("Saindo da Conta")}  
+        onPress={() => console.log("Saindo da Conta")}
       />
     </SafeAreaView>
   );
@@ -46,17 +75,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column', // Garantir que os itens se organizem verticalmente
   },
   image: {
-    width: width * 0.6,
-    height: width * 0.5,
-    resizeMode: 'contain', 
-    marginBottom: 0, 
+    resizeMode: 'contain',
   },
   text: {
     color: "#FFFFFF",
-    fontSize: width * 0.065,
     fontWeight: "bold",
-    marginTop: width * 0.01,
-    marginBottom: width * 0.02,
     textAlign: "center",
   },
 });
