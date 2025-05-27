@@ -1,4 +1,4 @@
-// Estatisticas.tsx
+// estatisticas.tsx
 
 
 import React from 'react';
@@ -36,7 +36,12 @@ const Estatisticas = ({ acertos, erros }: Props) => {
   const Labels = ({ slices }: any) => {
     return slices.map((slice: any, index: number) => {
       const { pieCentroid, data } = slice;
-      const percent = ((data.value / total) * 100).toFixed(1);
+      // Adicionado tratamento para evitar divisão por zero
+      const percent = total === 0 ? 0 : ((data.value / total) * 100);
+      // Não exibir label se a porcentagem for 0
+      if (percent === 0) {
+        return null;
+      }
       return (
         <G key={index}>
           <SvgText
@@ -48,23 +53,33 @@ const Estatisticas = ({ acertos, erros }: Props) => {
             fontSize={14}
             fontWeight="bold"
           >
-            {percent}%
+            {percent.toFixed(1)}%
           </SvgText>
         </G>
       );
     });
   };
 
+  // Não renderizar o gráfico se não houver dados
+  if (total === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Estatísticas</Text>
+        <Text style={styles.legendaTexto}>Nenhuma rodada concluída ainda.</Text>
+      </View>
+    );
+  }
+
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Estatísticas</Text>
       <PieChart
-        style={{ height: 250 }}
-        data={data}
+        style={{ height: 250, width: '100%' }} 
+        data={data.filter(item => item.value > 0)} 
         outerRadius={'90%'}
         innerRadius={'45%'}
-        labelRadius={110}
+        
       >
         <Labels />
       </PieChart>
@@ -107,8 +122,3 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
 });
-
-
-
-
-
