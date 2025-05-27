@@ -1,5 +1,5 @@
 // Seção de integração com o frontend da aplicação
-import {fetch} from 'expo/fetch'
+// import {fetch} from 'expo/fetch'
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -84,7 +84,7 @@ export interface User {
   email: string;
   nome: string;
   senha: string;
-  xata_createdat: Date;
+  xata_createdat: Date; 
   xata_id: string;
   xata_updatedat: Date;
   xata_version: number;
@@ -92,7 +92,9 @@ export interface User {
 
 export const cadastroUser = async (set:Partial<User>) => {
   try {
-    const response = await api.post('/cadastro_usuario', {nome: set.nome,  email: set.email, senha: set.senha });
+    console.log('deus')
+    const response = await axios.post('http://10.2.129.84:3000/cadastro_usuario', {nome: set.nome,  email: set.email, senha: set.senha });
+    console.log(response)
     const { user: { email, nome, xata_id }, token } = response.data;
     const userData = { user: { email, nome, xata_id}, token};
     await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
@@ -105,6 +107,7 @@ export const cadastroUser = async (set:Partial<User>) => {
 
 export const loginUser = async (set: Partial<User>) => {
   try {
+    console.log("teste")
     const response = await api.post('/login_usuario', { email: set.email, senha: set.senha });
     const { user: { email, nome, xata_id }, token } = response.data;
     const userData = { user: { email, nome, xata_id }, token };
@@ -115,3 +118,5 @@ export const loginUser = async (set: Partial<User>) => {
     throw error;
   }
 };
+
+// cadastroUser()

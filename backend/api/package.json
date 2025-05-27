@@ -29,6 +29,7 @@
     "@react-native-async-storage/async-storage": "2.1.2",
     "@xata.io/client": "^0.0.0-next.v93343b9646f57a1e5c51c35eccf0767c2bb80baa",
     "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "expo": "^53.0.9",
     "express": "^5.1.0",
