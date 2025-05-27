@@ -10,15 +10,20 @@ type Props = {
     width: number;
     height: number;
     borderRadius: number;
+    paddingTop?: number;
     editable?: boolean;
     onPress?: () => void;
 };
+
+export type CardRef = {
+    flipCard: () => void;
+}
 
 const Card = forwardRef(function Card(
     props: Props,
     ref: React.ForwardedRef<{ flipCard: () => void }>
 ) {
-    const { frontText, backText, width: cardWidth, height: cardHeight, borderRadius, editable, onPress } = props;
+    const { frontText, backText, width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop, editable, onPress } = props;
 
     const [front, setFront] = useState(frontText);
     const [back, setBack] = useState(backText);
@@ -62,7 +67,7 @@ const Card = forwardRef(function Card(
                 if (!editable && onPress) onPress();
             }}
         >
-            <View style={[styles.card, { width: cardWidth, height: cardHeight, borderRadius }]}>
+            <View style={[styles.card, { width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop }]}>
                 {/* Front do card */}
                 <Animated.View
                     pointerEvents={flipped ? 'none' : 'auto'}
@@ -158,9 +163,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#000',
         backgroundColor: '#FFFFFF',
-        padding: 6,
         borderRadius: 5,
         minWidth: 100,
+        minHeight: 190,
+        maxHeight: 100,
         textAlignVertical: 'top',
     },
     sideLabel: {
@@ -190,7 +196,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-
 });
 
 export default Card;
