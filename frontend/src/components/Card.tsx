@@ -1,7 +1,8 @@
 import React, { useState, useRef, useImperativeHandle, forwardRef } from "react";
 import {
     View, Text, TextInput, StyleSheet, ScrollView,
-    Animated, TouchableWithoutFeedback} from "react-native";
+    Animated, TouchableWithoutFeedback
+} from "react-native";
 
 type Props = {
     frontText: string;

@@ -15,9 +15,6 @@ export default function edicao() {
     };
     return (
         <SafeAreaView style={styles.container}>
-            <TouchableOpacity style={styles.arrowLeft} onPress={handleFlip}>
-                <Text style={styles.arrowText}>◀</Text>
-            </TouchableOpacity>
             <Flashcard
                 ref={cardRef}
                 frontText="Pergunta de Edição"
@@ -27,10 +24,8 @@ export default function edicao() {
                 borderRadius={10}
                 editable={true}
                 flashcardType="edicao"
+                showFlipButton={true}
             />
-            <TouchableOpacity style={styles.arrowRight} onPress={handleFlip}>
-                <Text style={styles.arrowText}>▶</Text>
-            </TouchableOpacity>
             <CustomButton
                 title="Salvar"
                 onPress={() => alert("Salvando o card")}

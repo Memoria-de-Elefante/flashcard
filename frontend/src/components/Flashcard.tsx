@@ -1,12 +1,10 @@
 import React, { useRef, useState, forwardRef, useImperativeHandle } from "react";
 import { View, StyleSheet, Dimensions, TouchableWithoutFeedback, Keyboard, StyleProp, ViewStyle, TouchableOpacity, Image } from "react-native";
 import CustomButton from "./CustomButton";
-import Card, { CardRef } from "./Card";
+import Card from "./Card";
 
-// Pegando a largura da tela
 const { width } = Dimensions.get('window');
 
-// const router = useRouter();
 
 type Props = {
     frontText: string;
@@ -21,28 +19,12 @@ type Props = {
     style?: StyleProp<ViewStyle>;
 };
 
-const Flashcard = forwardRef<CardRef, Props>(({
-    frontText,
-    backText,
-    width,
-    height,
-    borderRadius,
-    flashcardType,
-    onPress,
-    editable,
-    style
-}, ref) => {
-    const cardRef = useRef<CardRef>(null);
-
-    // Permitir que pai (edicao.tsx) acesse flipCard
-    useImperativeHandle(ref, () => ({
-        flipCard: () => {
-            cardRef.current?.flipCard();
-        },
-    }));
+export default function Flashcard({ frontText, backText, width, height, borderRadius, flashcardType, showFlipButton, onPress, editable, style }: Props) {
+    const cardRef = useRef<{ flipCard: () => void }>(null);
+    const [isFlipped, setIsFlipped] = useState(false); // Estado para controlar se o cartão foi virado
 
     const renderButtons = () => {
-        const handleFlip = () => cardRef.current?.flipCard();
+        if (!flashcardType) return null;
 
         switch (flashcardType) {
             case "edicao":
@@ -52,7 +34,7 @@ const Flashcard = forwardRef<CardRef, Props>(({
                             <Image source={require('../../assets/images/camera.png')} style={styles.image} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => alert('Exclui deck')} style={{ marginLeft: 10 }}>
-                            <Image source={require('../../assets/images/Deletar.png')} style={styles.image} />
+                            <Image source={require('../../assets/images/IconDeletar.png')} style={styles.image} />
                         </TouchableOpacity>
                     </View><View style={styles.buttonRowAleatorio}>
                             <CustomButton title="Fácil" onPress={() => console.log("Fácil")} width={80} height={45} borderRadius={10} />
@@ -61,16 +43,16 @@ const Flashcard = forwardRef<CardRef, Props>(({
                         </View></>
                 );
             case "aleatorio":
-                return (
+                if(isFlipped) return (
                     <View style={styles.buttonRowAleatorio}>
                         <CustomButton title="Fácil" onPress={() => console.log("Fácil")} width={80} height={45} borderRadius={10} />
                         <CustomButton title="Médio" onPress={() => console.log("Médio")} width={80} height={45} borderRadius={10} />
                         <CustomButton title="Difícil" onPress={() => console.log("Difícil")} width={80} height={45} borderRadius={10} />
                     </View>
                 );
-            case "desafio":
             case "dificuldade":
-                return (
+            case "desafio":
+                if(isFlipped) return (
                     <View style={styles.buttonRow}>
                         <CustomButton title="Acertei" onPress={() => console.log("Acertei")} width={90} height={45} borderRadius={10} />
                         <CustomButton title="Errei" onPress={() => console.log("Errei")} width={90} height={45} borderRadius={10} />
@@ -79,6 +61,10 @@ const Flashcard = forwardRef<CardRef, Props>(({
             default:
                 return null;
         }
+    };
+    const handleFlip = () => {
+        cardRef.current?.flipCard();
+        setIsFlipped(prev => !prev);
     };
 
     return (
@@ -96,10 +82,20 @@ const Flashcard = forwardRef<CardRef, Props>(({
                 />
                 {/* Renderiza os botões de acordo com o tipo de flashcard, apenas se o cartão estiver virado */}
                 {renderButtons()}
+                {showFlipButton && (
+                    <CustomButton
+                        title="Flip"
+                        onPress={handleFlip}
+                        width={250}
+                        height={50}
+                        borderRadius={25}
+                        marginVertical={52}
+                    />
+                )}
             </View>
         </TouchableWithoutFeedback>
     );
-});
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -142,5 +138,3 @@ const styles = StyleSheet.create({
         marginBottom: 0,
     },
 });
-
-export default Flashcard;
