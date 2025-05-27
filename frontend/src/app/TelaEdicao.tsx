@@ -6,12 +6,7 @@ import { router } from "expo-router";
 
 const { width, height } = Dimensions.get('window');
 
-export default function edicao({}) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    
-    const openModal = () => {setIsModalOpen(true)}
-    const closeModal = () => {setIsModalOpen(false)}
-
+export default function edicao({}) {    
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.text}>SUA COLEÇÃO DE PALAVRAS</Text>
@@ -53,7 +48,7 @@ export default function edicao({}) {
 
             <CustomButton
                 title="+"
-                onPress={openModal}
+                onPress={() => alert("add")}
                 borderRadius={5}
                 marginTop={50}
                 textStyle={{ fontSize: 30 }}
