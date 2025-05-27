@@ -1,10 +1,9 @@
+import { transformFromAstAsync } from '@babel/core';
 import fs from 'fs';
 import path from 'path';
-
-const filePath = path.join('.', 'localFiles', 'cardsJson.json');
+const filePath = path.join('..', 'localFiles', 'cardsJson.json');
 
 // Códigos referentes a criação e adição de elementos ao Json
-
 // Este código é responsável por criar um cardsJson base limpo, caso haja a necessidade
 function criarJson() {
     if (!fs.existsSync(filePath)) {
@@ -44,8 +43,8 @@ function adicionarFlashcard(materia: string, pergunta: string, resposta: string,
     try {
         const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
         // if (submateria == '') {
-        let tamanho = Object.keys(data[materia]).length
-        data[materia].push({pergunta: pergunta, resposta: resposta, dificuldade: dificuldade, imagem: imagem})
+        let tamanho = (Object.keys(data[materia])).length
+        data[materia].push({id: tamanho + 1, pergunta: pergunta, resposta: resposta, dificuldade: dificuldade, imagem: imagem})
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
         // }
         // else {   
@@ -112,6 +111,7 @@ function deletarFlashcard(materia: string, pergunta: string) {
 
 //function buscarTodosFlashcards() {}
 //function buscarTodasMaterias() {}
+adicionarFlashcard("matemática", "pergunta", "resposta", "fácil", "")
 
 // const card = buscarFlashcard('matemática')
 // console.log(card)
