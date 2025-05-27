@@ -1,0 +1,19 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_d0dtsa2do80pli9qn3pg",
+    "operations": [
+      {
+        "drop_column": {
+          "table": "cards",
+          "column": "materia"
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_d0dtsa2do80pli9qn3pg",
+  "parent": "mig_d0cv89qdo80pli9qmpsg",
+  "schema": "public",
+  "startedAt": "2025-05-07T22:26:49.137268Z"
+}
