@@ -1,3 +1,4 @@
+// <<<<<<< HEAD
 import React, { useRef, useState } from "react";
 import {
     View,
@@ -7,6 +8,8 @@ import {
     Keyboard,
     StyleProp,
     ViewStyle,
+    TouchableOpacity,
+    Image
 } from "react-native";
 import CustomButton from "./CustomButton";
 import Card from "./Card";
@@ -17,7 +20,7 @@ type Props = {
     width: number;
     height: number;
     borderRadius: number;
-    flashcardType?: "aleatorio" | "desafio" | "dificuldade";
+    flashcardType?: "edicao" | "aleatorio" | "desafio" | "dificuldade"; // Agora é opcional
     showFlipButton?: boolean;
     editable?: boolean;
     onPress?: () => void;
@@ -54,7 +57,7 @@ export default function Flashcard({
     const marginRight_buttonRow = windowWidth < 600 ? 70 : 0;
 
     const renderButtons = () => {
-        if (!isFlipped || !flashcardType) return null;
+        if (!flashcardType) return null;
 
         const commonStyle = {
             marginTop: flashcardType === "aleatorio" ? marginTop_buttonRowAleatorio : marginTop_buttonRow,
@@ -64,17 +67,32 @@ export default function Flashcard({
         };
 
         switch (flashcardType) {
+            case "edicao":
+                return(
+                    <><View style={styles.iconRow}>
+                        <TouchableOpacity onPress={() => alert('Adiciona imagem')} style={{ marginLeft: 10 }}>
+                            <Image source={require('../../assets/images/camera.png')} style={styles.image} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => alert('Exclui deck')} style={{ marginLeft: 10 }}>
+                            <Image source={require('../../assets/images/IconDeletar.png')} style={styles.image} />
+                        </TouchableOpacity>
+                    </View><View style={styles.buttonRowAleatorio}>
+                            <CustomButton title="Fácil" onPress={() => console.log("Fácil")} width={80} height={45} borderRadius={10} />
+                            <CustomButton title="Médio" onPress={() => console.log("Médio")} width={80} height={45} borderRadius={10} />
+                            <CustomButton title="Difícil" onPress={() => console.log("Difícil")} width={80} height={45} borderRadius={10} />
+                        </View></>
+                );
             case "aleatorio":
-                return (
-                    <View style={[styles.buttonRow, commonStyle]}>
+                if(isFlipped) return (
+                    <View style={[styles.buttonRowAleatorio, commonStyle]}>
                         <CustomButton title="Fácil" onPress={() => console.log("Fácil")} width={80} height={45} borderRadius={10} />
                         <CustomButton title="Médio" onPress={() => console.log("Médio")} width={80} height={45} borderRadius={10} />
                         <CustomButton title="Difícil" onPress={() => console.log("Difícil")} width={80} height={45} borderRadius={10} />
                     </View>
                 );
-            case "desafio":
             case "dificuldade":
-                return (
+            case "desafio":
+                if(isFlipped) return (
                     <View style={[styles.buttonRow, commonStyle]}>
                         <CustomButton title="Acertei" onPress={() => console.log("Acertei")} width={90} height={45} borderRadius={10} />
                         <CustomButton title="Errei" onPress={() => console.log("Errei")} width={90} height={45} borderRadius={10} />
@@ -84,7 +102,6 @@ export default function Flashcard({
                 return null;
         }
     };
-
     const handleFlip = () => {
         cardRef.current?.flipCard();
         setIsFlipped(prev => !prev);
@@ -132,6 +149,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingTop: 15,
     },
+    buttonRowAleatorio: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        width: '100%',
+        marginBottom: -15,
+        marginTop: 5,
+        marginLeft: -15,
+        marginRight: 15,
+    },
     buttonRow: {
         flexDirection: "row",
         justifyContent: "space-evenly",
@@ -139,5 +165,19 @@ const styles = StyleSheet.create({
     },
     flipButtonWrapper: {
         marginTop: 20,
+    },
+    iconRow: {
+        position: 'absolute',
+        top: 30,
+        right: 10,
+        flexDirection: 'row',
+        gap: 10,
+        zIndex: 2,
+    },
+    image: {
+        width: 24,
+        height: 24,
+        resizeMode: 'contain',
+        marginBottom: 0,
     },
 });

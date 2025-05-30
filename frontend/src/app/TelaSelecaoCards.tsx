@@ -123,7 +123,7 @@ export default function TelaSelecaoCards() {
                             height={height_flashcard}
                             borderRadius={borderRadius_cardFace}
                             editable={false}
-                            onPress={() => router.push('/TelaEdu')}
+                            onPress={() => router.push('/TelaEdicaoCard')}
                         />
 
                     </View>
