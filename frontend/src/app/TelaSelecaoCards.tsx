@@ -47,7 +47,7 @@ export default function TelaSelecaoCards({ }) {
                             height={400}
                             borderRadius={10}
                             editable={false}
-                            onPress={() => router.push('/TelaEdu')}
+                            onPress={() => router.push('/TelaEdicaoCard')}
                         />
                     </View>
                 ))}

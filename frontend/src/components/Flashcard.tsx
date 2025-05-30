@@ -1,12 +1,10 @@
-import React, { useRef, useState } from "react";
-import { View, StyleSheet, Dimensions, TouchableWithoutFeedback, Keyboard, StyleProp, ViewStyle } from "react-native";
+import React, { useRef, useState, forwardRef, useImperativeHandle } from "react";
+import { View, StyleSheet, Dimensions, TouchableWithoutFeedback, Keyboard, StyleProp, ViewStyle, TouchableOpacity, Image } from "react-native";
 import CustomButton from "./CustomButton";
 import Card from "./Card";
 
-// Pegando a largura da tela
 const { width } = Dimensions.get('window');
 
-// const router = useRouter();
 
 type Props = {
     frontText: string;
@@ -14,9 +12,9 @@ type Props = {
     width: number;
     height: number;
     borderRadius: number;
-    flashcardType?: "aleatorio" | "desafio" | "dificuldade"; // Agora é opcional
+    flashcardType?: "edicao" | "aleatorio" | "desafio" | "dificuldade"; // Agora é opcional
     showFlipButton?: boolean;
-    editable? : boolean;
+    editable?: boolean;
     onPress?: () => void;
     style?: StyleProp<ViewStyle>;
 };
@@ -26,20 +24,35 @@ export default function Flashcard({ frontText, backText, width, height, borderRa
     const [isFlipped, setIsFlipped] = useState(false); // Estado para controlar se o cartão foi virado
 
     const renderButtons = () => {
-        if (!isFlipped || !flashcardType) return null;
+        if (!flashcardType) return null;
 
         switch (flashcardType) {
+            case "edicao":
+                return(
+                    <><View style={styles.iconRow}>
+                        <TouchableOpacity onPress={() => alert('Adiciona imagem')} style={{ marginLeft: 10 }}>
+                            <Image source={require('../../assets/images/camera.png')} style={styles.image} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => alert('Exclui deck')} style={{ marginLeft: 10 }}>
+                            <Image source={require('../../assets/images/IconDeletar.png')} style={styles.image} />
+                        </TouchableOpacity>
+                    </View><View style={styles.buttonRowAleatorio}>
+                            <CustomButton title="Fácil" onPress={() => console.log("Fácil")} width={80} height={45} borderRadius={10} />
+                            <CustomButton title="Médio" onPress={() => console.log("Médio")} width={80} height={45} borderRadius={10} />
+                            <CustomButton title="Difícil" onPress={() => console.log("Difícil")} width={80} height={45} borderRadius={10} />
+                        </View></>
+                );
             case "aleatorio":
-                return (
+                if(isFlipped) return (
                     <View style={styles.buttonRowAleatorio}>
                         <CustomButton title="Fácil" onPress={() => console.log("Fácil")} width={80} height={45} borderRadius={10} />
                         <CustomButton title="Médio" onPress={() => console.log("Médio")} width={80} height={45} borderRadius={10} />
                         <CustomButton title="Difícil" onPress={() => console.log("Difícil")} width={80} height={45} borderRadius={10} />
                     </View>
                 );
-            case "desafio":
             case "dificuldade":
-                return (
+            case "desafio":
+                if(isFlipped) return (
                     <View style={styles.buttonRow}>
                         <CustomButton title="Acertei" onPress={() => console.log("Acertei")} width={90} height={45} borderRadius={10} />
                         <CustomButton title="Errei" onPress={() => console.log("Errei")} width={90} height={45} borderRadius={10} />
@@ -49,10 +62,9 @@ export default function Flashcard({ frontText, backText, width, height, borderRa
                 return null;
         }
     };
-
     const handleFlip = () => {
         cardRef.current?.flipCard();
-        setIsFlipped(prev => !prev); // Inverte o estado de flip
+        setIsFlipped(prev => !prev);
     };
 
     return (
@@ -110,5 +122,19 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginLeft: -60,
         marginRight: 15,
+    },
+    iconRow: {
+        position: 'absolute',
+        top: 30,
+        right: 10,
+        flexDirection: 'row',
+        gap: 10,
+        zIndex: 2,
+    },
+    image: {
+        width: 24,
+        height: 24,
+        resizeMode: 'contain',
+        marginBottom: 0,
     },
 });
