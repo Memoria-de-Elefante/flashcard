@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, Text, StyleSheet, Dimensions, View, TextInput, Image } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, useWindowDimensions, View, TextInput, Image } from 'react-native';
 
 type Props = {
     title: string;
@@ -8,8 +8,6 @@ type Props = {
     onChangeText: (text: string) => void;
 };
 
-const { width } = Dimensions.get('window');
-
 const SenhaButton = ({ title, onPress, value, onChangeText }: Props) => {
     const [senhaVisivel, setSenhaVisivel] = useState(false);
 
@@ -17,10 +15,51 @@ const SenhaButton = ({ title, onPress, value, onChangeText }: Props) => {
         setSenhaVisivel(!senhaVisivel);
     };
 
+    const { width: windowWidth } = useWindowDimensions();
+
+    // responsividade para o passwordContainer
+    const borderRadius_passwordContainer = windowWidth < 600 ? windowWidth * 10 : 30;
+    const padding_passwordContainer = windowWidth < 600 ? windowWidth * 0.01 : 25;
+    const marginBottom_passwordContainer = windowWidth < 600 ? windowWidth * 0.04 : 10;
+    const width_passwordContainer = windowWidth < 600 ? windowWidth * 0.7 : 500;
+    const height_passwordContainer = windowWidth < 600 ? windowWidth * 0.1 : 30;
+    const marginTop_passwordContainer = windowWidth < 600 ? windowWidth * 0.04 : 10;
+
+    // responsividade para o input 
+    const height_input = windowWidth < 600 ? windowWidth * 0.09 : 48;
+    const paddingHorizontal_input = windowWidth < 600 ? windowWidth * 0.025 : 0; // arrumar afastamento lado esquerdo
+    const fontSize_input = windowWidth < 600 ? windowWidth * 0.05 : 25;
+    const marginTop_input = windowWidth < 600 ? windowWidth * 0 : 0;
+    const borderRadius_input = windowWidth < 600 ? windowWidth * 10 : 30;
+
+    // responsividade para a imagem de edição
+    const width_imagemEdicao = windowWidth < 600 ? windowWidth * 0.1 : 35;
+    const height_imagemEdicao = windowWidth < 600 ? windowWidth * 1 : 35;
+
     return (
-        <View style={styles.passwordContainer}>
+        <View style={[
+                styles.passwordContainer,
+                {
+                    borderRadius: borderRadius_passwordContainer,
+                    padding: padding_passwordContainer,
+                    marginBottom: marginBottom_passwordContainer,
+                    width: width_passwordContainer,
+                    height: height_passwordContainer,
+                    marginTop: marginTop_passwordContainer,
+                }
+            ]}>
             <TextInput
-                style={[styles.input, { flex: 1 }]}
+                style={[
+                    styles.input, 
+                    { 
+                        flex: 1,
+                        height: height_input,   
+                        paddingHorizontal: paddingHorizontal_input,
+                        fontSize: fontSize_input, 
+                        marginTop: marginTop_input,
+                        borderRadius: borderRadius_input,
+                    }
+                ]}
                 placeholder="Digite sua senha aqui"
                 placeholderTextColor="#7C7C7C"
                 value={value}
@@ -35,8 +74,15 @@ const SenhaButton = ({ title, onPress, value, onChangeText }: Props) => {
                         senhaVisivel
                             ? require('../../assets/images/OlhoAberto.png')
                             : require('../../assets/images/OlhoFechado.png')
-                    }
-                    style={styles.image}
+                    }   
+
+                    style={[
+                        styles.image, 
+                        {
+                            width: width_imagemEdicao,
+                            height: height_imagemEdicao,
+                        }
+                    ]}
                 />
             </TouchableOpacity>
         </View>
@@ -46,24 +92,14 @@ const SenhaButton = ({ title, onPress, value, onChangeText }: Props) => {
 const styles = StyleSheet.create({
     passwordContainer: {
         backgroundColor: '#eee',
-        borderRadius: 25,
-        padding: 15,
-        marginBottom: 15,
         flexDirection: 'row',
         alignItems: 'center',
-        width: width * 0.7,
-        height: width * 0.13,
     },
     input: {
         backgroundColor: '#eee',
-        color: '#000', // <- Certifique-se de definir a cor do texto
-        height: width * 0.12,    // <- Aumente a altura para algo razoável
-        paddingHorizontal: width * 0.01,
-        fontSize: 16,  // <- Deixe legível
+        color: '#000',
     },
     image: {
-        width: 24,
-        height: 24,
         resizeMode: 'contain',
     },
 });

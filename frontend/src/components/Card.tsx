@@ -1,8 +1,5 @@
 import React, { useState, useRef, useImperativeHandle, forwardRef } from "react";
-import {
-    View, Text, TextInput, StyleSheet, ScrollView,
-    Animated, TouchableWithoutFeedback
-} from "react-native";
+import { View, Text, TextInput, StyleSheet, ScrollView, Animated, TouchableWithoutFeedback, useWindowDimensions } from "react-native";
 
 type Props = {
     frontText: string;
@@ -60,6 +57,35 @@ const Card = forwardRef(function Card(
         outputRange: ['180deg', '360deg'],
     });
 
+    const { width: windowWidth } = useWindowDimensions();
+
+    // responsividade para o cardFace 
+    const borderRadius_cardFace = windowWidth < 600 ? windowWidth * 0.02 : 5;
+    const padding_cardFace = windowWidth < 600 ? windowWidth * 0 : 0;
+
+    // responsividade para o clickableArea 
+    const padding_clickableArea = windowWidth < 600 ? windowWidth * 0.028 : 30; // alterar o valor do padding caso não de para digitar, como não testei na tela do Edu fiz um chute com o chatGPT
+
+    // responsividade para o text 
+    const fontSize_text = windowWidth < 600 ? windowWidth * 0.05 : 20;
+
+    // responsividade para o input 
+    const fontSize_input = windowWidth < 600 ? windowWidth * 0.05 : 25;
+    const padding_input = windowWidth < 600 ? windowWidth * 0.028 : 30; // mesma coisa que o clickableArea
+    const borderRadius_input = windowWidth < 600 ? windowWidth * 0.02 : 5;
+    const minWidth_input = windowWidth < 600 ? windowWidth * 0.28 : 30;
+
+    // responsividade para o scrollContent 
+    const paddingBottom_scrollContent = windowWidth < 600 ? windowWidth * 0.28 : 30;
+
+    // responsividade para o inputContainer 
+    const maxHeight_inputContainer = windowWidth < 600 ? windowWidth * 0.6 : 30;
+
+    // responsividade para o sideLabel 
+    const top_sideLabel = windowWidth < 600 ? windowWidth * 0.028 : 0;
+    const left_sideLabel = windowWidth < 600 ? windowWidth * 0.028 : 5;
+    const fontSize_sideLabel = windowWidth < 600 ? windowWidth * 0.045 : 20;
+
     // Envolve tudo com Touchable para permitir navegação quando não for editable
     return (
         <TouchableWithoutFeedback
@@ -71,18 +97,46 @@ const Card = forwardRef(function Card(
                 {/* Front do card */}
                 <Animated.View
                     pointerEvents={flipped ? 'none' : 'auto'}
-                    style={[styles.cardFace, { opacity: frontOpacity, transform: [{ rotateY: interpolatedRotation }] }]}
+                    style={[styles.cardFace,
+                    {
+                        opacity: frontOpacity,
+                        transform: [{ rotateY: interpolatedRotation }],
+                        borderRadius: borderRadius_cardFace,
+                        padding: padding_cardFace,
+                    }
+                    ]}
                 >
                     <TouchableWithoutFeedback onPress={() => editable ? setEditingFront(true) : props.onPress?.()}>
                         <View style={styles.clickableArea}>
-                            <Text style={styles.sideLabel}>FRONT</Text>
+                            <Text style={[styles.sideLabel, {
+                                    top: top_sideLabel,
+                                    left: left_sideLabel,
+                                    fontSize: fontSize_sideLabel,
+                                }
+                            ]}>FRONT</Text>
                             {editingFront ? (
-                                <ScrollView style={styles.inputContainer} contentContainerStyle={styles.scrollContent}>
+                                <ScrollView
+                                    style={[
+                                        styles.inputContainer,
+                                        {
+                                            maxHeight: maxHeight_inputContainer,
+                                        }
+                                    ]}
+                                    contentContainerStyle={{
+                                        paddingBottom: paddingBottom_scrollContent,
+                                    }
+                                    }>
                                     <TextInput
                                         value={front}
                                         onChangeText={setFront}
                                         onBlur={() => setEditingFront(false)}
-                                        style={styles.input}
+                                        style={[styles.input, {
+                                            fontSize: fontSize_input,
+                                            padding: padding_input,
+                                            borderRadius: borderRadius_input,
+                                            minWidth: minWidth_input,
+                                        }
+                                        ]}
                                         autoFocus
                                         multiline
                                         textAlignVertical="top"
@@ -90,25 +144,53 @@ const Card = forwardRef(function Card(
                                 </ScrollView>
                             ) : (
                                 <View style={styles.textWrapper}>
-                                    <Text style={styles.text}>{front}</Text>
+                                    <Text style={[styles.text,
+                                    {
+                                        fontSize: fontSize_text,
+                                    }
+                                    ]}>{front}</Text>
                                 </View>
                             )}
                         </View>
                     </TouchableWithoutFeedback>
                 </Animated.View>
 
-
-
                 {/* Back do card */}
                 <Animated.View
                     pointerEvents={flipped ? 'auto' : 'none'}
-                    style={[styles.cardFace, { opacity: 1, transform: [{ rotateY: backRotation }] }]}
+                    style={[styles.cardFace,
+                    {
+                        opacity: 1,
+                        transform: [{ rotateY: backRotation }],
+                        borderRadius: borderRadius_cardFace,
+                        padding: padding_cardFace,
+                    }
+                    ]}
                 >
                     <TouchableWithoutFeedback onPress={() => editable ? setEditingBack(true) : props.onPress?.()}>
-                        <View style={styles.clickableArea}>
-                            <Text style={styles.sideLabel}>BACK</Text>
+                        <View style={[styles.clickableArea,
+                        {
+                            padding: padding_clickableArea,
+                        }
+                        ]}>
+                            <Text style={[styles.sideLabel, {
+                                    top: top_sideLabel,
+                                    left: left_sideLabel,
+                                    fontSize: fontSize_sideLabel,
+                                }
+                            ]}>BACK</Text>
                             {editingBack ? (
-                                <ScrollView style={styles.inputContainer} contentContainerStyle={styles.scrollContent}>
+                                <ScrollView
+                                    style={[
+                                        styles.inputContainer,
+                                        {
+                                            maxHeight: maxHeight_inputContainer,
+                                        }
+                                    ]}
+                                    contentContainerStyle={{
+                                        paddingBottom: paddingBottom_scrollContent,
+                                    }
+                                    }>
                                     <TextInput
                                         value={back}
                                         onChangeText={setBack}
@@ -121,7 +203,11 @@ const Card = forwardRef(function Card(
                                 </ScrollView>
                             ) : (
                                 <View style={styles.textWrapper}>
-                                    <Text style={styles.text}>{back}</Text>
+                                    <Text style={[styles.text,
+                                    {
+                                        fontSize: fontSize_text,
+                                    }
+                                    ]}>{back}</Text>
                                 </View>
                             )}
                         </View>
@@ -149,48 +235,32 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         backgroundColor: '#F5F5F5',
-        borderRadius: 8,
-        padding: 10,
     },
     text: {
         color: "#000000",
-        fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'left',
     },
     input: {
-        fontSize: 18,
         fontWeight: 'bold',
         color: '#000',
         backgroundColor: '#FFFFFF',
-        borderRadius: 5,
-        minWidth: 100,
-        minHeight: 190,
-        maxHeight: 100,
         textAlignVertical: 'top',
     },
     sideLabel: {
         position: 'absolute',
-        top: 10,
-        left: 10,
         color: '#888888',
-        fontSize: 18,
         fontWeight: 'bold',
         zIndex: 1,
     },
     inputContainer: {
-        maxHeight: 200,
         width: '100%',
-    },
-    scrollContent: {
-        paddingBottom: 10,
     },
     clickableArea: {
         flex: 1,
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 10,
     },
     textWrapper: {
         justifyContent: 'center',
