@@ -1,16 +1,5 @@
-// <<<<<<< HEAD
 import React, { useRef, useState } from "react";
-import {
-    View,
-    StyleSheet,
-    useWindowDimensions,
-    TouchableWithoutFeedback,
-    Keyboard,
-    StyleProp,
-    ViewStyle,
-    TouchableOpacity,
-    Image
-} from "react-native";
+import { View, StyleSheet, useWindowDimensions, TouchableWithoutFeedback, Keyboard, StyleProp, ViewStyle, TouchableOpacity, Image } from "react-native";
 import CustomButton from "./CustomButton";
 import Card from "./Card";
 

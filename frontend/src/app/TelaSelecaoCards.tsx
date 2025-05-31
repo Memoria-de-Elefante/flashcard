@@ -1,15 +1,5 @@
 import React, { useState } from 'react';
-import {
-    TouchableOpacity,
-    Text,
-    Image,
-    SafeAreaView,
-    View,
-    StyleSheet,
-    useWindowDimensions,
-    TextInput,
-    ScrollView
-} from "react-native";
+import { TouchableOpacity, Text, Image, SafeAreaView, View, StyleSheet, useWindowDimensions, TextInput, ScrollView } from "react-native";
 import CustomButton from "../components/CustomButton";
 import Flashcard from "../components/Flashcard";
 import { useRouter } from "expo-router";
@@ -19,39 +9,39 @@ const router = useRouter();
 export default function TelaSelecaoCards() {
     const [text, setText] = useState('Matéria');
     const [isEditing, setIsEditing] = useState(false);
-    const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+    const { width: windowWidth } = useWindowDimensions();
 
     const borderRadius_cardFace = windowWidth < 600 ? windowWidth * 0.02 : 10;
-    const width_flashcard = windowWidth < 600 ? windowWidth * 0.6 : 350;
-    const height_flashcard = windowWidth < 600 ? windowWidth * 0.6 : 350;
+    const width_flashcard = windowWidth < 600 ? windowWidth * 0.85 : 350;
+    const height_flashcard = windowWidth < 600 ? windowWidth * 1 : 350;
 
     // TopRightIcon responsividade
-    const paddingRight_topRightIcon = windowWidth < 600 ? windowWidth * 0.6 : 250;
-    const marginTop_topRightIcon = windowWidth < 600 ? windowWidth * 0.45 : 25;
+    const paddingRight_topRightIcon = windowWidth < 600 ? windowWidth * 0 : 250;
+    const marginTop_topRightIcon = windowWidth < 600 ? windowWidth * 0.1 : 25;
 
     // IconCompartilhar responsividade
-    const size_iconCompartilhar = windowWidth < 600 ? windowWidth * 0.15 : 30;
+    const size_iconCompartilhar = windowWidth < 600 ? windowWidth * 0.1 : 30;
 
     // IconGroup responsividade
-    const gap_iconGroup = windowWidth < 600 ? 10 : 200;
+    const gap_iconGroup = windowWidth < 600 ? 0 : 200;
 
     // Input responsividade
-    const height_input = windowWidth < 600 ? 40 : 40;
+    const height_input = windowWidth < 600 ? 5 : 40;
     const margin_input = windowWidth < 600 ? 10 : 20;
-    const borderWidth_input = 1;
+    const borderWidth_input = 10;
     const padding_input = windowWidth < 600 ? 10 : 15;
     const fontSize_input = windowWidth < 600 ? 18 : 25;
 
     // Texto responsividade
-    const fontSize_texto = windowWidth < 600 ? 22 : 30;
-    const marginVertical_texto = windowWidth < 600 ? 10 : 15;
+    const fontSize_texto = windowWidth < 600 ? 30 : 30;
+    const marginVertical_texto = windowWidth < 600 ? 20 : 15;
     const marginRight_texto = windowWidth < 600 ? 10 : 0;
 
     // Imagem responsividade
     const size_imagem = windowWidth < 600 ? 30 : 30;
 
     // Page padding horizontal
-    const paddingHorizontal_page = windowWidth < 600 ? 20 : 300;
+    const paddingHorizontal_page = windowWidth < 600 ? 30 : 300;
 
     return (
         <SafeAreaView style={[styles.container, { paddingHorizontal: paddingHorizontal_page }]}>
@@ -164,7 +154,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     topRightIcon: {
-        width: '100%',
+        width: '85%',
         alignItems: 'flex-end',
     },
     page: {
@@ -172,8 +162,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scrollView: {
-        flexGrow: 0,
-        width: '102%',
+        flexGrow: 1,
+        width: '100%', // arrumar por aqui
     },
     scrollContent: {
         flexGrow: 1,
