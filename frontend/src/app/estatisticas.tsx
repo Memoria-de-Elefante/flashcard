@@ -1,11 +1,7 @@
-// estatisticas.tsx
-
-
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { PieChart } from 'react-native-svg-charts';
 import { G, Text as SvgText } from 'react-native-svg';
-
 
 interface Props {
   acertos: number;
@@ -14,8 +10,6 @@ interface Props {
 
 const Estatisticas = ({ acertos, erros }: Props) => {
   const total = acertos + erros;
-  
-
 
   const data = [
     {
@@ -31,7 +25,6 @@ const Estatisticas = ({ acertos, erros }: Props) => {
       label: 'Erros',
     },
   ];
-
 
   const Labels = ({ slices }: any) => {
     return slices.map((slice: any, index: number) => {
@@ -70,7 +63,6 @@ const Estatisticas = ({ acertos, erros }: Props) => {
     );
   }
 
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Estatísticas</Text>
@@ -95,9 +87,7 @@ const Estatisticas = ({ acertos, erros }: Props) => {
   );
 };
 
-
 export default Estatisticas;
-
 
 const styles = StyleSheet.create({
   container: {
