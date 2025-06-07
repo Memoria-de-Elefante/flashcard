@@ -25,7 +25,7 @@ export default function TelaModoDesafio() {
         width={250}
         borderRadius={10}
         marginVertical={60}
-        onPress={() => console.log("Indo para Estatísticas")}
+        onPress={() => router.push("/estatisticas")}
       />
     </SafeAreaView>
     // width: width ?? screenWidth * 0.45,
