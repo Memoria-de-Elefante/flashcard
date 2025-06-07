@@ -27,7 +27,7 @@ const Index = () => {
   return (
     <View style={styles.container}>
       <Animated.Image
-        source={require("../../assets/images/TESTE.png")}
+        source={require("../../assets/images/mde-poliedro-mobile.png")}
         style={[styles.image, { opacity: fadeAnim }]}
         resizeMode="contain"
       />
