@@ -1,10 +1,31 @@
 import React, { useState } from 'react';
 import { Text, Image, SafeAreaView, StyleSheet, useWindowDimensions, TextInput } from "react-native";
 import CustomButton from "../components/CustomButton";
+import { Link, router } from 'expo-router';
+import SenhaButton from "../components/SenhaButton";
+import { cadastroUser} from '@/data/api';
+
+// const { width } = Dimensions.get('window');
 
 export default function TelaCadastro({ }) {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const [nome, setNome] = useState('');
+    const [mensagem, setMensagem] = useState('');
+
+    const handleCadastro = async () => {
+        setMensagem('');
+        try {
+            const userData = await cadastroUser({nome, email, senha});
+            if (userData) {
+                router.push('/TelaInicial');
+                console.log('Cadastro bem-sucedido!', userData);
+            }
+        } catch (error: any) {
+            setMensagem(error.message || 'Erro ao fazer cadastro');
+            console.error('Erro no cadastro: ', error);
+        }
+    }
 
     const { width: windowWidth } = useWindowDimensions();
 
@@ -54,6 +75,15 @@ export default function TelaCadastro({ }) {
                     marginTop: marginTop_texto,
                 }
             ]}>CADASTRO</Text>
+
+            <Text style={styles.label}>Nome</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Digite seu nome aqui"
+                placeholderTextColor="#7C7C7C"
+                value={nome}
+                onChangeText={setNome}
+            />
 
             <Text style={[
                 styles.label,
@@ -118,7 +148,7 @@ export default function TelaCadastro({ }) {
                 width={200}
                 height={60}
                 borderRadius={5}
-                onPress={() => alert("Fazer Cadastro")} 
+                onPress={handleCadastro}  
             />
 
         </SafeAreaView>

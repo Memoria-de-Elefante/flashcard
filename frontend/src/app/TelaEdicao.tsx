@@ -1,3 +1,4 @@
+import React, { useState} from 'react';
 import { Text, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import EdicaoButton from "../components/EdicaoButton";
