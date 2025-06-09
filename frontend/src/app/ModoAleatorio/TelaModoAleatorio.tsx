@@ -14,8 +14,40 @@ export default function TelaModoDificuldade() {
   const marginTop_texto = width < 600 ? 40 : 0;
   const marginBottom_texto = width < 600 ? 40 : 10;
 
+  // responsividae para listras
+  const stripeWidth = width * 2.2;
+  const stripeHeight = 150;
+  const leftOffset = -width * 0.7;
+
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{
+        position: "absolute",
+        width: stripeWidth,
+        height: stripeHeight,
+        transform: [{ rotate: "45deg" }],
+        left: leftOffset,
+        top: 0,
+        backgroundColor: "#faa526",
+      }} />
+      <View style={{
+        position: "absolute",
+        width: stripeWidth,
+        height: stripeHeight,
+        transform: [{ rotate: "45deg" }],
+        left: leftOffset,
+        top: stripeHeight * 1.2,
+        backgroundColor: "#ea2e57",
+      }} />
+      <View style={{
+        position: "absolute",
+        width: stripeWidth,
+        height: stripeHeight,
+        transform: [{ rotate: "45deg" }],
+        left: leftOffset,
+        top: stripeHeight * 2.4,
+        backgroundColor: "#37b1bf",
+      }} />
       <Text style={[
         styles.text, {
           fontSize: fontSize_texto,
@@ -28,7 +60,7 @@ export default function TelaModoDificuldade() {
       <View style={{
         flexGrow: 1,
         maxHeight: width < 600 ? height * 0.45 : height * 0.6,
-        width: width < 600 ? width * 0.8 : 600, 
+        width: width < 600 ? width * 0.8 : 600,
       }}>
 
         <ScrollView>
