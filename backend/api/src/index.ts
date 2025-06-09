@@ -16,8 +16,10 @@ app.use(cors({
     origin: [
         "http://localhost:8081",
         "http://127.0.0.1:8081",
+        "http://192.168.15.6:8081",
         "http://localhost:3000",
-        "http://127.0.0.1:3000"
+        "http://127.0.0.1:3000",
+        "http://192.168.15.6:3000"
     ],
     methods: [
         "GET",
@@ -73,7 +75,8 @@ app.post('/cadastro_usuario', async (req: Request, res: Response): Promise<void>
         console.log(5)
         // 2. Criar o novo usuário com a senha criptografada
         const createUser = await client.db.users.create({ ...newUser, senha: hashedPassword });
-        res.status(200).json({ message: 'Login bem-sucedido!', results: createUser});
+        const { senha: hashedPasswordSentBack, ...userCreatedWithoutPassword } = createUser;
+        res.status(200).json({ message: 'Cadastro bem-sucedido!', results: userCreatedWithoutPassword });
     } catch (error: any) {
         console.error("Erro ao fazer cadastro de usuário!", error.message);
         res.status(500).json({error: 'Erro ao fazer cadastro de usuário!'});

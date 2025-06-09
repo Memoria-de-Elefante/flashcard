@@ -3,7 +3,7 @@ import { Text, Image, SafeAreaView, StyleSheet, useWindowDimensions, TextInput }
 import CustomButton from "../components/CustomButton";
 import { Link, router } from 'expo-router';
 import SenhaButton from "../components/SenhaButton";
-import { cadastroUser} from '@/data/api';
+import { cadastroUser } from '@/data/api';
 
 // const { width } = Dimensions.get('window');
 
@@ -18,12 +18,13 @@ export default function TelaCadastro({ }) {
         try {
             const userData = await cadastroUser({nome, email, senha});
             if (userData) {
-                router.push('/TelaInicial');
                 console.log('Cadastro bem-sucedido!', userData);
+                router.push('/TelaLogin');
             }
         } catch (error: any) {
             setMensagem(error.message || 'Erro ao fazer cadastro');
             console.error('Erro no cadastro: ', error);
+            router.push('/TelaLogin');
         }
     }
 

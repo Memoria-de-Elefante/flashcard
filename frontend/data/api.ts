@@ -37,9 +37,14 @@ export interface User {
 
 export const cadastroUser = async (set:Partial<User>) => {
   try {
-    console.log('deus')
-    const response = await api.post('http://10.2.128.203:3000/cadastro_usuario', {nome: set.nome,  email: set.email, senha: set.senha });
-    console.log(response)
+    const response = await api.post('http://192.168.15.6:3000/cadastro_usuario', {nome: set.nome,  email: set.email, senha: set.senha });
+    console.log(response.data);
+
+    if (!response.data) {
+      console.error("response.data está indefinido. A API não retornou dados.");
+      throw new Error("Dados da API não encontrados.");
+    }
+
     const { user: { email, nome, xata_id }, token } = response.data;
     const userData = { user: { email, nome, xata_id}, token};
     await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
@@ -52,8 +57,7 @@ export const cadastroUser = async (set:Partial<User>) => {
 
 export const loginUser = async (set: Partial<User>) => {
   try {
-    console.log("teste")
-    const response = await api.post('http://10.2.128.203:3000/login_usuario', { email: set.email, senha: set.senha });
+    const response = await api.post('http://192.168.15.6:3000/login_usuario', { email: set.email, senha: set.senha });
     const { user: { email, nome, xata_id }, token } = response.data;
     const userData = { user: { email, nome, xata_id }, token };
     await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));

@@ -3,10 +3,30 @@ import { Text, Image, SafeAreaView, StyleSheet, useWindowDimensions, TextInput }
 import CustomButton from "../components/CustomButton";
 import { Link, router } from 'expo-router';
 import SenhaButton from "../components/SenhaButton";
+import { loginUser } from "@/data/api";
 
 export default function TelaLogin({ }) {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const [mensagem, setMensagem] = useState('');
+
+    const handleLogin = async () => {
+            console.log('running');
+            setMensagem(''); // Limpa mensagens anteriores
+            try {
+              console.log(email, senha);
+              const userData = await loginUser({ email, senha });
+              if (userData) {
+                // Navegue para outra tela
+                console.log('Login bem-sucedido!', userData);
+                router.push('/TelaInicial');
+              }
+            } catch (error: any) {
+              // Exiba a mensagem de erro para o usuário
+              setMensagem(error.message || 'Erro ao fazer login');
+              console.error('Erro no login:', error);
+            }
+        }
 
     const { width: windowWidth } = useWindowDimensions();
 
@@ -119,7 +139,7 @@ export default function TelaLogin({ }) {
 
             <CustomButton
                 title="Login"
-                onPress={() => alert("Fazer Login")}
+                onPress={handleLogin}
             />
 
             <Link href="/TelaCadastro">
