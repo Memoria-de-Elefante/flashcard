@@ -2,9 +2,11 @@ import React from "react";
 import { SafeAreaView, StyleSheet, Text } from "react-native";
 import CustomButton from "../components/CustomButton"; // Ajuste o caminho conforme necessário
 import { useRouter } from "expo-router";
+import { criarJson } from "../scripts/comandosJson"
 
 // Roteador do expo-router
 const router = useRouter();
+criarJson()
 
 export default function Index() {
   return (

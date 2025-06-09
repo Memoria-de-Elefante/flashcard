@@ -1,26 +1,27 @@
 import { transformFromAstAsync } from '@babel/core';
-import fs from 'fs';
-import path from 'path';
-const filePath = path.join('..', 'localFiles', 'cardsJson.json');
+import * as fileSystem from 'expo-file-system'
+import cardsJson from '../../localFiles/cardsJson.json'
+const filePath = fileSystem.documentDirectory + 'cards.json';
 
 // Códigos referentes a criação e adição de elementos ao Json
 // Este código é responsável por criar um cardsJson base limpo, caso haja a necessidade
-function criarJson() {
-    if (!fs.existsSync(filePath)) {
-        try {
-            fs.writeFileSync(filePath, JSON.stringify('{}', null, 2));
-        } catch (err) {
-            console.error(err);
-        }
+export async function criarJson() {
+    const info = await fileSystem.getInfoAsync(filePath) 
+    if (!info.exists) {
+        console.log('Arquivo não existe. Criando JSON inicial...')
+        await fileSystem.writeAsStringAsync(filePath, JSON.stringify(cardsJson));
+    }
+    else {
+        console.log('Arquivo já existe.')
     }
 }
 
 // Este código é responsável por adicionar novos elementos matérias no cardsJson
-function adicionarMateria(materia: string) {
+async function adicionarMateria(materia: string) {
     try {
-        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
-        data[materia] = {}
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
+        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath));
+        data[materia] = {};
+        await fileSystem.writeAsStringAsync(filePath, JSON.stringify('{}', null, 2));    
     } catch (err) {
         console.error(err)
     }
@@ -30,7 +31,7 @@ function adicionarMateria(materia: string) {
 // Ele é feito de tal maneira que só possível adicionar submatérias a uma matéria, e não a outra submatéria
 // function adicionarSubmateria(materia: string, submateria: string) {
 //     try {
-//         const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+//         const data = JSON.parse(fs.readFileSync(filePath))
 //         data[materia] = {[submateria]: {}}
 //         fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
 //     } catch (err) {
@@ -39,13 +40,13 @@ function adicionarMateria(materia: string) {
 // }
 
 // Este código é responsável por adicionar novos elementos flashcards no cardsJson
-function adicionarFlashcard(materia: string, pergunta: string, resposta: string, dificuldade: string, imagem: string) {
+async function adicionarFlashcard(materia: string, pergunta: string, resposta: string, dificuldade: string, imagem: string) {
     try {
-        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath))
         // if (submateria == '') {
         let tamanho = (Object.keys(data[materia])).length
         data[materia].push({id: tamanho + 1, pergunta: pergunta, resposta: resposta, dificuldade: dificuldade, imagem: imagem})
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
+        await fileSystem.writeAsStringAsync(filePath, JSON.stringify('{}', null, 2));
         // }
         // else {   
         //     let tamanho = Object.keys(data[materia][submateria]).length
@@ -65,9 +66,9 @@ type Card = {
     imagem: string;
 }
 
-function buscarFlashcard(materia: string, pergunta: string) {
+async function buscarFlashcard(materia: string, pergunta: string) {
     try {
-        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath))
         const rawCards = data[materia]
         if (!rawCards) {
             return undefined
@@ -85,9 +86,9 @@ function buscarFlashcard(materia: string, pergunta: string) {
     }
 }
 
-function deletarFlashcard(materia: string, pergunta: string) {
+async function deletarFlashcard(materia: string, pergunta: string) {
     try {
-        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath))
         const rawCards = data[materia]
         console.log(rawCards)
         if (!rawCards) {
@@ -103,16 +104,16 @@ function deletarFlashcard(materia: string, pergunta: string) {
         }
 
         data[materia] = cards
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
+        await fileSystem.writeAsStringAsync(filePath, JSON.stringify('{}', null, 2));
         console.log('deleção bem-sucedida')
     } catch (err) {
         console.error(err)
     }
 }
 
-export function buscarMaterias() {
+export async function buscarMaterias() {
     try {
-        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath))
         if (!data) {
             return undefined
         }
@@ -130,4 +131,3 @@ export function buscarMaterias() {
 
 // const card = buscarFlashcard('matemática')
 // console.log(card)
-console.log(buscarMaterias())

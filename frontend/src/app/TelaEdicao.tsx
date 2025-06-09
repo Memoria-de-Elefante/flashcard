@@ -2,53 +2,43 @@ import React, { useState} from 'react';
 import { Text, Image, SafeAreaView, StyleSheet, Dimensions, ScrollView, View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import EdicaoButton from "../components/EdicaoButton";
+import { buscarMaterias } from "../scripts/comandosJson"
 import { router } from "expo-router";
 
 const { width, height } = Dimensions.get('window');
 
 export default function edicao({}) {    
+    const [botoes, SetBotoes] = useState<JSX.Element[]>([])
+    const importMaterias = async () => {
+        const materias = await buscarMaterias()
+        
+        if (materias != undefined) {
+            const novosBotoes = materias.map((materia, index) => (
+                <EdicaoButton
+                    key={index}
+                    title={materia || `Matéria ${index + 1}`}
+                    onPress={() => router.push('/TelaSelecaoCards')}
+                    onDelete={() => alert(`Deletar deck: ${materia}`)}
+                />
+            ))
+            SetBotoes(novosBotoes)
+        }
+    }
+
+    importMaterias()
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.text}>SUA COLEÇÃO DE PALAVRAS</Text>
 
             <View style={styles.deckBox}>
                 <ScrollView>
-                    <EdicaoButton 
-                        title="Matemática" 
-                        onPress={() => router.push('/TelaSelecaoCards')}  
-                        onDelete={() => alert("Deletar deck")}
-                    />
-                    <EdicaoButton 
-                        title="Português" 
-                        onPress={() => router.push('/TelaSelecaoCards')}  
-                        onDelete={() => alert("Deletar deck")}
-                    />
-                    <EdicaoButton 
-                        title="História" 
-                        onPress={() => router.push('/TelaSelecaoCards')}  
-                        onDelete={() => alert("Deletar deck")}
-                    />
-                    <EdicaoButton 
-                        title="Biologia" 
-                        onPress={() => router.push('/TelaSelecaoCards')}  
-                        onDelete={() => alert("Deletar deck")}
-                    />
-                    <EdicaoButton 
-                        title="Química" 
-                    onPress={() => router.push('/TelaSelecaoCards')}  
-                        onDelete={() => alert("Deletar deck")}
-                    />
-                    <EdicaoButton 
-                        title="Física" 
-                onPress={() => router.push('/TelaSelecaoCards')}  
-                        onDelete={() => alert("Deletar deck")}
-                    />
+                    {botoes}
                 </ScrollView>
             </View>
 
             <CustomButton
                 title="+"
-                onPress={() => alert("add")}
+                onPress={() => {console.log("add")}}
                 borderRadius={5}
                 marginTop={50}
                 textStyle={{ fontSize: 30 }}
