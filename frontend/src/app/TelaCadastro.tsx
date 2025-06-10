@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, Image, SafeAreaView, StyleSheet, useWindowDimensions, TextInput } from "react-native";
+import { Text, Image, SafeAreaView, StyleSheet, useWindowDimensions, TextInput, View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import { Link, router } from 'expo-router';
 import SenhaButton from "../components/SenhaButton";
@@ -16,7 +16,7 @@ export default function TelaCadastro({ }) {
     const handleCadastro = async () => {
         setMensagem('');
         try {
-            const userData = await cadastroUser({nome, email, senha});
+            const userData = await cadastroUser({ nome, email, senha });
             if (userData) {
                 console.log('Cadastro bem-sucedido!', userData);
                 router.push('/TelaLogin');
@@ -55,8 +55,40 @@ export default function TelaCadastro({ }) {
     const paddingHorizontal_input = windowWidth < 600 ? windowWidth * 0.05 : 25;
     const paddingLeft_input = windowWidth < 600 ? windowWidth * 0.03 : 25;
 
+    // responsividae para listras
+    const stripeWidth = windowWidth * 2.2;
+    const stripeHeight = 150;
+    const leftOffset = -windowWidth * 0.7;
+
     return (
         <SafeAreaView style={styles.container}>
+            <View style={{
+                position: "absolute",
+                width: stripeWidth,
+                height: stripeHeight,
+                transform: [{ rotate: "45deg" }],
+                left: leftOffset,
+                top: 0,
+                backgroundColor: "#faa526",
+            }} />
+            <View style={{
+                position: "absolute",
+                width: stripeWidth,
+                height: stripeHeight,
+                transform: [{ rotate: "45deg" }],
+                left: leftOffset,
+                top: stripeHeight * 1.2,
+                backgroundColor: "#ea2e57",
+            }} />
+            <View style={{
+                position: "absolute",
+                width: stripeWidth,
+                height: stripeHeight,
+                transform: [{ rotate: "45deg" }],
+                left: leftOffset,
+                top: stripeHeight * 2.4,
+                backgroundColor: "#37b1bf",
+            }} />
             <Image
                 source={require('../../assets/images/Poliedro.png')}
                 style={[
@@ -77,9 +109,29 @@ export default function TelaCadastro({ }) {
                 }
             ]}>CADASTRO</Text>
 
-            <Text style={styles.label}>Nome</Text>
+            <Text style={[
+                styles.label,
+                {
+                    fontSize: fontSize_textoLabel,
+                    marginTop: marginTop_textoLabel,
+                    padding: padding_textoLabel,
+                    paddingLeft: paddingLeft_textoLabel,
+                }
+            ]}>Nome</Text>
             <TextInput
-                style={styles.input}
+                style={[
+                    styles.input,
+                    {
+                        width: width_input,
+                        height: height_input,
+                        borderRadius: borderRadius_input,
+                        fontSize: fontSize_input,
+                        marginTop: marginTop_input,
+                        padding: paddingHorizontal_input,
+                        paddingLeft: paddingLeft_input,
+                        zIndex: 1,
+                    }
+                ]}
                 placeholder="Digite seu nome aqui"
                 placeholderTextColor="#7C7C7C"
                 value={nome}
@@ -107,6 +159,7 @@ export default function TelaCadastro({ }) {
                         marginTop: marginTop_input,
                         padding: paddingHorizontal_input,
                         paddingLeft: paddingLeft_input,
+                        zIndex: 1,
                     }
                 ]}
                 placeholder="Digite seu e-mail aqui"
@@ -136,6 +189,7 @@ export default function TelaCadastro({ }) {
                         marginTop: marginTop_input,
                         padding: paddingHorizontal_input,
                         paddingLeft: paddingLeft_input,
+                        zIndex: 1,
                     }
                 ]}
                 placeholder="Digite sua senha aqui"
@@ -144,12 +198,12 @@ export default function TelaCadastro({ }) {
                 onChangeText={setSenha}
             />
 
-            <CustomButton 
-                title="Realizar Cadastro" 
+            <CustomButton
+                title="Realizar Cadastro"
                 width={200}
                 height={60}
                 borderRadius={5}
-                onPress={handleCadastro}  
+                onPress={handleCadastro}
             />
 
         </SafeAreaView>

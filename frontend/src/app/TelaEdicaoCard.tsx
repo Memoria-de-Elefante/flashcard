@@ -1,22 +1,53 @@
 import React, { useRef, useState } from "react";
-import { SafeAreaView, StyleSheet, Dimensions, TouchableOpacity, Text } from "react-native";
+import { SafeAreaView, StyleSheet, Dimensions, TouchableOpacity, Text, useWindowDimensions, View } from "react-native";
 import Flashcard from "../components/Flashcard";
 import CustomButton from "../components/CustomButton";
 
-const { width, height } = Dimensions.get('window');
-
-
 export default function edicao() {
+
+    const { width, height } = Dimensions.get('window');
+
+    const stripeWidth = width * 2.4;
+    const stripeHeight = 150;
+    const leftOffset = -width * 0.7;
+
     const cardRef = useRef<{ flipCard: () => void }>(null);
     const [isFlipped, setIsFlipped] = useState(false);
     const handleFlip = () => {
         cardRef.current?.flipCard();
         setIsFlipped(prev => !prev);
     };
+    // responsividae para listras
     return (
         <SafeAreaView style={styles.container}>
+            <View style={{
+                position: "absolute",
+                width: stripeWidth,
+                height: stripeHeight,
+                transform: [{ rotate: "45deg" }],
+                left: leftOffset,
+                top: 0,
+                backgroundColor: "#faa526",
+            }} />
+            <View style={{
+                position: "absolute",
+                width: stripeWidth,
+                height: stripeHeight,
+                transform: [{ rotate: "45deg" }],
+                left: leftOffset,
+                top: stripeHeight * 1.2,
+                backgroundColor: "#ea2e57",
+            }} />
+            <View style={{
+                position: "absolute",
+                width: stripeWidth,
+                height: stripeHeight,
+                transform: [{ rotate: "45deg" }],
+                left: leftOffset,
+                top: stripeHeight * 2.4,
+                backgroundColor: "#37b1bf",
+            }} />
             <Flashcard
-                ref={cardRef}
                 frontText="Pergunta de Edição"
                 backText="Resposta de Edição"
                 width={300}
