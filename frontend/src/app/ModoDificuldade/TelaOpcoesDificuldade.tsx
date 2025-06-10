@@ -34,7 +34,7 @@ export default function TelaOpcoesDificuldade() {
         title="Estudar" 
         marginVertical={42}
         marginTop={115}
-        onPress={() => router.push('./TelaModoDificuldade')} 
+        onPress={() => router.navigate('./TelaModoDificuldade')} 
       />
     </SafeAreaView>
   );

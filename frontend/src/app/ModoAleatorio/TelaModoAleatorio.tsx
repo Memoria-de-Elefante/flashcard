@@ -59,7 +59,7 @@ export default function TelaModoDificuldade() {
         title="Estudar" 
         marginVertical={42}
         marginTop={60}
-        onPress={() => router.push('./FlashcardAleatorio')} 
+        onPress={() => router.navigate('./FlashcardAleatorio')} 
       />
     </SafeAreaView>
   );

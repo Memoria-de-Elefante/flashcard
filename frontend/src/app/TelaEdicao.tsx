@@ -1,44 +1,78 @@
-import React, { useState} from 'react';
-import { Text, Image, SafeAreaView, StyleSheet, Dimensions, ScrollView, View } from "react-native";
+import React, { useEffect, useState} from 'react';
+import { Text, Alert, SafeAreaView, StyleSheet, Dimensions, ScrollView, View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import EdicaoButton from "../components/EdicaoButton";
-import { buscarMaterias } from "../scripts/comandosJson"
+import { buscarMaterias, deletarMateria, adicionarMateria } from "../scripts/comandosJson"
 import { router } from "expo-router";
+import { useIsFocused } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
 export default function edicao({}) {    
-    const [botoes, SetBotoes] = useState<JSX.Element[]>([])
+    const [materias, setMaterias] = useState<string[]>([])
+    const [contador, setContador] = useState(1)
+
+    const addMat = async () => {
+        const nomeMateria = `matéria ${contador}`
+        await adicionarMateria(nomeMateria)
+        setMaterias([...materias, nomeMateria])
+        setContador(contador + 1)
+    }
+
+    const delMat = async (title: string) => {
+        Alert.alert(
+            'Confirmação',
+            `Tem certeza que deseja deletar "${title}"?`,
+            [
+            {
+                text: 'Cancelar',
+                style: 'cancel',
+            },
+            {
+                text: 'Deletar',
+                style: 'destructive',
+                onPress: () => {
+                    deletarMateria(title)
+                    setMaterias(materias.filter(materia => materia !== title))
+                },
+            },
+            ],
+            { cancelable: true }
+        )
+        setContador(contador - 1)
+    }
+
     const importMaterias = async () => {
         const materias = await buscarMaterias()
         
         if (materias != undefined) {
-            const novosBotoes = materias.map((materia, index) => (
-                <EdicaoButton
-                    key={index}
-                    title={materia || `Matéria ${index + 1}`}
-                    onPress={() => router.push('/TelaSelecaoCards')}
-                    onDelete={() => alert(`Deletar deck: ${materia}`)}
-                />
-            ))
-            SetBotoes(novosBotoes)
+            setMaterias(materias)
+            setContador(materias.length + 1)
         }
     }
-
-    importMaterias()
+    
+    const isFocused = useIsFocused()
+    useEffect(() => {if (isFocused) {importMaterias()}}, [isFocused])
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.text}>SUA COLEÇÃO DE PALAVRAS</Text>
 
             <View style={styles.deckBox}>
                 <ScrollView>
-                    {botoes}
+                    {materias.map(materia => (
+                        <EdicaoButton
+                            key={materia}
+                            title={materia}
+                            onPress={() => {router.navigate({pathname: '/TelaSelecaoCards', params: {materia}})}}
+                            onDelete={() => {delMat(materia)}}
+                        />
+                    ))}
                 </ScrollView>
             </View>
 
             <CustomButton
                 title="+"
-                onPress={() => {console.log("add")}}
+                onPress={() => addMat()}
                 borderRadius={5}
                 marginTop={50}
                 textStyle={{ fontSize: 30 }}

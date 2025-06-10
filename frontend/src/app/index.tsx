@@ -2,7 +2,7 @@ import React from "react";
 import { SafeAreaView, StyleSheet, Text } from "react-native";
 import CustomButton from "../components/CustomButton"; // Ajuste o caminho conforme necessário
 import { useRouter } from "expo-router";
-import { criarJson } from "../scripts/comandosJson"
+import { criarJson, delJson } from "../scripts/comandosJson"
 
 // Roteador do expo-router
 const router = useRouter();
@@ -13,7 +13,7 @@ export default function Index() {
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Tela Inicial Temporária</Text>
       <CustomButton title="Ir para login" 
-        onPress={() => router.push("/TelaLogin")} // Direciona para a nova tela
+        onPress={() => router.navigate("/TelaLogin")} // Direciona para a nova tela
         marginVertical={42}
       />
     </SafeAreaView>

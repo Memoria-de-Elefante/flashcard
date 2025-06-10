@@ -1,17 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, Text, Image, SafeAreaView, View, StyleSheet, Dimensions, TextInput } from "react-native";
 import CustomButton from "../components/CustomButton";
 import Flashcard from "../components/Flashcard";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import PagerView from 'react-native-pager-view';
+import { editarMateria, buscarTodosFlashcards, adicionarFlashcard, Card, print } from "../scripts/comandosJson"
+import { useIsFocused } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 const router = useRouter();
 
 export default function TelaSelecaoCards({ }) {
-    const [text, setText] = useState('Matéria');
-    const [isEditing, setIsEditing] = useState(false);
+    const materia = useLocalSearchParams<{materia: string}>().materia
+    const [text, setText] = useState(materia);
+    const [isEditing, setIsEditing] = useState(false)
+    const [cards, setCards] = useState<Card[]>([])
+    const [contador, setContador] = useState(1)
 
+    const addCard = async () => {
+        await adicionarFlashcard(materia, "Pergunta", "Resposta", "médio", "")
+        setCards([...cards, {id: contador, pergunta:"Pergunta", resposta:"Resposta", dificuldade:"médio", imagem:""}])
+        setContador(contador + 1)
+    }
+
+    const importCards = async () => {
+        const flashcards = await buscarTodosFlashcards(materia)
+        if (flashcards != undefined) {
+            setCards(flashcards)
+            setContador(flashcards.length + 1)
+        }
+    }
+
+    const isFocused = useIsFocused()
+        useEffect(() => {if (isFocused) {importCards()}}, [isFocused])
     return (
         <SafeAreaView style={styles.container}>
             <SafeAreaView style={styles.topRightIcon}>
@@ -24,8 +45,11 @@ export default function TelaSelecaoCards({ }) {
                     <TextInput
                         style={styles.input}
                         value={text}
-                        onChangeText={setText}
-                        onBlur={() => setIsEditing(false)} // Fecha o input ao perder o foco
+                        onChangeText={(novoTexto) => setText(novoTexto)}
+                        onBlur={() => {
+                            editarMateria(materia, text)
+                            setIsEditing(false)
+                        }} // Fecha o input ao perder o foco
                         autoFocus
                     />
                 ) : (
@@ -38,16 +62,16 @@ export default function TelaSelecaoCards({ }) {
             </SafeAreaView>
 
             <PagerView style={styles.pagerView} initialPage={0}>
-                {[1, 2, 3, 4].map((num) => (
-                    <View style={styles.page} key={num.toString()}>
+                {cards.map(card => (
+                    <View style={styles.page} key={card.id}>
                         <Flashcard
-                            frontText="Pergunta Aleatória"
-                            backText="Resposta"
+                            frontText={card.pergunta}
+                            backText={card.resposta}
                             width={width * 0.8}
                             height={400}
                             borderRadius={10}
                             editable={false}
-                            onPress={() => router.push('/TelaEdicaoCard')}
+                            onPress={() => router.navigate({pathname: '/TelaEdicaoCard', params: {id: Number(card.id), materia: materia}})}
                         />
                     </View>
                 ))}
@@ -55,7 +79,7 @@ export default function TelaSelecaoCards({ }) {
 
             <CustomButton
                 title="+"
-                onPress={() => alert("Criação de deck")}
+                onPress={() => addCard()}
                 borderRadius={5}
                 marginTop={50}
                 textStyle={{ fontSize: 30 }}

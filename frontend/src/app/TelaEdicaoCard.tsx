@@ -1,24 +1,44 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView, StyleSheet, Dimensions, TouchableOpacity, Text } from "react-native";
 import Flashcard from "../components/Flashcard";
 import CustomButton from "../components/CustomButton";
+import { buscarFlashcard, editarFlashcard } from "../scripts/comandosJson";
+import { useLocalSearchParams } from "expo-router";
 
 const { width, height } = Dimensions.get('window');
 
 
 export default function edicao() {
+    const id = useLocalSearchParams<{id: string}>().id
+    const materia = useLocalSearchParams<{materia: string}>().materia
     const cardRef = useRef<{ flipCard: () => void }>(null);
     const [isFlipped, setIsFlipped] = useState(false);
     const handleFlip = () => {
         cardRef.current?.flipCard();
         setIsFlipped(prev => !prev);
     };
+    const [pergunta, setPergunta] = useState("a")
+    const [resposta, setResposta] = useState("a")
+
+    const importCard = async () => {
+        const card = await buscarFlashcard(materia, id)
+        if (card != undefined) {
+            setPergunta(card.pergunta)
+            setResposta(card.resposta)
+        }
+    }
+    
+    const saveMudancas = async () => {
+        await editarFlashcard(materia, Number(id), pergunta, resposta, "fácil", "")
+    }
+
+    useEffect(() => {importCard(); console.log(pergunta, resposta)}, [])
     return (
         <SafeAreaView style={styles.container}>
             <Flashcard
                 ref={cardRef}
-                frontText="Pergunta de Edição"
-                backText="Resposta de Edição"
+                frontText={pergunta}
+                backText={resposta}
                 width={300}
                 height={400}
                 borderRadius={10}
@@ -28,7 +48,7 @@ export default function edicao() {
             />
             <CustomButton
                 title="Salvar"
-                onPress={() => alert("Salvando o card")}
+                onPress={() => saveMudancas()}
                 width={200}
                 height={60}
                 borderRadius={12}

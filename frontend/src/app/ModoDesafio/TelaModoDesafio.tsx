@@ -18,7 +18,7 @@ export default function TelaModoDesafio() {
         width={250}
         borderRadius={10}
         marginVertical={60}
-        onPress={() => router.push('./FlashcardDesafio')}
+        onPress={() => router.navigate('./FlashcardDesafio')}
       />
       <CustomButton
         title="Ver Estatísticas"

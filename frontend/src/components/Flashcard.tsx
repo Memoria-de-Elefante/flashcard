@@ -22,6 +22,7 @@ type Props = {
 export default function Flashcard({ frontText, backText, width, height, borderRadius, flashcardType, showFlipButton, onPress, editable, style }: Props) {
     const cardRef = useRef<{ flipCard: () => void }>(null);
     const [isFlipped, setIsFlipped] = useState(false); // Estado para controlar se o cartão foi virado
+    const [dificuldade, setDificuldade] = useState("médio")
 
     const renderButtons = () => {
         if (!flashcardType) return null;
@@ -37,17 +38,17 @@ export default function Flashcard({ frontText, backText, width, height, borderRa
                             <Image source={require('../../assets/images/IconDeletar.png')} style={styles.image} />
                         </TouchableOpacity>
                     </View><View style={styles.buttonRowAleatorio}>
-                            <CustomButton title="Fácil" onPress={() => console.log("Fácil")} width={80} height={45} borderRadius={10} />
-                            <CustomButton title="Médio" onPress={() => console.log("Médio")} width={80} height={45} borderRadius={10} />
-                            <CustomButton title="Difícil" onPress={() => console.log("Difícil")} width={80} height={45} borderRadius={10} />
+                            <CustomButton title="Fácil" onPress={() => setDificuldade("fácil")} width={80} height={45} borderRadius={10} />
+                            <CustomButton title="Médio" onPress={() => setDificuldade("médio")} width={80} height={45} borderRadius={10} />
+                            <CustomButton title="Difícil" onPress={() => setDificuldade("difícil")} width={80} height={45} borderRadius={10} />
                         </View></>
                 );
             case "aleatorio":
                 if(isFlipped) return (
                     <View style={styles.buttonRowAleatorio}>
-                        <CustomButton title="Fácil" onPress={() => console.log("Fácil")} width={80} height={45} borderRadius={10} />
-                        <CustomButton title="Médio" onPress={() => console.log("Médio")} width={80} height={45} borderRadius={10} />
-                        <CustomButton title="Difícil" onPress={() => console.log("Difícil")} width={80} height={45} borderRadius={10} />
+                        <CustomButton title="Fácil" onPress={() => setDificuldade("fácil")} width={80} height={45} borderRadius={10} />
+                        <CustomButton title="Médio" onPress={() => setDificuldade("médio")} width={80} height={45} borderRadius={10} />
+                        <CustomButton title="Difícil" onPress={() => setDificuldade("difícil")} width={80} height={45} borderRadius={10} />
                     </View>
                 );
             case "dificuldade":
