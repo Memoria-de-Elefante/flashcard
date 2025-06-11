@@ -1,16 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
-import { SafeAreaView, StyleSheet, Dimensions, TouchableOpacity, Text, Alert } from "react-native";
+import { SafeAreaView, StyleSheet, useWindowDimensions, View, Alert, TouchableOpacity, Text } from "react-native";
 import Flashcard from "../components/Flashcard";
 import CustomButton from "../components/CustomButton";
-import { buscarFlashcard, deletarFlashcard, editarFlashcard } from "../scripts/comandosJson";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { deletarFlashcard, editarFlashcard, buscarFlashcard } from "../scripts/comandosJson";
 
-const { width, height } = Dimensions.get('window');
-const router = useRouter();
+const router = useRouter()
 
 export default function edicao() {
+    const { width, height } = useWindowDimensions();
+    const stripeWidth = width * 2.4;
+    const stripeHeight = 150;
+    const leftOffset = -width * 0.7;
+
     const id = useLocalSearchParams<{id: string}>().id
     const materia = useLocalSearchParams<{materia: string}>().materia
+    
     const cardRef = useRef<{ flipCard: () => void }>(null);
     const [isFlipped, setIsFlipped] = useState(false);
     const handleFlip = () => {
@@ -59,6 +64,33 @@ export default function edicao() {
     useEffect(() => {importCard(); console.log(pergunta, resposta)}, [])
     return (
         <SafeAreaView style={styles.container}>
+            <View style={{
+                position: "absolute",
+                width: stripeWidth,
+                height: stripeHeight,
+                transform: [{ rotate: "45deg" }],
+                left: leftOffset,
+                top: 0,
+                backgroundColor: "#faa526",
+            }} />
+            <View style={{
+                position: "absolute",
+                width: stripeWidth,
+                height: stripeHeight,
+                transform: [{ rotate: "45deg" }],
+                left: leftOffset,
+                top: stripeHeight * 1.2,
+                backgroundColor: "#ea2e57",
+            }} />
+            <View style={{
+                position: "absolute",
+                width: stripeWidth,
+                height: stripeHeight,
+                transform: [{ rotate: "45deg" }],
+                left: leftOffset,
+                top: stripeHeight * 2.4,
+                backgroundColor: "#37b1bf",
+            }} />
             <Flashcard
                 ref={cardRef}
                 frontText={pergunta}

@@ -1,10 +1,7 @@
-import React, { useRef, useState, forwardRef, useImperativeHandle } from "react";
-import { View, StyleSheet, Dimensions, TouchableWithoutFeedback, Keyboard, StyleProp, ViewStyle, TouchableOpacity, Image } from "react-native";
+import React, { useRef, useState } from "react";
+import { View, StyleSheet, useWindowDimensions, TouchableWithoutFeedback, Keyboard, StyleProp, ViewStyle, TouchableOpacity, Image } from "react-native";
 import CustomButton from "./CustomButton";
 import Card from "./Card";
-
-const { width } = Dimensions.get('window');
-
 
 type Props = {
     frontText: string;
@@ -24,14 +21,52 @@ type Props = {
     style?: StyleProp<ViewStyle>;
 };
 
-export default function Flashcard({ frontText, backText, width, height, borderRadius, flashcardType, showFlipButton, onPress, onDelete, editable, style, onChangeFrontText, onChangeBackText, onChangeDificuldade, onChangeAcerto }: Props) {
+export default function Flashcard({ 
+    frontText, 
+    backText, 
+    width, 
+    height, 
+    borderRadius, 
+    flashcardType, 
+    showFlipButton, 
+    onPress, 
+    onDelete, 
+    editable, 
+    style, 
+    onChangeFrontText, 
+    onChangeBackText, 
+    onChangeDificuldade, 
+    onChangeAcerto 
+}: Props) {
     const cardRef = useRef<{ flipCard: () => void }>(null);
-    const [isFlipped, setIsFlipped] = useState(false); // Estado para controlar se o cartão foi virado
+    const [isFlipped, setIsFlipped] = useState(false);
+
+    const { width: windowWidth } = useWindowDimensions();
+
+    // responsividade para o buttonRowAleatorio 
+    const marginBottom_buttonRowAleatorio = windowWidth < 600 ? windowWidth * -0.1 : -60;
+    const marginTop_buttonRowAleatorio = windowWidth < 600 ? windowWidth * -0.04 : -25;
+    const marginLeft_buttonRowAleatorio = windowWidth < 600 ? 0 : 0;
+    const marginRight_buttonRowAleatorio = windowWidth < 600 ? 40 : 0;
+
+    // responsividade para o buttonRow
+    const marginBottom_buttonRow = windowWidth < 600 ? windowWidth * -0.1 : -60;
+    const marginTop_buttonRow = windowWidth < 600 ? windowWidth * -0.04 : -25;
+    const marginLeft_buttonRow = windowWidth < 600 ? 0 : 0;
+    const marginRight_buttonRow = windowWidth < 600 ? 70 : 0;
+    
     const [dificuldade, setDificuldade] = useState("médio")
     const [acerto, setAcerto] = useState(false)
 
     const renderButtons = () => {
         if (!flashcardType) return null;
+
+        const commonStyle = {
+            marginTop: flashcardType === "aleatorio" ? marginTop_buttonRowAleatorio : marginTop_buttonRow,
+            marginBottom: flashcardType === "aleatorio" ? marginBottom_buttonRowAleatorio : marginBottom_buttonRow,
+            marginLeft: flashcardType === "aleatorio" ? marginLeft_buttonRowAleatorio : marginLeft_buttonRow,
+            marginRight: flashcardType === "aleatorio" ? marginRight_buttonRowAleatorio : marginRight_buttonRow,
+        };
 
         switch (flashcardType) {
             case "edicao":
@@ -51,7 +86,7 @@ export default function Flashcard({ frontText, backText, width, height, borderRa
                 );
             case "aleatorio":
                 if(isFlipped) return (
-                    <View style={styles.buttonRowAleatorio}>
+                    <View style={[styles.buttonRowAleatorio, commonStyle]}>
                         <CustomButton title="Fácil" onPress={() => handleSetDificuldade("fácil")} width={80} height={45} borderRadius={10} />
                         <CustomButton title="Médio" onPress={() => handleSetDificuldade("médio")} width={80} height={45} borderRadius={10} />
                         <CustomButton title="Difícil" onPress={() => handleSetDificuldade("difícil")} width={80} height={45} borderRadius={10} />
@@ -60,8 +95,8 @@ export default function Flashcard({ frontText, backText, width, height, borderRa
             case "dificuldade":
             case "desafio":
                 if(isFlipped) return (
-                    <View style={styles.buttonRow}>
-                        <CustomButton title="Acertei" onPress={() => handleSetAcerto(true)} width={90} height={45} borderRadius={10} />
+                    <View style={[styles.buttonRow, commonStyle]}>
+                        CustomButton title="Acertei" onPress={() => handleSetAcerto(true)} width={90} height={45} borderRadius={10} />
                         <CustomButton title="Errei" onPress={() => handleSetAcerto(false)} width={90} height={45} borderRadius={10} />
                     </View>
                 );
@@ -99,17 +134,21 @@ export default function Flashcard({ frontText, backText, width, height, borderRa
                     onPress={onPress}
                     editable={editable}
                 />
-                {/* Renderiza os botões de acordo com o tipo de flashcard, apenas se o cartão estiver virado */}
+
+                {/* Botões de feedback */}
                 {renderButtons()}
+
+                {/* Botão Flip sempre por último */}
                 {showFlipButton && (
-                    <CustomButton
-                        title="Flip"
-                        onPress={handleFlip}
-                        width={250}
-                        height={50}
-                        borderRadius={25}
-                        marginVertical={52}
-                    />
+                    <View style={styles.flipButtonWrapper}>
+                        <CustomButton
+                            title="Flip"
+                            onPress={handleFlip}
+                            width={250}
+                            height={50}
+                            borderRadius={25}
+                        />
+                    </View>
                 )}
             </View>
         </TouchableWithoutFeedback>
@@ -119,9 +158,8 @@ export default function Flashcard({ frontText, backText, width, height, borderRa
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#000000",
-        justifyContent: 'flex-start',
-        alignItems: 'center',
+        justifyContent: "flex-start",
+        alignItems: "center",
         paddingTop: 15,
     },
     buttonRowAleatorio: {
@@ -134,13 +172,12 @@ const styles = StyleSheet.create({
         marginRight: 15,
     },
     buttonRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        width: '100%',
-        marginBottom: -15,
-        marginTop: 5,
-        marginLeft: -60,
-        marginRight: 15,
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        width: "100%",
+    },
+    flipButtonWrapper: {
+        marginTop: 20,
     },
     iconRow: {
         position: 'absolute',
