@@ -1,20 +1,68 @@
 import React, { useState } from "react";
-import { Text, SafeAreaView, StyleSheet, Dimensions, ScrollView, View } from "react-native";
+import { Text, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View } from "react-native";
 import CustomButton from "../../components/CustomButton";
 import OptionButton from "../../components/OptionButton";
 import { router } from "expo-router";
 
-const { width, height } = Dimensions.get('window');
-
 export default function TelaModoDificuldade() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
+  const { width, height } = useWindowDimensions();
+
+  // Responsividade para o texto
+  const fontSize_texto = width < 600 ? width * 0.06 : 30;
+  const marginTop_texto = width < 600 ? 40 : 0;
+  const marginBottom_texto = width < 600 ? 40 : 10;
+
+  // responsividae para listras
+  const stripeWidth = width * 2.2;
+  const stripeHeight = 150;
+  const leftOffset = -width * 0.7;
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>Selecione o deck que você deseja estudar</Text>
+      <View style={{
+        position: "absolute",
+        width: stripeWidth,
+        height: stripeHeight,
+        transform: [{ rotate: "45deg" }],
+        left: leftOffset,
+        top: 0,
+        backgroundColor: "#faa526",
+      }} />
+      <View style={{
+        position: "absolute",
+        width: stripeWidth,
+        height: stripeHeight,
+        transform: [{ rotate: "45deg" }],
+        left: leftOffset,
+        top: stripeHeight * 1.2,
+        backgroundColor: "#ea2e57",
+      }} />
+      <View style={{
+        position: "absolute",
+        width: stripeWidth,
+        height: stripeHeight,
+        transform: [{ rotate: "45deg" }],
+        left: leftOffset,
+        top: stripeHeight * 2.4,
+        backgroundColor: "#37b1bf",
+      }} />
+      <Text style={[
+        styles.text, {
+          fontSize: fontSize_texto,
+          marginTop: marginTop_texto,
+          marginBottom: marginBottom_texto,
+        }
+      ]}>Selecione o deck que você deseja estudar</Text>
 
       {/* Caixa invisível para scrollar os decks */}
-      <View style={styles.deckBox}>
+      <View style={{
+        flexGrow: 1,
+        maxHeight: width < 600 ? height * 0.45 : height * 0.6,
+        width: width < 600 ? width * 0.8 : 600,
+      }}>
+
         <ScrollView>
           <OptionButton
             label="Matemática"
@@ -55,11 +103,11 @@ export default function TelaModoDificuldade() {
         </ScrollView>
       </View>
 
-      <CustomButton 
-        title="Estudar" 
+      <CustomButton
+        title="Estudar"
         marginVertical={42}
         marginTop={60}
-        onPress={() => router.push('./FlashcardAleatorio')} 
+        onPress={() => router.push('./FlashcardAleatorio')}
       />
     </SafeAreaView>
   );
@@ -75,15 +123,10 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#FFFFFF",
-    fontSize: width * 0.065,
     fontWeight: "bold",
-    marginTop: width * 0.15,
-    marginBottom: width * 0.05,
     textAlign: "center",
   },
   deckBox: {
-    height: height * 0.45, // altura máxima da "caixa invisível"
     width: "100%",
-    paddingHorizontal: width * 0.1,
   },
 });
