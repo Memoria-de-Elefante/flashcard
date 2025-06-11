@@ -13,7 +13,7 @@ export default function OptionButton({ label, value, isSelected, onPress }: Opti
   const { width: windowWidth } = useWindowDimensions();
 
   // responsividade para o button 
-  const padding_button = windowWidth < 600 ? windowWidth * 0.05 : 40;
+  const padding_button = windowWidth < 600 ? windowWidth * 0.04 : 40;
   const marginVertical_button = windowWidth < 600 ? windowWidth * 0.03 : 30;
   const borderRadius_button = windowWidth < 600 ? windowWidth * 0.2 : 5;
   const width_button = windowWidth < 600 ? windowWidth * 0.77 : 550;

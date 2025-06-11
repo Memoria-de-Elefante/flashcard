@@ -3,6 +3,7 @@ import { TouchableOpacity, Text, Image, SafeAreaView, View, StyleSheet, useWindo
 import CustomButton from "../components/CustomButton";
 import Flashcard from "../components/Flashcard";
 import { useRouter } from "expo-router";
+import ListrasDeFundo from '../components/ListrasDeFundo';
 
 const router = useRouter();
 
@@ -43,40 +44,11 @@ export default function TelaSelecaoCards() {
     // Page padding horizontal
     const paddingHorizontal_page = windowWidth < 600 ? 30 : 300;
 
-    // responsividae para listras
-    const stripeWidth = windowWidth * 2.2;
-    const stripeHeight = 150;
-    const leftOffset = -windowWidth * 0.7;
-
     return (
         <SafeAreaView style={[styles.container, { paddingHorizontal: paddingHorizontal_page }]}>
-            <View style={{
-                    position: "absolute",
-                    width: stripeWidth,
-                    height: stripeHeight,
-                    transform: [{ rotate: "45deg" }],
-                    left: leftOffset,
-                    top: 0,
-                    backgroundColor: "#faa526",
-                }} />
-                <View style={{
-                    position: "absolute",
-                    width: stripeWidth,
-                    height: stripeHeight,
-                    transform: [{ rotate: "45deg" }],
-                    left: leftOffset,
-                    top: stripeHeight * 1.2,
-                    backgroundColor: "#ea2e57",
-                }} />
-                <View style={{
-                    position: "absolute",
-                    width: stripeWidth,
-                    height: stripeHeight,
-                    transform: [{ rotate: "45deg" }],
-                    left: leftOffset,
-                    top: stripeHeight * 2.4,
-                    backgroundColor: "#37b1bf",
-                }} />
+            
+            <ListrasDeFundo />
+
             <SafeAreaView
                 style={[styles.topRightIcon, {
                     paddingRight: paddingRight_topRightIcon,
@@ -167,6 +139,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",  // mantém itens no topo
         alignItems: "center",          // centraliza horizontalmente
         flexDirection: 'column',
+        overflow: 'hidden',
     },
 
     iconGroup: {

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { PieChart } from 'react-native-svg-charts';
 import { G, Text as SvgText } from 'react-native-svg';
+import ListrasDeFundo from '../components/ListrasDeFundo';
 
 interface Props {
   acertos: number;
@@ -57,6 +58,9 @@ const Estatisticas = ({ acertos, erros }: Props) => {
   if (total === 0) {
     return (
       <View style={styles.container}>
+
+        <ListrasDeFundo />
+
         <Text style={styles.title}>Estatísticas</Text>
         <Text style={styles.legendaTexto}>Nenhuma rodada concluída ainda.</Text>
       </View>
@@ -65,17 +69,20 @@ const Estatisticas = ({ acertos, erros }: Props) => {
 
   return (
     <View style={styles.container}>
+
+      <ListrasDeFundo />
+
       <Text style={styles.title}>Estatísticas</Text>
       <PieChart
-        style={{ height: 250, width: '100%' }} 
-        data={data.filter(item => item.value > 0)} 
+        style={{ height: 250, width: '100%' }}
+        data={data.filter(item => item.value > 0)}
         outerRadius={'90%'}
         innerRadius={'45%'}
-        
+
       >
         <Labels />
       </PieChart>
-      <View style={styles.legenda}>
+      <View style={styles.legendaContainer}>
         <Text style={styles.legendaTexto}>
           🟩 Acertos: {acertos}
         </Text>
@@ -83,6 +90,7 @@ const Estatisticas = ({ acertos, erros }: Props) => {
           🟥 Erros: {erros}
         </Text>
       </View>
+
     </View>
   );
 };
@@ -96,19 +104,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    overflow: 'hidden',
   },
   title: {
-    fontSize: 26,
+    fontSize: 30,
     color: '#fff',
     marginBottom: 16,
     fontWeight: 'bold',
   },
-  legenda: {
+  legendaContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     marginTop: 20,
+    alignItems: 'flex-start', // alinha os textos à esquerda
   },
+
   legendaTexto: {
     fontSize: 18,
-    color: '#fff',
+    color: '#000',
     marginVertical: 4,
   },
 });

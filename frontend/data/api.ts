@@ -37,7 +37,7 @@ export interface User {
 
 export const cadastroUser = async (set:Partial<User>) => {
   try {
-    const response = await api.post('http://192.168.15.6:3000/cadastro_usuario', {nome: set.nome,  email: set.email, senha: set.senha });
+    const response = await api.post('http://192.168.0.190:3000/cadastro_usuario', {nome: set.nome,  email: set.email, senha: set.senha });
     console.log(response.data);
 
     if (!response.data) {
@@ -57,7 +57,7 @@ export const cadastroUser = async (set:Partial<User>) => {
 
 export const loginUser = async (set: Partial<User>) => {
   try {
-    const response = await api.post('http://192.168.15.6:3000/login_usuario', { email: set.email, senha: set.senha });
+    const response = await api.post('http://192.168.0.190:3000/login_usuario', { email: set.email, senha: set.senha });
     const { user: { email, nome, xata_id }, token } = response.data;
     const userData = { user: { email, nome, xata_id }, token };
     await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));

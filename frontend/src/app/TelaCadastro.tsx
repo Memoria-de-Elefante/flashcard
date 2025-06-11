@@ -3,6 +3,7 @@ import { Text, Image, SafeAreaView, StyleSheet, useWindowDimensions, TextInput, 
 import CustomButton from "../components/CustomButton";
 import { Link, router } from 'expo-router';
 import SenhaButton from "../components/SenhaButton";
+import ListrasDeFundo from '../components/ListrasDeFundo';
 import { cadastroUser } from '@/data/api';
 
 // const { width } = Dimensions.get('window');
@@ -15,16 +16,27 @@ export default function TelaCadastro({ }) {
 
     const handleCadastro = async () => {
         setMensagem('');
+
+        // Validação dos campos
+        if (!nome || !email || !senha) {
+            alert('Preencha todos campos obrigatoriamente');
+            return;
+        }
+
         try {
             const userData = await cadastroUser({ nome, email, senha });
             if (userData) {
-                console.log('Cadastro bem-sucedido!', userData);
+                alert('Cadastro bem-sucedido!');
                 router.push('/TelaLogin');
             }
         } catch (error: any) {
-            setMensagem(error.message || 'Erro ao fazer cadastro');
-            console.error('Erro no cadastro: ', error);
-            router.push('/TelaLogin');
+            if (error.response && error.response.status === 400) {
+                alert('As informações inseridas são inválidas');
+            } else {
+                alert('Erro ao fazer cadastro');
+                setMensagem(error.message || 'Erro ao fazer cadastro');
+            }
+            console.error('Erro no cadastro:', error);
         }
     }
 
@@ -53,42 +65,13 @@ export default function TelaCadastro({ }) {
     const fontSize_input = windowWidth < 600 ? windowWidth * 0.05 : 25;
     const marginTop_input = windowWidth < 600 ? windowWidth * 0.04 : 5;
     const paddingHorizontal_input = windowWidth < 600 ? windowWidth * 0.05 : 25;
-    const paddingLeft_input = windowWidth < 600 ? windowWidth * 0.03 : 25;
-
-    // responsividae para listras
-    const stripeWidth = windowWidth * 2.2;
-    const stripeHeight = 150;
-    const leftOffset = -windowWidth * 0.7;
+    const paddingVertical_input = windowWidth < 600 ? windowWidth * 0.03 : 25;
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{
-                position: "absolute",
-                width: stripeWidth,
-                height: stripeHeight,
-                transform: [{ rotate: "45deg" }],
-                left: leftOffset,
-                top: 0,
-                backgroundColor: "#faa526",
-            }} />
-            <View style={{
-                position: "absolute",
-                width: stripeWidth,
-                height: stripeHeight,
-                transform: [{ rotate: "45deg" }],
-                left: leftOffset,
-                top: stripeHeight * 1.2,
-                backgroundColor: "#ea2e57",
-            }} />
-            <View style={{
-                position: "absolute",
-                width: stripeWidth,
-                height: stripeHeight,
-                transform: [{ rotate: "45deg" }],
-                left: leftOffset,
-                top: stripeHeight * 2.4,
-                backgroundColor: "#37b1bf",
-            }} />
+
+            <ListrasDeFundo />
+
             <Image
                 source={require('../../assets/images/Poliedro.png')}
                 style={[
@@ -127,8 +110,8 @@ export default function TelaCadastro({ }) {
                         borderRadius: borderRadius_input,
                         fontSize: fontSize_input,
                         marginTop: marginTop_input,
-                        padding: paddingHorizontal_input,
-                        paddingLeft: paddingLeft_input,
+                        paddingHorizontal: paddingHorizontal_input,
+                        paddingVertical: paddingVertical_input,
                         zIndex: 1,
                     }
                 ]}
@@ -157,8 +140,8 @@ export default function TelaCadastro({ }) {
                         borderRadius: borderRadius_input,
                         fontSize: fontSize_input,
                         marginTop: marginTop_input,
-                        padding: paddingHorizontal_input,
-                        paddingLeft: paddingLeft_input,
+                        paddingHorizontal: paddingHorizontal_input,
+                        paddingVertical: paddingVertical_input,
                         zIndex: 1,
                     }
                 ]}
@@ -187,8 +170,8 @@ export default function TelaCadastro({ }) {
                         borderRadius: borderRadius_input,
                         fontSize: fontSize_input,
                         marginTop: marginTop_input,
-                        padding: paddingHorizontal_input,
-                        paddingLeft: paddingLeft_input,
+                        paddingHorizontal: paddingHorizontal_input,
+                        paddingVertical: paddingVertical_input,
                         zIndex: 1,
                     }
                 ]}
@@ -220,6 +203,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0,
         paddingBottom: 0,
         flexDirection: 'column',
+        overflow: 'hidden',
     },
     image: {
         resizeMode: 'contain',

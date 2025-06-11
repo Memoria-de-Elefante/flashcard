@@ -3,6 +3,7 @@ import { Text, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View }
 import CustomButton from "../components/CustomButton";
 import EdicaoButton from "../components/EdicaoButton";
 import { router } from "expo-router";
+import ListrasDeFundo from '../components/ListrasDeFundo';
 
 export default function Edicao() {
     const { width, height } = useWindowDimensions();
@@ -12,40 +13,11 @@ export default function Edicao() {
     const marginTop_texto = width < 600 ? 40 : 0;
     const marginBottom_texto = width < 600 ? 40 : 10;
 
-    // responsividae para listras
-    const stripeWidth = width * 2.2;
-    const stripeHeight = 150;
-    const leftOffset = -width * 0.7;
-
     return (
         <SafeAreaView style={[styles.container]}>
-            <View style={{
-                position: "absolute",
-                width: stripeWidth,
-                height: stripeHeight,
-                transform: [{ rotate: "45deg" }],
-                left: leftOffset,
-                top: 0,
-                backgroundColor: "#faa526",
-            }} />
-            <View style={{
-                position: "absolute",
-                width: stripeWidth,
-                height: stripeHeight,
-                transform: [{ rotate: "45deg" }],
-                left: leftOffset,
-                top: stripeHeight * 1.2,
-                backgroundColor: "#ea2e57",
-            }} />
-            <View style={{
-                position: "absolute",
-                width: stripeWidth,
-                height: stripeHeight,
-                transform: [{ rotate: "45deg" }],
-                left: leftOffset,
-                top: stripeHeight * 2.4,
-                backgroundColor: "#37b1bf",
-            }} />
+            
+            <ListrasDeFundo />
+
             <Text style={[
                 styles.text, {
                     fontSize: fontSize_texto,
@@ -93,6 +65,7 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 10,
         flexDirection: 'column',
+        overflow: 'hidden',
     },
     text: {
         color: "#FFFFFF",

@@ -1,8 +1,30 @@
 import { Text, Image, SafeAreaView, StyleSheet, useWindowDimensions, View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import { router } from 'expo-router';
+import ListrasDeFundo from '../components/ListrasDeFundo';
+import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Index({ }) {
+
+  const [nomeUsuario, setNomeUsuario] = useState('');
+
+  // useEffect para puxar o nome do usuário
+  useEffect(() => {
+    const carregarNome = async () => {
+      try {
+        const usuarioString = await AsyncStorage.getItem('usuario');
+        if (usuarioString) {
+          const usuario = JSON.parse(usuarioString);
+          setNomeUsuario(usuario.nome);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar nome do usuário:', error);
+      }
+    };
+
+    carregarNome();
+  }, []);
 
   const { width: windowWidth } = useWindowDimensions();
 
@@ -17,40 +39,11 @@ export default function Index({ }) {
   const marginBottom_texto = windowWidth < 600 ? windowWidth * 0 : 0;
   const marginTop_imagem = windowWidth < 600 ? windowWidth * 0.07 : 10;
 
-  // responsividae para listras
-  const stripeWidth = windowWidth * 2.2;
-  const stripeHeight = 150;
-  const leftOffset = -windowWidth * 0.7;
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{
-        position: "absolute",
-        width: stripeWidth,
-        height: stripeHeight,
-        transform: [{ rotate: "45deg" }],
-        left: leftOffset,
-        top: 0,
-        backgroundColor: "#faa526",
-      }} />
-      <View style={{
-        position: "absolute",
-        width: stripeWidth,
-        height: stripeHeight,
-        transform: [{ rotate: "45deg" }],
-        left: leftOffset,
-        top: stripeHeight * 1.2,
-        backgroundColor: "#ea2e57",
-      }} />
-      <View style={{
-        position: "absolute",
-        width: stripeWidth,
-        height: stripeHeight,
-        transform: [{ rotate: "45deg" }],
-        left: leftOffset,
-        top: stripeHeight * 2.4,
-        backgroundColor: "#37b1bf",
-      }} />
+
+      <ListrasDeFundo />
+
       <Image
         source={require('../../assets/images/Poliedro.png')}
         style={[
@@ -63,15 +56,14 @@ export default function Index({ }) {
           }
         ]}
       />
-      <Text style={[
-        styles.text,
-        {
-          fontSize: fontSize_texto,
-          marginTop: marginTop_texto,
-          marginBottom: marginBottom_texto,
-        }
-      ]}>Bem-vindo, aluno!</Text>
-      {/* Colocar um parâmetro para puxar o nome do usuário pelo token */}
+
+      <Text style={[styles.text, {
+        fontSize: fontSize_texto,
+        marginTop: marginTop_texto,
+        marginBottom: marginBottom_texto,
+      }]}>
+        Bem-vindo{nomeUsuario ? `, ${nomeUsuario}` : ''}!
+      </Text>
 
       <CustomButton
         title="Jogar"
@@ -85,12 +77,18 @@ export default function Index({ }) {
         borderRadius={5}
         onPress={() => router.push('/TelaEdicao')}
       />
+
       <CustomButton
         title="Sair da Conta"
         marginVertical={20}
         borderRadius={5}
-        onPress={() => console.log("Saindo da Conta")}
+        onPress={async () => {
+          await AsyncStorage.removeItem('token');
+          await AsyncStorage.removeItem('usuario');
+          router.back(); 
+        }}
       />
+
     </SafeAreaView>
   );
 }
@@ -105,6 +103,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     paddingBottom: 0,
     flexDirection: 'column', // Garantir que os itens se organizem verticalmente
+    overflow: 'hidden',
   },
   image: {
     resizeMode: 'contain',

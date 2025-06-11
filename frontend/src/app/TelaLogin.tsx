@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Text, Image, SafeAreaView, StyleSheet, useWindowDimensions, TextInput, View } from "react-native";
 import CustomButton from "../components/CustomButton";
+import ListrasDeFundo from '../components/ListrasDeFundo';
 import { Link, router } from 'expo-router';
 import SenhaButton from "../components/SenhaButton";
 import { loginUser } from "@/data/api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function TelaLogin({ }) {
     const [email, setEmail] = useState('');
@@ -11,19 +13,30 @@ export default function TelaLogin({ }) {
     const [mensagem, setMensagem] = useState('');
 
     const handleLogin = async () => {
-        console.log('running');
-        setMensagem(''); // Limpa mensagens anteriores
+        setMensagem('');
+
+        // Validação dos campos
+        if (!email || !senha) {
+            alert('Preencha todos campos obrigatoriamente');
+            return;
+        }
+
         try {
-            console.log(email, senha);
-            const userData = await loginUser({ email, senha });
+            const userData = await loginUser({ email, senha });  
+            await AsyncStorage.setItem('token', userData.token);
+            await AsyncStorage.setItem('usuario', JSON.stringify(userData.user));
             if (userData) {
-                // Navegue para outra tela
+                alert('Login bem-sucedido!');
                 console.log('Login bem-sucedido!', userData);
                 router.push('/TelaInicial');
             }
         } catch (error: any) {
-            // Exiba a mensagem de erro para o usuário
-            setMensagem(error.message || 'Erro ao fazer login');
+            if (error.response && error.response.status === 401) {
+                alert('As informações inseridas são inválidas');    
+            } else {
+                alert('Erro ao fazer login');
+                setMensagem(error.message || 'Erro ao fazer login');
+            }
             console.error('Erro no login:', error);
         }
     }
@@ -52,46 +65,17 @@ export default function TelaLogin({ }) {
     const borderRadius_input = windowWidth < 600 ? windowWidth * 10 : 30;
     const fontSize_input = windowWidth < 600 ? windowWidth * 0.05 : 25;
     const marginTop_input = windowWidth < 600 ? windowWidth * 0.04 : 5;
-    const paddingHorizontal_input = windowWidth < 600 ? windowWidth * 0.05 : 25;
-    const paddingLeft_input = windowWidth < 600 ? windowWidth * 0.03 : 25;
+    const paddingHorizontal_input = windowWidth < 600 ? windowWidth * 0.025 : 25;
+    const paddingVertical_input = windowWidth < 600 ? windowWidth * 0.03 : 25;
 
     // responsividade para o input 
     const fontSize_link = windowWidth < 600 ? windowWidth * 0.04 : 15;
 
-    // responsividae para listras
-    const stripeWidth = windowWidth * 2.2;
-    const stripeHeight = 150;
-    const leftOffset = -windowWidth * 0.7;
-
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{
-                position: "absolute",
-                width: stripeWidth,
-                height: stripeHeight,
-                transform: [{ rotate: "45deg" }],
-                left: leftOffset,
-                top: 0,
-                backgroundColor: "#faa526",
-            }} />
-            <View style={{
-                position: "absolute",
-                width: stripeWidth,
-                height: stripeHeight,
-                transform: [{ rotate: "45deg" }],
-                left: leftOffset,
-                top: stripeHeight * 1.2,
-                backgroundColor: "#ea2e57",
-            }} />
-            <View style={{
-                position: "absolute",
-                width: stripeWidth,
-                height: stripeHeight,
-                transform: [{ rotate: "45deg" }],
-                left: leftOffset,
-                top: stripeHeight * 2.4,
-                backgroundColor: "#37b1bf",
-            }} />
+
+            <ListrasDeFundo />
+
             <Image
                 source={require('../../assets/images/Poliedro.png')}
                 style={[
@@ -131,8 +115,8 @@ export default function TelaLogin({ }) {
                         borderRadius: borderRadius_input,
                         fontSize: fontSize_input,
                         marginTop: marginTop_input,
-                        padding: paddingHorizontal_input,
-                        paddingLeft: paddingLeft_input,
+                        paddingHorizontal: paddingHorizontal_input,
+                        paddingVertical: paddingVertical_input,
                         zIndex: 1,
                     }
                 ]}
@@ -206,6 +190,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 0,
         paddingBottom: 0,
         flexDirection: 'column',
+        overflow: 'hidden',
     },
     image: {
         resizeMode: 'contain',

@@ -20,7 +20,8 @@ const Index = () => {
         useNativeDriver: true,
       }),
     ]).start(() => {
-      router.push("/TelaLogin");
+      // impedir que o usuário consiga retornar para index
+      router.replace("/TelaLogin");
     });
   }, []);
 

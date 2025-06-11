@@ -3,6 +3,7 @@ import { Text, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View }
 import CustomButton from "../../components/CustomButton";
 import OptionButton from "../../components/OptionButton";
 import { router } from "expo-router";
+import ListrasDeFundo from '../../components/ListrasDeFundo';
 
 export default function TelaModoDificuldade() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -14,40 +15,11 @@ export default function TelaModoDificuldade() {
   const marginTop_texto = width < 600 ? 40 : 0;
   const marginBottom_texto = width < 600 ? 40 : 10;
 
-  // responsividae para listras
-  const stripeWidth = width * 2.2;
-  const stripeHeight = 150;
-  const leftOffset = -width * 0.7;
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{
-        position: "absolute",
-        width: stripeWidth,
-        height: stripeHeight,
-        transform: [{ rotate: "45deg" }],
-        left: leftOffset,
-        top: 0,
-        backgroundColor: "#faa526",
-      }} />
-      <View style={{
-        position: "absolute",
-        width: stripeWidth,
-        height: stripeHeight,
-        transform: [{ rotate: "45deg" }],
-        left: leftOffset,
-        top: stripeHeight * 1.2,
-        backgroundColor: "#ea2e57",
-      }} />
-      <View style={{
-        position: "absolute",
-        width: stripeWidth,
-        height: stripeHeight,
-        transform: [{ rotate: "45deg" }],
-        left: leftOffset,
-        top: stripeHeight * 2.4,
-        backgroundColor: "#37b1bf",
-      }} />
+      
+      <ListrasDeFundo />
+
       <Text style={[
         styles.text, {
           fontSize: fontSize_texto,
@@ -107,7 +79,14 @@ export default function TelaModoDificuldade() {
         title="Estudar"
         marginVertical={42}
         marginTop={60}
-        onPress={() => router.push('./FlashcardAleatorio')}
+        onPress={() => { 
+          if (selectedOption) {
+            router.push('./FlashcardAleatorio');
+          }
+          else {
+            alert('Por favor, selecione um deck antes de continuar.');
+          }
+        }}
       />
     </SafeAreaView>
   );
@@ -120,6 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     paddingTop: 10,
+    overflow: 'hidden',
   },
   text: {
     color: "#FFFFFF",
