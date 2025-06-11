@@ -1,4 +1,4 @@
-import React, { useState, useRef, useImperativeHandle, forwardRef } from "react";
+import React, { useState, useRef, useImperativeHandle, forwardRef, useEffect } from "react";
 import {
     View, Text, TextInput, StyleSheet, ScrollView,
     Animated, TouchableWithoutFeedback
@@ -7,6 +7,8 @@ import {
 type Props = {
     frontText: string;
     backText: string;
+    onChangeFrontText?: (text: string) => void;
+    onChangeBackText?: (text: string) => void;
     width: number;
     height: number;
     borderRadius: number;
@@ -60,6 +62,13 @@ const Card = forwardRef(function Card(
         outputRange: ['180deg', '360deg'],
     });
 
+    useEffect(() => {
+    setFront(frontText);
+    }, [frontText]);
+
+    useEffect(() => {
+    setBack(backText);
+    }, [backText]);
     // Envolve tudo com Touchable para permitir navegação quando não for editable
     return (
         <TouchableWithoutFeedback
@@ -80,7 +89,10 @@ const Card = forwardRef(function Card(
                                 <ScrollView style={styles.inputContainer} contentContainerStyle={styles.scrollContent}>
                                     <TextInput
                                         value={front}
-                                        onChangeText={setFront}
+                                        onChangeText={(text) => {
+                                            setFront(text)
+                                            props.onChangeFrontText?.(text)
+                                        }}
                                         onBlur={() => setEditingFront(false)}
                                         style={styles.input}
                                         autoFocus
@@ -111,7 +123,10 @@ const Card = forwardRef(function Card(
                                 <ScrollView style={styles.inputContainer} contentContainerStyle={styles.scrollContent}>
                                     <TextInput
                                         value={back}
-                                        onChangeText={setBack}
+                                        onChangeText={(text) => {
+                                            setBack(text)
+                                            props.onChangeBackText?.(text)
+                                        }}
                                         onBlur={() => setEditingBack(false)}
                                         style={styles.input}
                                         autoFocus

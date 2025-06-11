@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TouchableOpacity, Text, Image, SafeAreaView, View, StyleSheet, Dimensions, TextInput } from "react-native";
 import CustomButton from "../components/CustomButton";
 import Flashcard from "../components/Flashcard";
@@ -15,24 +15,35 @@ export default function TelaSelecaoCards({ }) {
     const [text, setText] = useState(materia);
     const [isEditing, setIsEditing] = useState(false)
     const [cards, setCards] = useState<Card[]>([])
-    const [contador, setContador] = useState(1)
+    const [cardAtual, setCardAtual] = useState(0)
+    const pagerRef = useRef<PagerView>(null)
 
     const addCard = async () => {
-        await adicionarFlashcard(materia, "Pergunta", "Resposta", "médio", "")
-        setCards([...cards, {id: contador, pergunta:"Pergunta", resposta:"Resposta", dificuldade:"médio", imagem:""}])
-        setContador(contador + 1)
+        const numAleatorio = Math.floor(Math.random() * (301 - 1 + 1)) + 1
+        await adicionarFlashcard(numAleatorio, materia, "Pergunta", "Resposta")
+        setCards([...cards, {id: numAleatorio, pergunta:"Pergunta", resposta:"Resposta", dificuldade:"médio", imagem:"", acerto: false}])
+        setTimeout(() => {
+            pagerRef.current?.setPage(cards.length)
+        }, 100)
     }
 
     const importCards = async () => {
         const flashcards = await buscarTodosFlashcards(materia)
         if (flashcards != undefined) {
             setCards(flashcards)
-            setContador(flashcards.length + 1)
+            setTimeout(() => {
+                const pageFocada = cardAtual >= flashcards.length ? Math.max(flashcards.length - 1, 0) : cardAtual
+                setCardAtual(pageFocada)
+                pagerRef.current?.setPage(pageFocada)
+            }, 100)
         }
+        
     }
 
     const isFocused = useIsFocused()
-        useEffect(() => {if (isFocused) {importCards()}}, [isFocused])
+    useEffect(() => {
+        if (isFocused) {importCards()}
+    }, [isFocused])
     return (
         <SafeAreaView style={styles.container}>
             <SafeAreaView style={styles.topRightIcon}>
@@ -61,7 +72,7 @@ export default function TelaSelecaoCards({ }) {
                 </TouchableOpacity>
             </SafeAreaView>
 
-            <PagerView style={styles.pagerView} initialPage={0}>
+            <PagerView key={cards.length} ref={pagerRef} style={styles.pagerView} initialPage={0} onPageSelected={card => setCardAtual(card.nativeEvent.position)}>
                 {cards.map(card => (
                     <View style={styles.page} key={card.id}>
                         <Flashcard

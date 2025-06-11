@@ -76,12 +76,11 @@ export async function buscarMaterias() {
 // }
 
 // Este código é responsável por adicionar novos elementos flashcards no cardsJson
-export async function adicionarFlashcard(materia: string, pergunta: string, resposta: string, dificuldade: string, imagem: string) {
+export async function adicionarFlashcard(id: number, materia: string, pergunta: string, resposta: string) {
     try {
         const data = JSON.parse(await fileSystem.readAsStringAsync(filePath))
         // if (submateria == '') {
-        let tamanho = (Object.keys(data[materia])).length
-        data[materia].push({id: tamanho + 1, pergunta: pergunta, resposta: resposta, dificuldade: dificuldade, imagem: imagem})
+        data[materia].push({id: id, pergunta: pergunta, resposta: resposta, dificuldade: "médio", imagem: "", acerto: false})
         await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));
         // }
         // else {   
@@ -101,6 +100,7 @@ export type Card = {
     resposta: string;
     dificuldade: string;
     imagem: string;
+    acerto: boolean
 }
 
 export async function buscarFlashcard(materia: string, id: number) {
@@ -180,6 +180,21 @@ export async function editarFlashcard(materia: string, id: number, novaPergunta:
     } catch (err) {
         console.error(err);
     }
+}
+
+export async function foiAcerto(materia: string, id: number, acerto: boolean) {
+    const data = JSON.parse(await fileSystem.readAsStringAsync(filePath));
+    const rawCards = data[materia];
+    const cards = Object.values(rawCards) as Card[];
+
+    for (const card of cards) {
+        if (card.id === id) { 
+            card.acerto = acerto
+        }
+    }
+
+    data[materia] = cards;
+    await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));    
 }
 
 export async function print() {
