@@ -96,7 +96,7 @@ export default function Flashcard({
             case "desafio":
                 if(isFlipped) return (
                     <View style={[styles.buttonRow, commonStyle]}>
-                        CustomButton title="Acertei" onPress={() => handleSetAcerto(true)} width={90} height={45} borderRadius={10} />
+                        <CustomButton title="Acertei" onPress={() => handleSetAcerto(true)} width={90} height={45} borderRadius={10} />
                         <CustomButton title="Errei" onPress={() => handleSetAcerto(false)} width={90} height={45} borderRadius={10} />
                     </View>
                 );
