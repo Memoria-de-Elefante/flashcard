@@ -3,7 +3,7 @@ import { TouchableOpacity, Text, Image, SafeAreaView, View, StyleSheet, useWindo
 import CustomButton from "../components/CustomButton";
 import Flashcard from "../components/Flashcard";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import PagerView from 'react-native-pager-view';
+import Carousel from 'react-native-reanimated-carousel'
 import { editarMateria, buscarTodosFlashcards, adicionarFlashcard, Card, print } from "../scripts/comandosJson"
 import { useIsFocused } from '@react-navigation/native';
 
@@ -15,7 +15,7 @@ export default function TelaSelecaoCards({ }) {
     const [isEditing, setIsEditing] = useState(false)
     const [cards, setCards] = useState<Card[]>([])
     const [cardAtual, setCardAtual] = useState(0)
-    const pagerRef = useRef<PagerView>(null)
+    const carouselRef = useRef<any>(null);
     const { width: windowWidth } = useWindowDimensions();
 
     const borderRadius_cardFace = windowWidth < 600 ? windowWidth * 0.02 : 10;
@@ -60,8 +60,8 @@ export default function TelaSelecaoCards({ }) {
         await adicionarFlashcard(numAleatorio, materia, "Pergunta", "Resposta")
         setCards([...cards, {id: numAleatorio, pergunta:"Pergunta", resposta:"Resposta", dificuldade:"médio", imagem:"", acerto: false}])
         setTimeout(() => {
-            pagerRef.current?.setPage(cards.length)
-        }, 100)
+            carouselRef.current?.scrollTo({ index: cards.length, animated: true })
+        }, 100);
     }
 
     const importCards = async () => {
@@ -71,7 +71,7 @@ export default function TelaSelecaoCards({ }) {
             setTimeout(() => {
                 const pageFocada = cardAtual >= flashcards.length ? Math.max(flashcards.length - 1, 0) : cardAtual
                 setCardAtual(pageFocada)
-                pagerRef.current?.setPage(pageFocada)
+                carouselRef.current?.scrollTo({ index: pageFocada, animated: true })
             }, 100)
         }
         
@@ -163,31 +163,34 @@ export default function TelaSelecaoCards({ }) {
                 </TouchableOpacity>
             </SafeAreaView>
 
-            <ScrollView 
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent} 
+            <Carousel
+                ref={carouselRef}
+                loop={false}
+                width={windowWidth - 50}
+                height={height_flashcard + 40}
+                data={cards}
                 key={cards.length}
-                ref={pagerRef}
-                initialPage={0}
-            >
-                {cards.map(card => (
-                    <View style={styles.page} key={card.id}>
+                scrollAnimationDuration={500}
+                onSnapToItem={index => setCardAtual(index)} // ← importante manter isso
+                renderItem={({ item }) => (
+                    <View style={[styles.page, { width: width_flashcard }]}>
                         <Flashcard
-                            frontText={card.pergunta}
-                            backText={card.resposta}
-                            width={width * 0.8}
+                            frontText={item.pergunta}
+                            backText={item.resposta}
+                            width={width_flashcard * .95}
                             height={400}
-                            borderRadius={10}
+                            borderRadius={borderRadius_cardFace}
                             editable={false}
-                            onPress={() => router.navigate({pathname: '/TelaEdicaoCard', params: {id: Number(card.id), materia: materia}})}
+                            onPress={() =>
+                                router.navigate({
+                                    pathname: '/TelaEdicaoCard',
+                                    params: { id: Number(item.id), materia }
+                                })
+                            }
                         />
-
                     </View>
-                ))}
-            </ScrollView>
+                )}
+            />
 
             <CustomButton
                 title="+"
