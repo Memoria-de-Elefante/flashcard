@@ -1,35 +1,52 @@
-import React from "react";
-import { SafeAreaView, StyleSheet, Text } from "react-native";
-import CustomButton from "../components/CustomButton"; // Ajuste o caminho conforme necessário
+import React, { useEffect, useRef } from "react";
+import { Animated, StyleSheet, Image, View } from "react-native";
 import { useRouter } from "expo-router";
 import { criarJson, delJson } from "../scripts/comandosJson"
 
-// Roteador do expo-router
-const router = useRouter();
-criarJson()
+const Index = () => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const router = useRouter();
 
-export default function Index() {
+  useEffect(() => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.delay(1500), 
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      router.push("/TelaLogin");
+    });
+  }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>Tela Inicial Temporária</Text>
-      <CustomButton title="Ir para login" 
-        onPress={() => router.navigate("/TelaLogin")} // Direciona para a nova tela
-        marginVertical={42}
+    <View style={styles.container}>
+      <Animated.Image
+        source={require("../../assets/images/mde-poliedro-mobile.png")}
+        style={[styles.image, { opacity: fadeAnim }]}
+        resizeMode="contain"
       />
-    </SafeAreaView>
+    </View>
   );
-}
+};
+
+export default Index;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#000000",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#000000",
   },
-  text: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    marginBottom: 20,
+  image: {
+    width: "100%",
+    height: "120%",
   },
 });
