@@ -34,6 +34,7 @@ export default function edicao() {
         if (card != undefined) {
             setPergunta(card.pergunta)
             setResposta(card.resposta)
+            setImage(card.imagem)
         }
     }
     
@@ -119,8 +120,9 @@ export default function edicao() {
                 flashcardType="edicao"
                 showFlipButton={true}
                 onChangeDificuldade={(dificuldade) => setDificuldade(dificuldade)}
-                onPress={pickImage}
+                onPickImage={pickImage}
                 onDelete={delCard}
+                imageURI={image}
             />
             <CustomButton
                 title="Salvar"
