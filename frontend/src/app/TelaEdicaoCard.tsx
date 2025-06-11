@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { SafeAreaView, StyleSheet, useWindowDimensions, View, Alert, TouchableOpacity, Text } from "react-native";
+import { SafeAreaView, StyleSheet, useWindowDimensions, View, Alert, TouchableOpacity, Text, Platform } from "react-native";
 import Flashcard from "../components/Flashcard";
 import CustomButton from "../components/CustomButton";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -27,7 +27,8 @@ export default function edicao() {
     const [dificuldade, setDificuldade] = useState("médio")
 
     const importCard = async () => {
-        const card = await buscarFlashcard(materia, Number(id))
+        console.log(materia, id)
+        const card = await buscarFlashcard(materia, id)
         console.log(card)
         if (card != undefined) {
             setPergunta(card.pergunta)
@@ -36,10 +37,14 @@ export default function edicao() {
     }
     
     const saveMudancas = async () => {
-        await editarFlashcard(materia, Number(id), pergunta, resposta, dificuldade, "")
+        await editarFlashcard(materia, id, pergunta, resposta, dificuldade, "")
     }
 
     const delCard = async () => {
+        if (Platform.OS === 'web') {
+            const confirm = window.confirm(`Tem certeza que deseja deletar o flashcard atual?`)
+            if (confirm) await confirmarExclusao(materia, id)
+        }
         Alert.alert(
             'Confirmação',
             'Tem certeza que deseja deletar o flashcard atual?',
@@ -52,13 +57,17 @@ export default function edicao() {
                     text: 'Deletar',
                     style: 'destructive',
                     onPress: async () => {
-                        await deletarFlashcard(materia, Number(id))
-                        router.back()
+                        await confirmarExclusao(materia, id)
                     },
                 },
             ],
             { cancelable: true }
         )
+    }
+
+    const confirmarExclusao = async (materia: string, id: string) => {
+        await deletarFlashcard(materia, id)
+        router.back()
     }
 
     useEffect(() => {importCard(); console.log(pergunta, resposta)}, [])

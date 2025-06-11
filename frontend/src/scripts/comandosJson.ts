@@ -1,26 +1,43 @@
 import * as fileSystem from 'expo-file-system'
 import cardsJson from '../../localFiles/cardsJson.json'
+import { Platform } from 'react-native';
+import { FeDiffuseLighting } from 'react-native-svg';
 const filePath = fileSystem.documentDirectory + 'cards.json';
+const eWeb = Platform.OS === 'web';
+const chaveStorage = "cardsWeb";
 
 // Códigos referentes a criação e adição de elementos ao Json
 // Este código é responsável por criar um cardsJson base limpo, caso haja a necessidade
 export async function criarJson() {
-    const info = await fileSystem.getInfoAsync(filePath) 
-    if (!info.exists) {
-        console.log('Arquivo não existe. Criando JSON inicial...')
-        await fileSystem.writeAsStringAsync(filePath, JSON.stringify(cardsJson));
+    if (eWeb) {
+        const json = localStorage.getItem(chaveStorage);
+        json ? console.log("Arquivo já existe.") : await localStorage.setItem(chaveStorage, JSON.stringify(cardsJson)) 
     }
     else {
-        console.log('Arquivo já existe.')
+        const info = await fileSystem.getInfoAsync(filePath) 
+        if (!info.exists) {
+            console.log('Arquivo não existe. Criando JSON inicial...');
+            await fileSystem.writeAsStringAsync(filePath, JSON.stringify(cardsJson));
+        }
+        else {
+            console.log('Arquivo já existe.');
+        }
     }
 }
 
 // Este código é responsável por adicionar novos elementos matérias no cardsJson
 export async function adicionarMateria(materia: string) {
     try {
-        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath));
-        data[materia] = [];
-        await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));    
+        let json = null;
+        if (eWeb) json = await localStorage.getItem(chaveStorage);
+        else json = await fileSystem.readAsStringAsync(filePath);
+    
+        if (json) {
+            const data = JSON.parse(json);
+            data[materia] = [];
+            if (eWeb) await localStorage.setItem(chaveStorage, JSON.stringify(data));
+            else await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));
+        }
     } catch (err) {
         console.error(err)
     }
@@ -28,9 +45,15 @@ export async function adicionarMateria(materia: string) {
 
 export async function deletarMateria(materia: string) {
     try {
-        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath))
-        delete data[materia]
-        await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));
+        let json = null;
+        if (eWeb) json = await localStorage.getItem(chaveStorage);
+        else json = await fileSystem.readAsStringAsync(filePath);
+        if (json) {
+            const data = JSON.parse(json);
+            delete data[materia]
+            if (eWeb) await localStorage.setItem(chaveStorage, JSON.stringify(data));
+            else await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));
+        }
     } catch (err) {
         console.error(err)
     }
@@ -38,12 +61,17 @@ export async function deletarMateria(materia: string) {
 
 export async function editarMateria(materia: string, novoNome: string) {
     try {
-        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath));
-        const materiaData = data[materia];
-        delete data[materia];
-        data[novoNome] = materiaData;
-        await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));    
-        console.log("JOINHA")
+        let json = null;
+        if (eWeb) json = await localStorage.getItem(chaveStorage);
+        else json = await fileSystem.readAsStringAsync(filePath);
+        if (json) {
+            const data = JSON.parse(json);
+            const materiaData = data[materia];
+            delete data[materia];
+            data[novoNome] = materiaData;
+            if (eWeb) await localStorage.setItem(chaveStorage, JSON.stringify(data));
+            else await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));
+        }
     } catch (err) {
         console.error(err)
     }
@@ -51,12 +79,15 @@ export async function editarMateria(materia: string, novoNome: string) {
 
 export async function buscarMaterias() {
     try {
-        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath))
-        if (!data) {
-            return undefined
+        let json = null;
+        if (eWeb) json = await localStorage.getItem(chaveStorage);
+        else json = await fileSystem.readAsStringAsync(filePath);
+        if (json) {
+            const data = JSON.parse(json);
+            if (!data) return undefined
+            const materias = Object.keys(data)
+            return materias
         }
-        const materias = Object.keys(data)
-        return materias
     } catch (err) {
         console.error(err)
         return undefined
@@ -76,26 +107,27 @@ export async function buscarMaterias() {
 // }
 
 // Este código é responsável por adicionar novos elementos flashcards no cardsJson
-export async function adicionarFlashcard(id: number, materia: string, pergunta: string, resposta: string) {
+export async function adicionarFlashcard(id: string, materia: string, pergunta: string, resposta: string) {
     try {
-        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath))
-        // if (submateria == '') {
-        data[materia].push({id: id, pergunta: pergunta, resposta: resposta, dificuldade: "médio", imagem: "", acerto: false})
-        await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));
-        // }
-        // else {   
-        //     let tamanho = Object.keys(data[materia][submateria]).length
-        //     data[materia][submateria][`card${tamanho+1}`] = {pergunta: pergunta, resposta: resposta, dificuldade: dificuldade}
-        //     fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
-        // }
+        let json = null;
+        if (eWeb) json = await localStorage.getItem(chaveStorage);
+        else json = await fileSystem.readAsStringAsync(filePath);
+        console.log("teste1")
+        if (json) {
+            console.log(2)
+            const data = JSON.parse(json);
+            data[materia].push({id: id, pergunta: pergunta, resposta: resposta, dificuldade: "médio", imagem: "", acerto: false});
+            if (eWeb) await localStorage.setItem(chaveStorage, JSON.stringify(data));
+            else await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));
+        }
     } catch (err) {
-        console.error(err)
+        console.error(err);
     }
 }
 
 // Códigos referentes a busca de elementos ao Json
 export type Card = {
-    id: number;
+    id: string;
     pergunta: string;
     resposta: string;
     dificuldade: string;
@@ -103,17 +135,20 @@ export type Card = {
     acerto: boolean
 }
 
-export async function buscarFlashcard(materia: string, id: number) {
+export async function buscarFlashcard(materia: string, id: string) {
     try {
-        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath));
-        const rawCards = data[materia];
-        if (!rawCards) {
-            return undefined;
-        }
-        const cards = Object.values(rawCards) as Card[];
-        for (const card of cards) {
-            if (card.id === id) {  
-                return card;
+        let json = null;
+        if (eWeb) json = await localStorage.getItem(chaveStorage);
+        else json = await fileSystem.readAsStringAsync(filePath);
+        if (json) {
+            const data = JSON.parse(json);
+            const rawCards = data[materia];
+            if (!rawCards) return undefined;
+            const cards = Object.values(rawCards) as Card[];
+            for (const card of cards) {
+                if (card.id === id) {
+                    return card;
+                }
             }
         }
         return undefined;
@@ -125,76 +160,94 @@ export async function buscarFlashcard(materia: string, id: number) {
 
 export async function buscarTodosFlashcards(materia: string) {
     try {
-        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath));
-        const rawCards = data[materia];
-        if (!rawCards) {
-            return undefined;
+        let json = null;
+        if (eWeb) json = await localStorage.getItem(chaveStorage);
+        else json = await fileSystem.readAsStringAsync(filePath);
+        if (json) {
+            const data = JSON.parse(json);
+            const rawCards = data[materia];
+            if (!rawCards) return undefined;
+            const cards = Object.values(rawCards) as Card[];
+            return cards;
         }
-        const cards = Object.values(rawCards) as Card[];
-        return cards;
+        return undefined
     } catch (err) {
         console.error(err);
         return undefined;
     }
 }
 
-export async function deletarFlashcard(materia: string, id: number) {
+export async function deletarFlashcard(materia: string, id: string) {
     try {
-        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath));
-        const rawCards = data[materia];
-        const cards = Object.values(rawCards) as Card[];
-        
-        for (const card of cards) {
-            if (card.id === id) {
-                cards.splice(cards.indexOf(card), 1);
-            }
-        }
+        let json = null;
+        if (eWeb) json = await localStorage.getItem(chaveStorage);
+        else json = await fileSystem.readAsStringAsync(filePath);
+        if (json) {
+            const data = JSON.parse(json);
+            const rawCards = data[materia];
+            const cards = Object.values(rawCards) as Card[];
 
-        data[materia] = cards;
-        await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));
-        console.log('deleção bem-sucedida');
+            for (const card of cards) {
+                if (card.id === id) {
+                    cards.splice(cards.indexOf(card), 1);
+                }
+            }
+            data[materia] = cards;
+            if (eWeb) await localStorage.setItem(chaveStorage, JSON.stringify(data));
+            else await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));
+        }
     } catch (err) {
         console.error(err);
     }
 }
 
-export async function editarFlashcard(materia: string, id: number, novaPergunta: string, novaResposta: string, novaDificuldade: string, novaImagem: string) {
+export async function editarFlashcard(materia: string, id: string, novaPergunta: string, novaResposta: string, novaDificuldade: string, novaImagem: string) {
     try {
-        const data = JSON.parse(await fileSystem.readAsStringAsync(filePath));
-        const rawCards = data[materia];
-        const cards = Object.values(rawCards) as Card[];
+        let json = null;
+        if (eWeb) json = await localStorage.getItem(chaveStorage);
+        else json = await fileSystem.readAsStringAsync(filePath);
+        if (json) {
+            const data = JSON.parse(json);
+            const rawCards = data[materia];
+            const cards = Object.values(rawCards) as Card[];
 
-        for (const card of cards) {
-            if (card.id === id) {
-                card.pergunta = novaPergunta;
-                card.resposta = novaResposta;
-                card.dificuldade = novaDificuldade;
-                card.imagem = novaImagem;
+            for (const card of cards) {
+                if (card.id === id) {
+                    card.pergunta = novaPergunta;
+                    card.resposta = novaResposta;
+                    card.dificuldade = novaDificuldade;
+                    card.imagem = novaImagem;
+                }
             }
-        }
 
-        data[materia] = cards;
-        await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));    
-        console.log("JOINHA")
-        console.log(data[materia])
+            data[materia] = cards;
+            if (eWeb) await localStorage.setItem(chaveStorage, JSON.stringify(data));
+            else await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2)); 
+        }
     } catch (err) {
         console.error(err);
     }
 }
 
-export async function foiAcerto(materia: string, id: number, acerto: boolean) {
-    const data = JSON.parse(await fileSystem.readAsStringAsync(filePath));
-    const rawCards = data[materia];
-    const cards = Object.values(rawCards) as Card[];
+export async function foiAcerto(materia: string, id: string, acerto: boolean) {
+    let json = null;
+    if (eWeb) json = await localStorage.getItem(chaveStorage);
+    else json = await fileSystem.readAsStringAsync(filePath);
+    if (json) {
+        const data = JSON.parse(json);
+        const rawCards = data[materia];
+        const cards = Object.values(rawCards) as Card[];
 
-    for (const card of cards) {
-        if (card.id === id) { 
-            card.acerto = acerto
+        for (const card of cards) {
+            if (card.id === id) { 
+                card.acerto = acerto
+            }
         }
-    }
 
-    data[materia] = cards;
-    await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));    
+        data[materia] = cards;
+        if (eWeb) await localStorage.setItem(chaveStorage, JSON.stringify(data));
+        else await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2)); 
+    }
 }
 
 export async function print() {
@@ -214,10 +267,3 @@ export async function delJson() {
     console.error('Erro ao deletar arquivo:', err);
   }
 }
-//function buscarTodosFlashcards() {}
-
-
-// adicionarFlashcard("matemática", "pergunta", "resposta", "fácil", "")
-
-// const card = buscarFlashcard('matemática')
-// console.log(card)

@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { TouchableOpacity, Text, Image, SafeAreaView, View, StyleSheet, useWindowDimensions, TextInput, ScrollView } from "react-native";
+import { TouchableOpacity, Text, Image, SafeAreaView, View, StyleSheet, useWindowDimensions, TextInput, ScrollView, Platform } from "react-native";
 import CustomButton from "../components/CustomButton";
 import Flashcard from "../components/Flashcard";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import Carousel from 'react-native-reanimated-carousel'
 import { editarMateria, buscarTodosFlashcards, adicionarFlashcard, Card, print } from "../scripts/comandosJson"
 import { useIsFocused } from '@react-navigation/native';
+import { v4 as uuidv4 } from 'uuid';
+import * as uuidMobile from 'react-native-uuid'
 
 const router = useRouter();
 
@@ -18,6 +20,9 @@ export default function TelaSelecaoCards({ }) {
     const carouselRef = useRef<any>(null);
     const { width: windowWidth } = useWindowDimensions();
 
+    // Variável confirma se a plataforma é web
+    const eWeb = Platform.OS === 'web'
+
     const borderRadius_cardFace = windowWidth < 600 ? windowWidth * 0.02 : 10;
     const width_flashcard = windowWidth < 600 ? windowWidth * 0.85 : 350;
     const height_flashcard = windowWidth < 600 ? windowWidth * 1 : 350;
@@ -25,12 +30,13 @@ export default function TelaSelecaoCards({ }) {
     // TopRightIcon responsividade
     const paddingRight_topRightIcon = windowWidth < 600 ? windowWidth * 0 : 250;
     const marginTop_topRightIcon = windowWidth < 600 ? windowWidth * 0.1 : 25;
+    const marginLeft_topRightIcon = windowWidth < 600 ? windowWidth * 0.1 : 25;
 
     // IconCompartilhar responsividade
     const size_iconCompartilhar = windowWidth < 600 ? windowWidth * 0.1 : 30;
 
     // IconGroup responsividade
-    const gap_iconGroup = windowWidth < 600 ? 0 : 200;
+    const gap_iconGroup = windowWidth < 600 ? 0 : 20;
 
     // Input responsividade
     const height_input = windowWidth < 600 ? 5 : 40;
@@ -56,9 +62,11 @@ export default function TelaSelecaoCards({ }) {
     const leftOffset = -windowWidth * 0.7;
 
     const addCard = async () => {
-        const numAleatorio = Math.floor(Math.random() * (301 - 1 + 1)) + 1
-        await adicionarFlashcard(numAleatorio, materia, "Pergunta", "Resposta")
-        setCards([...cards, {id: numAleatorio, pergunta:"Pergunta", resposta:"Resposta", dificuldade:"médio", imagem:"", acerto: false}])
+        let chaveAleatorio: string
+        if (Platform.OS === "web") chaveAleatorio = uuidv4()
+            else chaveAleatorio = uuidMobile.default.v4()
+        await adicionarFlashcard(chaveAleatorio, materia, "Pergunta", "Resposta")
+        setCards([...cards, {id: chaveAleatorio, pergunta:"Pergunta", resposta:"Resposta", dificuldade:"médio", imagem:"", acerto: false}])
         setTimeout(() => {
             carouselRef.current?.scrollTo({ index: cards.length, animated: true })
         }, 100);
@@ -66,6 +74,7 @@ export default function TelaSelecaoCards({ }) {
 
     const importCards = async () => {
         const flashcards = await buscarTodosFlashcards(materia)
+        console.log(flashcards)
         if (flashcards != undefined) {
             setCards(flashcards)
             setTimeout(() => {
@@ -112,7 +121,11 @@ export default function TelaSelecaoCards({ }) {
                     backgroundColor: "#37b1bf",
                 }} />
             <SafeAreaView
-                style={[styles.topRightIcon, {
+                style={[styles.topRightIcon, eWeb ? {
+                    paddingRight: paddingRight_topRightIcon + 50,
+                    marginTop: marginTop_topRightIcon,
+                    marginLeft: marginLeft_topRightIcon,
+                } : {
                     paddingRight: paddingRight_topRightIcon,
                     marginTop: marginTop_topRightIcon,
                 }]}
@@ -125,8 +138,9 @@ export default function TelaSelecaoCards({ }) {
                     }]}
                 />
             </SafeAreaView>
-
-            <SafeAreaView style={[styles.iconGroup, { gap: gap_iconGroup }]}>
+            
+            
+            <SafeAreaView style={[styles.iconGroup, eWeb && { gap: gap_iconGroup }]}>
                 {isEditing ? (
                     <TextInput
                         style={[styles.input, {
@@ -167,29 +181,30 @@ export default function TelaSelecaoCards({ }) {
                 ref={carouselRef}
                 loop={false}
                 width={windowWidth - 50}
-                height={height_flashcard + 40}
+                height={height_flashcard + 15}
                 data={cards}
                 key={cards.length}
                 scrollAnimationDuration={500}
                 onSnapToItem={index => setCardAtual(index)} // ← importante manter isso
                 renderItem={({ item }) => (
-                    <View style={[styles.page, { width: width_flashcard }]}>
+                    <View style={[styles.page]}>
                         <Flashcard
                             frontText={item.pergunta}
                             backText={item.resposta}
                             width={width_flashcard * .95}
-                            height={400}
+                            height={height_flashcard}
                             borderRadius={borderRadius_cardFace}
                             editable={false}
                             onPress={() =>
                                 router.navigate({
                                     pathname: '/TelaEdicaoCard',
-                                    params: { id: Number(item.id), materia }
+                                    params: { id: item.id, materia }
                                 })
                             }
                         />
                     </View>
                 )}
+                style={styles.carrossel}
             />
 
             <CustomButton
@@ -249,6 +264,10 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: '#FFFFFF',
         borderColor: '#FFFFFF',
-        borderRadius: 5,
+        borderRadius: 10,
+    },
+    carrossel: {
+        justifyContent: "center",
+        alignItems: "center"
     }
 });

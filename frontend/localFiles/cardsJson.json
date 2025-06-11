@@ -1,25 +1,2 @@
 {
-  "matemática": [
-    {
-      "id": 1,
-      "pergunta": "pergunta teste2",
-      "resposta": "resposta teste",
-      "dificuldade": "médio",
-      "imagem": ""
-    },
-    {
-      "id": 2,
-      "pergunta": "pergunta teste3",
-      "resposta": "resposta teste",
-      "dificuldade": "médio",
-      "imagem": ""
-    },
-    {
-      "id": 3,
-      "pergunta": "pergunta teste1",
-      "resposta": "resposta teste",
-      "dificuldade": "médio",
-      "imagem": ""
-    }
-  ]
 }

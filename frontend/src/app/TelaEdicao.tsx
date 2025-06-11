@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from 'react';
-import { Text, Alert, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View } from "react-native";
+import { Text, Alert, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View, Platform } from "react-native";
 import CustomButton from "../components/CustomButton";
 import EdicaoButton from "../components/EdicaoButton";
 import { buscarMaterias, deletarMateria, adicionarMateria } from "../scripts/comandosJson"
@@ -29,9 +29,13 @@ export default function edicao() {
     }
 
     const delMat = async (title: string) => {
+        if (Platform.OS === 'web') {
+                const confirm = window.confirm(`Tem certeza que deseja deletar ${title}?`)
+                if (confirm) confirmarExclusao(title)
+        }
         Alert.alert(
             'Confirmação',
-            `Tem certeza que deseja deletar "${title}"?`,
+            `Tem certeza que deseja deletar ${title}?`,
             [
             {
                 text: 'Cancelar',
@@ -40,15 +44,17 @@ export default function edicao() {
             {
                 text: 'Deletar',
                 style: 'destructive',
-                onPress: () => {
-                    deletarMateria(title)
-                    setMaterias(materias.filter(materia => materia !== title))
-                },
+                onPress: () => confirmarExclusao(title),
             },
             ],
             { cancelable: true }
         )
         setContador(contador - 1)
+    }
+
+    const confirmarExclusao = (title: string) => {
+        deletarMateria(title)
+        setMaterias(materias.filter(materia => materia !== title))
     }
 
     const importMaterias = async () => {
