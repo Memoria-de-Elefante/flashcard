@@ -8,6 +8,7 @@ const Index = () => {
   const router = useRouter();
 
   useEffect(() => {
+    criarJson()
     Animated.sequence([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -21,7 +22,7 @@ const Index = () => {
         useNativeDriver: true,
       }),
     ]).start(() => {
-      router.push("/TelaLogin");
+      router.navigate("/TelaLogin");
     });
   }, []);
 
