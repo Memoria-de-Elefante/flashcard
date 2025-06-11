@@ -64,6 +64,7 @@ type Card = {
     dificuldade: string;
     imagem: string;
 }
+
 function buscarFlashcard(materia: string, pergunta: string) {
     try {
         const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
@@ -109,9 +110,24 @@ function deletarFlashcard(materia: string, pergunta: string) {
     }
 }
 
+export function buscarMaterias() {
+    try {
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+        if (!data) {
+            return undefined
+        }
+        const materias = Object.keys(data)
+        return materias
+    } catch (err) {
+        console.error(err)
+        return undefined
+    }
+}
 //function buscarTodosFlashcards() {}
-//function buscarTodasMaterias() {}
-adicionarFlashcard("matemática", "pergunta", "resposta", "fácil", "")
+
+
+// adicionarFlashcard("matemática", "pergunta", "resposta", "fácil", "")
 
 // const card = buscarFlashcard('matemática')
 // console.log(card)
+console.log(buscarMaterias())

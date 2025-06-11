@@ -62,17 +62,17 @@ export default function TelaSelecaoModo() {
       <CustomButton
         title="Modo Aleatório"
         marginVertical={42}
-        onPress={() => router.push('/ModoAleatorio/TelaModoAleatorio')}
+        onPress={() => router.navigate('/ModoAleatorio/TelaModoAleatorio')}  
       />
       <CustomButton
         title="Modo Dificuldade"
         marginVertical={42}
-        onPress={() => router.push('/ModoDificuldade/TelaOpcoesDificuldade')}
+        onPress={() => router.navigate('/ModoDificuldade/TelaOpcoesDificuldade')}
       />
       <CustomButton
         title="Modo Desafio"
         marginVertical={42}
-        onPress={() => router.push('/ModoDesafio/TelaModoDesafio')}
+        onPress={() => router.navigate('/ModoDesafio/TelaModoDesafio')}  
       />
     </SafeAreaView>
   );

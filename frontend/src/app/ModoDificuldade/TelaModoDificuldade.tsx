@@ -64,7 +64,7 @@ export default function TelaModoDificuldade() {
         width={250}
         borderRadius={10}
         marginVertical={60}
-        onPress={() => router.push('./FlashcardDificuldade')}
+        onPress={() => router.navigate('./FlashcardDificuldade')}
       />
       <CustomButton
         title="Ver Estatísticas"

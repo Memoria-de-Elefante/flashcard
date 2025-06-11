@@ -12,21 +12,31 @@ type Props = {
     flashcardType?: "edicao" | "aleatorio" | "desafio" | "dificuldade"; // Agora é opcional
     showFlipButton?: boolean;
     editable?: boolean;
+    onChangeFrontText?: (text: string) => void
+    onChangeBackText?: (text: string) => void
+    onChangeDificuldade?: (dificuldade: string) => void
+    onChangeAcerto?: (acerto: boolean) => void
     onPress?: () => void;
+    onDelete?: () => void
     style?: StyleProp<ViewStyle>;
 };
 
-export default function Flashcard({
-    frontText,
-    backText,
-    width,
-    height,
-    borderRadius,
-    flashcardType,
-    showFlipButton,
-    onPress,
-    editable,
-    style,
+export default function Flashcard({ 
+    frontText, 
+    backText, 
+    width, 
+    height, 
+    borderRadius, 
+    flashcardType, 
+    showFlipButton, 
+    onPress, 
+    onDelete, 
+    editable, 
+    style, 
+    onChangeFrontText, 
+    onChangeBackText, 
+    onChangeDificuldade, 
+    onChangeAcerto 
 }: Props) {
     const cardRef = useRef<{ flipCard: () => void }>(null);
     const [isFlipped, setIsFlipped] = useState(false);
@@ -44,6 +54,9 @@ export default function Flashcard({
     const marginTop_buttonRow = windowWidth < 600 ? windowWidth * -0.04 : -25;
     const marginLeft_buttonRow = windowWidth < 600 ? 0 : 0;
     const marginRight_buttonRow = windowWidth < 600 ? 70 : 0;
+    
+    const [dificuldade, setDificuldade] = useState("médio")
+    const [acerto, setAcerto] = useState(false)
 
     const renderButtons = () => {
         if (!flashcardType) return null;
@@ -62,29 +75,29 @@ export default function Flashcard({
                         <TouchableOpacity onPress={() => alert('Adiciona imagem')} style={{ marginLeft: 10 }}>
                             <Image source={require('../../assets/images/camera.png')} style={styles.image} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => alert('Exclui deck')} style={{ marginLeft: 10 }}>
+                        <TouchableOpacity onPress={onDelete} style={{ marginLeft: 10 }}>
                             <Image source={require('../../assets/images/IconDeletar.png')} style={styles.image} />
                         </TouchableOpacity>
                     </View><View style={styles.buttonRowAleatorio}>
-                            <CustomButton title="Fácil" onPress={() => console.log("Fácil")} width={80} height={45} borderRadius={10} />
-                            <CustomButton title="Médio" onPress={() => console.log("Médio")} width={80} height={45} borderRadius={10} />
-                            <CustomButton title="Difícil" onPress={() => console.log("Difícil")} width={80} height={45} borderRadius={10} />
+                            <CustomButton title="Fácil" onPress={() => handleSetDificuldade("fácil")} width={80} height={45} borderRadius={10} />
+                            <CustomButton title="Médio" onPress={() => handleSetDificuldade("médio")} width={80} height={45} borderRadius={10} />
+                            <CustomButton title="Difícil" onPress={() => handleSetDificuldade("difícil")} width={80} height={45} borderRadius={10} />
                         </View></>
                 );
             case "aleatorio":
                 if(isFlipped) return (
                     <View style={[styles.buttonRowAleatorio, commonStyle]}>
-                        <CustomButton title="Fácil" onPress={() => console.log("Fácil")} width={80} height={45} borderRadius={10} />
-                        <CustomButton title="Médio" onPress={() => console.log("Médio")} width={80} height={45} borderRadius={10} />
-                        <CustomButton title="Difícil" onPress={() => console.log("Difícil")} width={80} height={45} borderRadius={10} />
+                        <CustomButton title="Fácil" onPress={() => handleSetDificuldade("fácil")} width={80} height={45} borderRadius={10} />
+                        <CustomButton title="Médio" onPress={() => handleSetDificuldade("médio")} width={80} height={45} borderRadius={10} />
+                        <CustomButton title="Difícil" onPress={() => handleSetDificuldade("difícil")} width={80} height={45} borderRadius={10} />
                     </View>
                 );
             case "dificuldade":
             case "desafio":
                 if(isFlipped) return (
                     <View style={[styles.buttonRow, commonStyle]}>
-                        <CustomButton title="Acertei" onPress={() => console.log("Acertei")} width={90} height={45} borderRadius={10} />
-                        <CustomButton title="Errei" onPress={() => console.log("Errei")} width={90} height={45} borderRadius={10} />
+                        <CustomButton title="Acertei" onPress={() => handleSetAcerto(true)} width={90} height={45} borderRadius={10} />
+                        <CustomButton title="Errei" onPress={() => handleSetAcerto(false)} width={90} height={45} borderRadius={10} />
                     </View>
                 );
             default:
@@ -96,6 +109,16 @@ export default function Flashcard({
         setIsFlipped(prev => !prev);
     };
 
+    const handleSetDificuldade = (dificuldade: string) => {
+        setDificuldade(dificuldade)
+        onChangeDificuldade?.(dificuldade)
+    }
+
+    const handleSetAcerto = (acerto: boolean) => {
+        setAcerto(acerto)
+        onChangeAcerto?.(acerto)
+    }
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[styles.container, style]}>
@@ -103,6 +126,8 @@ export default function Flashcard({
                     ref={cardRef}
                     frontText={frontText}
                     backText={backText}
+                    onChangeFrontText={onChangeFrontText}
+                    onChangeBackText={onChangeBackText}
                     width={width}
                     height={height}
                     borderRadius={borderRadius}

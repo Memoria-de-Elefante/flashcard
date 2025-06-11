@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TouchableOpacity, Text, Image, SafeAreaView, View, StyleSheet, useWindowDimensions, TextInput, ScrollView } from "react-native";
 import CustomButton from "../components/CustomButton";
 import Flashcard from "../components/Flashcard";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import PagerView from 'react-native-pager-view';
+import { editarMateria, buscarTodosFlashcards, adicionarFlashcard, Card, print } from "../scripts/comandosJson"
+import { useIsFocused } from '@react-navigation/native';
 
 const router = useRouter();
 
-export default function TelaSelecaoCards() {
-    const [text, setText] = useState('Matéria');
-    const [isEditing, setIsEditing] = useState(false);
+export default function TelaSelecaoCards({ }) {
+    const materia = useLocalSearchParams<{materia: string}>().materia
+    const [text, setText] = useState(materia);
+    const [isEditing, setIsEditing] = useState(false)
+    const [cards, setCards] = useState<Card[]>([])
+    const [cardAtual, setCardAtual] = useState(0)
+    const pagerRef = useRef<PagerView>(null)
     const { width: windowWidth } = useWindowDimensions();
 
     const borderRadius_cardFace = windowWidth < 600 ? windowWidth * 0.02 : 10;
@@ -47,6 +54,33 @@ export default function TelaSelecaoCards() {
     const stripeWidth = windowWidth * 2.2;
     const stripeHeight = 150;
     const leftOffset = -windowWidth * 0.7;
+
+    const addCard = async () => {
+        const numAleatorio = Math.floor(Math.random() * (301 - 1 + 1)) + 1
+        await adicionarFlashcard(numAleatorio, materia, "Pergunta", "Resposta")
+        setCards([...cards, {id: numAleatorio, pergunta:"Pergunta", resposta:"Resposta", dificuldade:"médio", imagem:"", acerto: false}])
+        setTimeout(() => {
+            pagerRef.current?.setPage(cards.length)
+        }, 100)
+    }
+
+    const importCards = async () => {
+        const flashcards = await buscarTodosFlashcards(materia)
+        if (flashcards != undefined) {
+            setCards(flashcards)
+            setTimeout(() => {
+                const pageFocada = cardAtual >= flashcards.length ? Math.max(flashcards.length - 1, 0) : cardAtual
+                setCardAtual(pageFocada)
+                pagerRef.current?.setPage(pageFocada)
+            }, 100)
+        }
+        
+    }
+
+    const isFocused = useIsFocused()
+    useEffect(() => {
+        if (isFocused) {importCards()}
+    }, [isFocused])
 
     return (
         <SafeAreaView style={[styles.container, { paddingHorizontal: paddingHorizontal_page }]}>
@@ -103,8 +137,11 @@ export default function TelaSelecaoCards() {
                             fontSize: fontSize_input,
                         }]}
                         value={text}
-                        onChangeText={setText}
-                        onBlur={() => setIsEditing(false)}
+                        onChangeText={(novoTexto) => setText(novoTexto)}
+                        onBlur={() => {
+                            editarMateria(materia, text)
+                            setIsEditing(false)
+                        }}
                         autoFocus
                     />
                 ) : (
@@ -126,26 +163,26 @@ export default function TelaSelecaoCards() {
                 </TouchableOpacity>
             </SafeAreaView>
 
-            <ScrollView
+            <ScrollView 
                 horizontal
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}
                 style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
+                contentContainerStyle={styles.scrollContent} 
+                key={cards.length}
+                ref={pagerRef}
+                initialPage={0}
             >
-                {[1, 2, 3, 4].map((num) => (
-                    <View
-                        style={[styles.page, { paddingHorizontal: paddingHorizontal_page }]}
-                        key={num.toString()}
-                    >
+                {cards.map(card => (
+                    <View style={styles.page} key={card.id}>
                         <Flashcard
-                            frontText="Pergunta Aleatória"
-                            backText="Resposta"
-                            width={width_flashcard}
-                            height={height_flashcard}
-                            borderRadius={borderRadius_cardFace}
+                            frontText={card.pergunta}
+                            backText={card.resposta}
+                            width={width * 0.8}
+                            height={400}
+                            borderRadius={10}
                             editable={false}
-                            onPress={() => router.push('/TelaEdicaoCard')}
+                            onPress={() => router.navigate({pathname: '/TelaEdicaoCard', params: {id: Number(card.id), materia: materia}})}
                         />
 
                     </View>
@@ -154,7 +191,10 @@ export default function TelaSelecaoCards() {
 
             <CustomButton
                 title="+"
-                onPress={() => alert("Criação de deck")}
+                onPress={() => addCard()}
+                borderRadius={5}
+                marginTop={50}
+                textStyle={{ fontSize: 30 }}
             />
         </SafeAreaView>
     );

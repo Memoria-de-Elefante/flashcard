@@ -75,7 +75,7 @@ export default function TelaOpcoesDificuldade() {
       />
       <CustomButton
         title="Estudar"
-        onPress={() => router.push('./TelaModoDificuldade')}
+        onPress={() => router.navigate('./TelaModoDificuldade')}
       />
     </SafeAreaView>
   );

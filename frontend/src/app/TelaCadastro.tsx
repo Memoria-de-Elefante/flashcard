@@ -18,6 +18,7 @@ export default function TelaCadastro({ }) {
         try {
             const userData = await cadastroUser({ nome, email, senha });
             if (userData) {
+                router.navigate('/TelaInicial');
                 console.log('Cadastro bem-sucedido!', userData);
                 router.push('/TelaLogin');
             }

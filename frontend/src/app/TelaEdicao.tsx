@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { Text, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View } from "react-native";
+import React, { useEffect, useState} from 'react';
+import { Text, Alert, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import EdicaoButton from "../components/EdicaoButton";
+import { buscarMaterias, deletarMateria, adicionarMateria } from "../scripts/comandosJson"
 import { router } from "expo-router";
+import { useIsFocused } from '@react-navigation/native';
 
-export default function Edicao() {
+export default function edicao() {    
     const { width, height } = useWindowDimensions();
-
     // Responsividade para o texto
     const fontSize_texto = width < 600 ? width * 0.06 : 30;
     const marginTop_texto = width < 600 ? 40 : 0;
@@ -16,7 +17,51 @@ export default function Edicao() {
     const stripeWidth = width * 2.2;
     const stripeHeight = 150;
     const leftOffset = -width * 0.7;
+    
+    const [materias, setMaterias] = useState<string[]>([])
+    const [contador, setContador] = useState(1)
 
+    const addMat = async () => {
+        const nomeMateria = `matéria ${contador}`
+        await adicionarMateria(nomeMateria)
+        setMaterias([...materias, nomeMateria])
+        setContador(contador + 1)
+    }
+
+    const delMat = async (title: string) => {
+        Alert.alert(
+            'Confirmação',
+            `Tem certeza que deseja deletar "${title}"?`,
+            [
+            {
+                text: 'Cancelar',
+                style: 'cancel',
+            },
+            {
+                text: 'Deletar',
+                style: 'destructive',
+                onPress: () => {
+                    deletarMateria(title)
+                    setMaterias(materias.filter(materia => materia !== title))
+                },
+            },
+            ],
+            { cancelable: true }
+        )
+        setContador(contador - 1)
+    }
+
+    const importMaterias = async () => {
+        const materias = await buscarMaterias()
+        
+        if (materias != undefined) {
+            setMaterias(materias)
+            setContador(materias.length + 1)
+        }
+    }
+    
+    const isFocused = useIsFocused()
+    useEffect(() => {if (isFocused) {importMaterias()}}, [isFocused])
     return (
         <SafeAreaView style={[styles.container]}>
             <View style={{
@@ -64,12 +109,12 @@ export default function Edicao() {
                 }
             ]}>
                 <ScrollView>
-                    {["Matemática", "Português", "História", "Biologia", "Química", "Física"].map((item) => (
+                    {materias.map(materia => (
                         <EdicaoButton
-                            key={item}
-                            title={item}
-                            onPress={() => router.push('/TelaSelecaoCards')}
-                            onDelete={() => alert("Deletar deck")}
+                            key={materia}
+                            title={materia}
+                            onPress={() => {router.navigate({pathname: '/TelaSelecaoCards', params: {materia}})}}
+                            onDelete={() => {delMat(materia)}}
                         />
                     ))}
                 </ScrollView>
@@ -77,7 +122,9 @@ export default function Edicao() {
 
             <CustomButton
                 title="+"
-                onPress={() => alert("Criação de deck")}
+                onPress={() => addMat()}
+                borderRadius={5}
+                marginTop={50}
                 textStyle={{ fontSize: 30 }}
             />
         </SafeAreaView>

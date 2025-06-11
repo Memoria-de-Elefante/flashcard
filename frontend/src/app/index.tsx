@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, StyleSheet, Image, View } from "react-native";
 import { useRouter } from "expo-router";
+import { criarJson, delJson } from "../scripts/comandosJson"
 
 const Index = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const router = useRouter();
 
   useEffect(() => {
+    criarJson()
     Animated.sequence([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -20,7 +22,7 @@ const Index = () => {
         useNativeDriver: true,
       }),
     ]).start(() => {
-      router.push("/TelaLogin");
+      router.navigate("/TelaLogin");
     });
   }, []);
 

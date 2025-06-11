@@ -189,7 +189,7 @@ export default function TelaLogin({ }) {
             <CustomButton
                 title="Após Login"
                 marginVertical={20}
-                onPress={() => router.push('/TelaInicial')}
+                onPress={() => router.navigate('/TelaInicial')}
             />
 
         </SafeAreaView>

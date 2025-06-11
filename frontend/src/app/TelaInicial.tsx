@@ -77,13 +77,13 @@ export default function Index({ }) {
         title="Jogar"
         marginVertical={20}
         borderRadius={5}
-        onPress={() => router.push('/TelaSelecaoModo')}
+        onPress={() => router.navigate('/TelaSelecaoModo')}  
       />
       <CustomButton
         title="Editar Decks"
         marginVertical={20}
         borderRadius={5}
-        onPress={() => router.push('/TelaEdicao')}
+        onPress={() => router.navigate('/TelaEdicao')} 
       />
       <CustomButton
         title="Sair da Conta"
