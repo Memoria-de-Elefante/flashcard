@@ -36,7 +36,7 @@ export default function Flashcard({
     onChangeFrontText, 
     onChangeBackText, 
     onChangeDificuldade, 
-    onChangeAcerto 
+    onChangeAcerto,
 }: Props) {
     const cardRef = useRef<{ flipCard: () => void }>(null);
     const [isFlipped, setIsFlipped] = useState(false);
@@ -72,7 +72,7 @@ export default function Flashcard({
             case "edicao":
                 return(
                     <><View style={styles.iconRow}>
-                        <TouchableOpacity onPress={() => alert('Adiciona imagem')} style={{ marginLeft: 10 }}>
+                        <TouchableOpacity onPress={onPress} style={{ marginLeft: 10 }}>
                             <Image source={require('../../assets/images/camera.png')} style={styles.image} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onDelete} style={{ marginLeft: 10 }}>
