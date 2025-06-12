@@ -146,6 +146,7 @@ export default function FlashcardAleatorio() {
             setDificuldade(dif)
             proximoCard(dif)
           }}
+          imageURI={cardAtual.imagem}
         />
       )}
     </SafeAreaView>
