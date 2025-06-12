@@ -19,6 +19,7 @@ export default function edicao() {
     
     const cardRef = useRef<{ flipCard: () => void }>(null);
     const [isFlipped, setIsFlipped] = useState(false);
+	const [flipped, setFlipped] = useState(false);
     const handleFlip = () => {
         cardRef.current?.flipCard();
         setIsFlipped(prev => !prev);
@@ -27,6 +28,7 @@ export default function edicao() {
     const [resposta, setResposta] = useState("")
     const [dificuldade, setDificuldade] = useState("médio")
     const [image, setImage] = useState("")
+	const [backImage, setBackImage] = useState("")
 
     const importCard = async () => {
         console.log(materia, id)
@@ -36,11 +38,12 @@ export default function edicao() {
             setPergunta(card.pergunta)
             setResposta(card.resposta)
             setImage(card.imagem)
+			setBackImage(card.backImage)
         }
     }
     
     const saveMudancas = async () => {
-        await editarFlashcard(materia, id, pergunta, resposta, dificuldade, image)
+        await editarFlashcard(materia, id, pergunta, resposta, dificuldade, image, backImage)
     }
 
     const pickImage = async () => {
@@ -52,7 +55,12 @@ export default function edicao() {
         });
 
         if (!result.canceled) {
-            setImage(result.assets[0].uri);
+			if (!flipped) {
+				setImage(result.assets[0].uri);
+			}
+			else {
+				setBackImage(result.assets[0].uri);
+			}
         }
     }
 
@@ -132,6 +140,8 @@ export default function edicao() {
                 onPickImage={pickImage}
                 onDelete={delCard}
                 imageURI={image}
+				backImage={backImage}
+				onFlip={(value) => setFlipped(value)}
             />
             <CustomButton
                 title="Salvar"

@@ -17,6 +17,8 @@ type Props = {
     onDelete?: () => void;
     onPickImage?: () => void,
     imageURI: string;
+	backImage: string;
+	flipped: boolean;
 };
 
 export type CardRef = {
@@ -27,7 +29,7 @@ const Card = forwardRef(function Card(
     props: Props,
     ref: React.ForwardedRef<{ flipCard: () => void }>
 ) {
-    const { frontText, backText, width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop, cardType, editable, onPress, onPickImage, onDelete, imageURI } = props;
+    const { frontText, backText, width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop, cardType, editable, onPress, onPickImage, onDelete, imageURI, backImage } = props;
 
     const [front, setFront] = useState(frontText);
     const [back, setBack] = useState(backText);
@@ -255,6 +257,7 @@ const Card = forwardRef(function Card(
                             )}
                         </View>
                     </TouchableWithoutFeedback>
+                    <Image source={{ uri: backImage }} style={styles.imageCard} />
                 </Animated.View>
 
 
