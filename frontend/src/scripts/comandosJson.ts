@@ -136,7 +136,7 @@ export async function adicionarFlashcard(id: string, materia: string, pergunta: 
         if (json) {
             console.log(2)
             const data = JSON.parse(json);
-            data[materia].push({id: id, pergunta: pergunta, resposta: resposta, dificuldade: "médio", imagem: "", acerto: false});
+            data[materia].push({id: id, pergunta: pergunta, resposta: resposta, dificuldade: "médio", imagem: "", backImage: "", acerto: false});
             if (eWeb) await localStorage.setItem(chaveStorage, JSON.stringify(data));
             else await fileSystem.writeAsStringAsync(filePath, JSON.stringify(data, null, 2));
         }
@@ -152,6 +152,7 @@ export type Card = {
     resposta: string;
     dificuldade: string;
     imagem: string;
+	backImage: string;
     acerto: boolean
 }
 
@@ -221,7 +222,7 @@ export async function deletarFlashcard(materia: string, id: string) {
     }
 }
 
-export async function editarFlashcard(materia: string, id: string, novaPergunta: string, novaResposta: string, novaDificuldade: string, novaImagem: string) {
+export async function editarFlashcard(materia: string, id: string, novaPergunta: string, novaResposta: string, novaDificuldade: string, novaImagem: string, novaBackImage: string) {
     try {
         let json = null;
         if (eWeb) json = await localStorage.getItem(chaveStorage);
@@ -237,6 +238,7 @@ export async function editarFlashcard(materia: string, id: string, novaPergunta:
                     card.resposta = novaResposta;
                     card.dificuldade = novaDificuldade;
                     card.imagem = novaImagem;
+					card.backImage = novaBackImage;
                 }
             }
 

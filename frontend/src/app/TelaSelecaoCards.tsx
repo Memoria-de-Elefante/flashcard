@@ -66,7 +66,7 @@ export default function TelaSelecaoCards({ }) {
         if (Platform.OS === "web") chaveAleatorio = uuidv4()
             else chaveAleatorio = uuidMobile.default.v4()
         await adicionarFlashcard(chaveAleatorio, materia, "Pergunta", "Resposta")
-        setCards([...cards, {id: chaveAleatorio, pergunta:"Pergunta", resposta:"Resposta", dificuldade:"médio", imagem:"", acerto: false}])
+        setCards([...cards, {id: chaveAleatorio, pergunta:"Pergunta", resposta:"Resposta", dificuldade:"médio", imagem:"", backImage: "", acerto: false}])
         setTimeout(() => {
             carouselRef.current?.scrollTo({ index: cards.length, animated: true })
         }, 100);
