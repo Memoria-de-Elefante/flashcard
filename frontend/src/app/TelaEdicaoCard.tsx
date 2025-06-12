@@ -4,6 +4,7 @@ import Flashcard from "../components/Flashcard";
 import CustomButton from "../components/CustomButton";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { deletarFlashcard, editarFlashcard, buscarFlashcard } from "../scripts/comandosJson";
+import * as ImagePicker from 'expo-image-picker';
 
 const router = useRouter()
 
@@ -25,6 +26,7 @@ export default function edicao() {
     const [pergunta, setPergunta] = useState("")
     const [resposta, setResposta] = useState("")
     const [dificuldade, setDificuldade] = useState("médio")
+    const [image, setImage] = useState("")
 
     const importCard = async () => {
         console.log(materia, id)
@@ -33,11 +35,25 @@ export default function edicao() {
         if (card != undefined) {
             setPergunta(card.pergunta)
             setResposta(card.resposta)
+            setImage(card.imagem)
         }
     }
     
     const saveMudancas = async () => {
-        await editarFlashcard(materia, id, pergunta, resposta, dificuldade, "")
+        await editarFlashcard(materia, id, pergunta, resposta, dificuldade, image)
+    }
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            allowsEditing: true,
+            // aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
     }
 
     const delCard = async () => {
@@ -113,7 +129,9 @@ export default function edicao() {
                 flashcardType="edicao"
                 showFlipButton={true}
                 onChangeDificuldade={(dificuldade) => setDificuldade(dificuldade)}
+                onPickImage={pickImage}
                 onDelete={delCard}
+                imageURI={image}
             />
             <CustomButton
                 title="Salvar"

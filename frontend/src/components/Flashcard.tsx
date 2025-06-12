@@ -21,8 +21,10 @@ type Props = {
     onChangeDificuldade?: (dificuldade: string) => void;
     onChangeAcerto?: (acerto: boolean) => void;
     onPress?: () => void;
-    onDelete?: () => void;
+    onPickImage?: () => void;
+    onDelete?: () => void
     style?: StyleProp<ViewStyle>;
+    imageURI: string;
 };
 
 const Flashcard = forwardRef<FlashcardHandle, Props>(({
@@ -34,13 +36,15 @@ const Flashcard = forwardRef<FlashcardHandle, Props>(({
     flashcardType,
     showFlipButton,
     onPress,
+    onPickImage,
     onDelete,
     editable,
     style,
     onChangeFrontText,
     onChangeBackText,
     onChangeDificuldade,
-    onChangeAcerto
+    onChangeAcerto,
+    imageURI,
 }, ref) => {
     const cardRef = useRef<{ flipCard: () => void }>(null);
     const [isFlipped, setIsFlipped] = useState(false);
@@ -92,17 +96,15 @@ const Flashcard = forwardRef<FlashcardHandle, Props>(({
 
         switch (flashcardType) {
             case "edicao":
-                return (
-                    <>
-                        <View style={styles.iconRow}>
-                            <TouchableOpacity onPress={() => alert('Adiciona imagem')} style={{ marginLeft: 10 }}>
-                                <Image source={require('../../assets/images/camera.png')} style={styles.image} />
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={onDelete} style={{ marginLeft: 10 }}>
-                                <Image source={require('../../assets/images/IconDeletar.png')} style={styles.image} />
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.buttonRowAleatorio}>
+                return(
+                    <><View style={styles.iconRow}>
+                        <TouchableOpacity onPress={onPickImage} style={{ marginLeft: 10 }}>
+                            <Image source={require('../../assets/images/camera.png')} style={styles.image} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onDelete} style={{ marginLeft: 10 }}>
+                            <Image source={require('../../assets/images/IconDeletar.png')} style={styles.image} />
+                        </TouchableOpacity>
+                    </View><View style={styles.buttonRowAleatorio}>
                             <CustomButton title="Fácil" onPress={() => handleSetDificuldade("fácil")} width={80} height={45} borderRadius={10} />
                             <CustomButton title="Médio" onPress={() => handleSetDificuldade("médio")} width={80} height={45} borderRadius={10} />
                             <CustomButton title="Difícil" onPress={() => handleSetDificuldade("difícil")} width={80} height={45} borderRadius={10} />
@@ -150,6 +152,7 @@ const Flashcard = forwardRef<FlashcardHandle, Props>(({
                     borderRadius={borderRadius}
                     onPress={onPress}
                     editable={editable}
+                    imageURI={imageURI}
                 />
 
                 {renderButtons()}
