@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View } from "react-native";
 import CustomButton from "../../components/CustomButton";
 import OptionButton from "../../components/OptionButton";
 import { router } from "expo-router";
+import { buscarMaterias, Card } from "../../scripts/comandosJson"
 
 export default function TelaModoDificuldade() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [materias, setMaterias] = useState<string[]>([])
 
   const { width, height } = useWindowDimensions();
 
@@ -19,6 +21,15 @@ export default function TelaModoDificuldade() {
   const stripeHeight = 150;
   const leftOffset = -width * 0.7;
 
+  const importMaterias = async () => {
+    const materias = await buscarMaterias()
+    
+    if (materias != undefined) {
+      setMaterias(materias)
+    }
+  }
+
+  useEffect(() => {importMaterias()}, [])
   return (
     <SafeAreaView style={styles.container}>
       <View style={{
@@ -62,44 +73,16 @@ export default function TelaModoDificuldade() {
         maxHeight: width < 600 ? height * 0.45 : height * 0.6,
         width: width < 600 ? width * 0.8 : 600,
       }}>
-
+        
         <ScrollView>
-          <OptionButton
-            label="Matemática"
-            value="matematica"
-            isSelected={selectedOption === 'matematica'}
-            onPress={setSelectedOption}
-          />
-          <OptionButton
-            label="Português"
-            value="portugues"
-            isSelected={selectedOption === 'portugues'}
-            onPress={setSelectedOption}
-          />
-          <OptionButton
-            label="História"
-            value="historia"
-            isSelected={selectedOption === 'historia'}
-            onPress={setSelectedOption}
-          />
-          <OptionButton
-            label="Biologia"
-            value="biologia"
-            isSelected={selectedOption === 'biologia'}
-            onPress={setSelectedOption}
-          />
-          <OptionButton
-            label="Química"
-            value="quimica"
-            isSelected={selectedOption === 'quimica'}
-            onPress={setSelectedOption}
-          />
-          <OptionButton
-            label="Física"
-            value="fisica"
-            isSelected={selectedOption === 'fisica'}
-            onPress={setSelectedOption}
-          />
+          {materias.map(materia => (
+            <OptionButton
+              label={materia}
+              value={materia}
+              isSelected={selectedOption === materia}
+              onPress={() => setSelectedOption(materia)}
+            />
+          ))}
         </ScrollView>
       </View>
 
@@ -107,7 +90,7 @@ export default function TelaModoDificuldade() {
         title="Estudar"
         marginVertical={42}
         marginTop={60}
-        onPress={() => router.navigate('./FlashcardAleatorio')} 
+        onPress={() => router.navigate({pathname: './FlashcardAleatorio', params:{materia: selectedOption}})} 
       />
     </SafeAreaView>
   );

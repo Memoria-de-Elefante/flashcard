@@ -74,7 +74,6 @@ export default function TelaSelecaoCards({ }) {
 
     const importCards = async () => {
         const flashcards = await buscarTodosFlashcards(materia)
-        console.log(flashcards)
         if (flashcards != undefined) {
             setCards(flashcards)
             setTimeout(() => {
@@ -83,7 +82,6 @@ export default function TelaSelecaoCards({ }) {
                 carouselRef.current?.scrollTo({ index: pageFocada, animated: true })
             }, 100)
         }
-        
     }
 
     const isFocused = useIsFocused()
