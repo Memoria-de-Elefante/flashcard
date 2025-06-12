@@ -17,7 +17,7 @@ const SenhaButton = ({ title, onPress, value, onChangeText }: Props) => {
 
     const { width: windowWidth } = useWindowDimensions();
 
-    // responsividade para o passwordContainer
+    
     const borderRadius_passwordContainer = windowWidth < 600 ? windowWidth * 10 : 30;
     const padding_passwordContainer = windowWidth < 600 ? windowWidth * 0.01 : 25;
     const marginBottom_passwordContainer = windowWidth < 600 ? windowWidth * 0.04 : 10;
@@ -25,14 +25,14 @@ const SenhaButton = ({ title, onPress, value, onChangeText }: Props) => {
     const height_passwordContainer = windowWidth < 600 ? windowWidth * 0.1 : 30;
     const marginTop_passwordContainer = windowWidth < 600 ? windowWidth * 0.04 : 10;
 
-    // responsividade para o input 
+    
     const height_input = windowWidth < 600 ? windowWidth * 0.09 : 48;
-    const paddingHorizontal_input = windowWidth < 600 ? windowWidth * 0.025 : 0; // arrumar afastamento lado esquerdo
+    const paddingHorizontal_input = windowWidth < 600 ? windowWidth * 0.025 : 0; 
     const fontSize_input = windowWidth < 600 ? windowWidth * 0.05 : 25;
     const marginTop_input = windowWidth < 600 ? windowWidth * 0 : 0;
     const borderRadius_input = windowWidth < 600 ? windowWidth * 10 : 30;
 
-    // responsividade para a imagem de edição
+    
     const width_imagemEdicao = windowWidth < 600 ? windowWidth * 0.1 : 35;
     const height_imagemEdicao = windowWidth < 600 ? windowWidth * 1 : 35;
 

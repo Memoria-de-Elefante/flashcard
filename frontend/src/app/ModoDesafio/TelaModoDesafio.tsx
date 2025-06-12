@@ -1,19 +1,19 @@
 import React from "react";
 import { Image, SafeAreaView, StyleSheet, useWindowDimensions, View } from "react-native";
-import CustomButton from "../../components/CustomButton"; // Ajuste o caminho de acordo com a estrutura
+import CustomButton from "../../components/CustomButton"; 
 import { router } from "expo-router";
 
 export default function TelaModoDesafio() {
 
   const { width: windowWidth } = useWindowDimensions();
 
-  // responsividade para a imagem
+ 
   const largura_imagem = windowWidth < 600 ? windowWidth * 0.6 : 300;
   const altura_imagem = windowWidth < 600 ? windowWidth * 0.45 : 100;
   const marginBottom_imagem = windowWidth < 600 ? windowWidth * 0.05 : 0;
   const marginTop_imagem = windowWidth < 600 ? windowWidth * 0.07 : 10;
 
-  // responsividae para listras
+  
   const stripeWidth = windowWidth * 2.2;
   const stripeHeight = 150;
   const leftOffset = -windowWidth * 0.7;
@@ -74,10 +74,6 @@ export default function TelaModoDesafio() {
         onPress={() => router.navigate("../estatisticas")}
       />
     </SafeAreaView>
-    // width: width ?? screenWidth * 0.45,
-    // height: height ?? screenWidth * 0.15,
-    // borderRadius: borderRadius ?? 15,
-    // marginVertical: marginVertical ?? 0.045,
   );
 }
 
@@ -85,12 +81,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000000",
-    justifyContent: "flex-start", // Alinha tudo no topo
+    justifyContent: "flex-start", 
     alignItems: "center",
     paddingTop: 10,
     paddingHorizontal: 0,
     paddingBottom: 0,
-    flexDirection: 'column', // Garantir que os itens se organizem verticalmente
+    flexDirection: 'column', 
   },
   image: {
     resizeMode: 'contain',

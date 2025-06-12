@@ -9,7 +9,7 @@ type Props = {
     width: number;
     height: number;
     borderRadius: number;
-    flashcardType?: "edicao" | "aleatorio" | "desafio" | "dificuldade"; // Agora é opcional
+    flashcardType?: "edicao" | "aleatorio" | "desafio" | "dificuldade"; 
     showFlipButton?: boolean;
     cardType?: "edicao";
     editable?: boolean;
@@ -45,13 +45,13 @@ export default function Flashcard({
 
     const { width: windowWidth } = useWindowDimensions();
 
-    // responsividade para o buttonRowAleatorio 
+    
     const marginBottom_buttonRowAleatorio = windowWidth < 600 ? windowWidth * -0.1 : -60;
     const marginTop_buttonRowAleatorio = windowWidth < 600 ? windowWidth * -0.04 : -25;
     const marginLeft_buttonRowAleatorio = windowWidth < 600 ? 0 : 0;
     const marginRight_buttonRowAleatorio = windowWidth < 600 ? 40 : 0;
 
-    // responsividade para o buttonRow
+    
     const marginBottom_buttonRow = windowWidth < 600 ? windowWidth * -0.1 : -60;
     const marginTop_buttonRow = windowWidth < 600 ? windowWidth * -0.04 : -25;
     const marginLeft_buttonRow = windowWidth < 600 ? 0 : 0;
@@ -132,10 +132,10 @@ export default function Flashcard({
                     editable={editable}
                 />
 
-                {/* Botões de feedback */}
+                
                 {renderButtons()}
 
-                {/* Botão Flip sempre por último */}
+                
                 {showFlipButton && (
                     <View style={styles.flipButtonWrapper}>
                         <CustomButton

@@ -6,7 +6,7 @@ export default function FlashcardDificuldade() {
 
   const { width: windowWidth } = useWindowDimensions();
 
-  // responsividae para listras
+ 
   const stripeWidth = windowWidth * 2.2;
   const stripeHeight = 150;
   const leftOffset = -windowWidth * 0.7;
@@ -45,8 +45,8 @@ export default function FlashcardDificuldade() {
         width={300}
         height={400}
         borderRadius={10}
-        flashcardType="dificuldade" // Passando o tipo para o Flashcard
-        showFlipButton={true} // Caso queira que o botão flip apareça ou não
+        flashcardType="dificuldade" 
+        showFlipButton={true} 
         editable={false}
         style={{ marginTop: 60 }}
       />

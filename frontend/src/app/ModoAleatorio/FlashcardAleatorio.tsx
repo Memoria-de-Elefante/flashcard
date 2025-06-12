@@ -5,7 +5,7 @@ import Flashcard from "../../components/Flashcard";
 export default function FlashcardAleatorio() {
   const { width: windowWidth } = useWindowDimensions();
 
-  // responsividae para listras
+ 
   const stripeWidth = windowWidth * 2.2;
   const stripeHeight = 150;
   const leftOffset = -windowWidth * 0.7;
@@ -44,8 +44,8 @@ export default function FlashcardAleatorio() {
         width={300}
         height={400}
         borderRadius={10}
-        flashcardType="aleatorio" // Passando o tipo para o Flashcard
-        showFlipButton={true} // Caso queira que o botão flip apareça ou não
+        flashcardType="aleatorio" 
+        showFlipButton={true} 
         editable={false}
         style={{ marginTop: 60 }}
       />

@@ -1,114 +1,148 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import {
+View,
+Text,
+StyleSheet,
+TouchableOpacity,
+Animated,
+} from 'react-native';
 import { PieChart } from 'react-native-svg-charts';
 import { G, Text as SvgText } from 'react-native-svg';
 
-interface Props {
-  acertos: number;
-  erros: number;
-}
+const Estatisticas = () => {
+const [mostrarGrafico, setMostrarGrafico] = useState(false);
+const [acertos] = useState(12);
+const [erros] = useState(3);
+const fadeAnimBotao = useRef(new Animated.Value(1)).current;
+const fadeAnimGrafico = useRef(new Animated.Value(0)).current;
 
-const Estatisticas = ({ acertos, erros }: Props) => {
-  const total = acertos + erros;
+const total = acertos + erros;
 
-  const data = [
-    {
-      key: 1,
-      value: acertos,
-      svg: { fill: '#2ecc71' }, // verde
-      label: 'Acertos',
-    },
-    {
-      key: 2,
-      value: erros,
-      svg: { fill: '#e74c3c' }, // vermelho
-      label: 'Erros',
-    },
-  ];
+const data = [
+{
+key: 1,
+value: acertos,
+svg: { fill: '#2ecc71' },
+label: 'Acertos',
+},
+{
+key: 2,
+value: erros,
+svg: { fill: '#e74c3c' },
+label: 'Erros',
+},
+];
 
-  const Labels = ({ slices }: any) => {
-    return slices.map((slice: any, index: number) => {
-      const { pieCentroid, data } = slice;
-      // Adicionado tratamento para evitar divisão por zero
-      const percent = total === 0 ? 0 : ((data.value / total) * 100);
-      // Não exibir label se a porcentagem for 0
-      if (percent === 0) {
-        return null;
-      }
-      return (
-        <G key={index}>
-          <SvgText
-            x={pieCentroid[0]}
-            y={pieCentroid[1]}
-            fill="white"
-            textAnchor="middle"
-            alignmentBaseline="middle"
-            fontSize={14}
-            fontWeight="bold"
-          >
-            {percent.toFixed(1)}%
-          </SvgText>
-        </G>
-      );
-    });
-  };
+const Labels = ({ slices }: any) => {
+return slices.map((slice: any, index: number) => {
+const { pieCentroid, data } = slice;
+const percent = total === 0 ? 0 : (data.value / total) * 100;
+if (percent === 0) return null;
+return (
+<G key={index}>
+<SvgText x={pieCentroid[0]} y={pieCentroid[1]} fill="white" textAnchor="middle" alignmentBaseline="middle" fontSize={14} fontWeight="bold" >
+{percent.toFixed(1)}%
+</SvgText>
+</G>
+);
+});
+};
 
-  // Não renderizar o gráfico se não houver dados
-  if (total === 0) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Estatísticas</Text>
-        <Text style={styles.legendaTexto}>Nenhuma rodada concluída ainda.</Text>
+const handleGerarGrafico = () => {
+Animated.timing(fadeAnimBotao, {
+toValue: 0,
+duration: 500,
+useNativeDriver: true,
+}).start(() => {
+setMostrarGrafico(true);
+Animated.timing(fadeAnimGrafico, {
+toValue: 1,
+duration: 800,
+useNativeDriver: true,
+}).start();
+});
+};
+
+return (
+<View style={styles.container}>
+{!mostrarGrafico && (
+<Animated.View style={{ opacity: fadeAnimBotao }}>
+<TouchableOpacity style={styles.botao} onPress={handleGerarGrafico}>
+<Text style={styles.botaoTexto}>Gerar Gráfico</Text>
+</TouchableOpacity>
+</Animated.View>
+)}
+
+php-template
+Copiar
+Editar
+  {mostrarGrafico && (
+    <Animated.View style={[styles.bordaBranca, { opacity: fadeAnimGrafico }]}>
+      <View style={styles.conteudoGrafico}>
+        <PieChart
+          style={{ height: 220, width: 220 }}
+          data={data.filter(item => item.value > 0)}
+          outerRadius={'90%'}
+          innerRadius={'45%'}
+        >
+          <Labels />
+        </PieChart>
       </View>
-    );
-  }
+    </Animated.View>
+  )}
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Estatísticas</Text>
-      <PieChart
-        style={{ height: 250, width: '100%' }} 
-        data={data.filter(item => item.value > 0)} 
-        outerRadius={'90%'}
-        innerRadius={'45%'}
-        
-      >
-        <Labels />
-      </PieChart>
-      <View style={styles.legenda}>
-        <Text style={styles.legendaTexto}>
-          🟩 Acertos: {acertos}
-        </Text>
-        <Text style={styles.legendaTexto}>
-          🟥 Erros: {erros}
-        </Text>
-      </View>
-    </View>
-  );
+  <View style={styles.legenda}>
+    <Text style={styles.legendaTexto}>🟩 Acertos: 12</Text>
+    <Text style={styles.legendaTexto}>🟥 Erros: 3</Text>
+  </View>
+</View>
+);
 };
 
 export default Estatisticas;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000', // fundo preto
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 26,
-    color: '#fff',
-    marginBottom: 16,
-    fontWeight: 'bold',
-  },
-  legenda: {
-    marginTop: 20,
-  },
-  legendaTexto: {
-    fontSize: 18,
-    color: '#fff',
-    marginVertical: 4,
-  },
+container: {
+flex: 1,
+backgroundColor: '#000',
+justifyContent: 'center',
+alignItems: 'center',
+padding: 20,
+},
+botao: {
+paddingVertical: 12,
+paddingHorizontal: 24,
+borderWidth: 2,
+borderColor: '#fff',
+borderRadius: 8,
+},
+botaoTexto: {
+color: '#fff',
+fontSize: 18,
+fontWeight: 'bold',
+},
+bordaBranca: {
+height: 260,
+width: 260,
+borderRadius: 130,
+backgroundColor: '#fff',
+justifyContent: 'center',
+alignItems: 'center',
+},
+conteudoGrafico: {
+height: 220,
+width: 220,
+borderRadius: 110,
+backgroundColor: '#000',
+justifyContent: 'center',
+alignItems: 'center',
+},
+legenda: {
+marginTop: 20,
+},
+legendaTexto: {
+fontSize: 18,
+color: '#fff',
+marginVertical: 4,
+},
 });

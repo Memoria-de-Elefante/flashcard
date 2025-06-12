@@ -22,35 +22,35 @@ export default function TelaSelecaoCards({ }) {
     const width_flashcard = windowWidth < 600 ? windowWidth * 0.85 : 350;
     const height_flashcard = windowWidth < 600 ? windowWidth * 1 : 350;
 
-    // TopRightIcon responsividade
+    
     const paddingRight_topRightIcon = windowWidth < 600 ? windowWidth * 0 : 250;
     const marginTop_topRightIcon = windowWidth < 600 ? windowWidth * 0.1 : 25;
 
-    // IconCompartilhar responsividade
+    
     const size_iconCompartilhar = windowWidth < 600 ? windowWidth * 0.1 : 30;
 
-    // IconGroup responsividade
+    
     const gap_iconGroup = windowWidth < 600 ? 0 : 200;
 
-    // Input responsividade
+    
     const height_input = windowWidth < 600 ? 5 : 40;
     const margin_input = windowWidth < 600 ? 10 : 20;
     const borderWidth_input = 10;
     const padding_input = windowWidth < 600 ? 10 : 15;
     const fontSize_input = windowWidth < 600 ? 18 : 25;
 
-    // Texto responsividade
+    
     const fontSize_texto = windowWidth < 600 ? 30 : 30;
     const marginVertical_texto = windowWidth < 600 ? 20 : 15;
     const marginRight_texto = windowWidth < 600 ? 10 : 0;
 
-    // Imagem responsividade
+    
     const size_imagem = windowWidth < 600 ? 30 : 30;
 
-    // Page padding horizontal
+    
     const paddingHorizontal_page = windowWidth < 600 ? 30 : 300;
 
-    // responsividae para listras
+    
     const stripeWidth = windowWidth * 2.2;
     const stripeHeight = 150;
     const leftOffset = -windowWidth * 0.7;
@@ -204,8 +204,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#000000",
-        justifyContent: "flex-start",  // mantém itens no topo
-        alignItems: "center",          // centraliza horizontalmente
+        justifyContent: "flex-start",  
+        alignItems: "center",          
         flexDirection: 'column',
     },
 

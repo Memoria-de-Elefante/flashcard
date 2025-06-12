@@ -8,12 +8,12 @@ import { useIsFocused } from '@react-navigation/native';
 
 export default function edicao() {    
     const { width, height } = useWindowDimensions();
-    // Responsividade para o texto
+    
     const fontSize_texto = width < 600 ? width * 0.06 : 30;
     const marginTop_texto = width < 600 ? 40 : 0;
     const marginBottom_texto = width < 600 ? 40 : 10;
 
-    // responsividae para listras
+    
     const stripeWidth = width * 2.2;
     const stripeHeight = 150;
     const leftOffset = -width * 0.7;

@@ -6,18 +6,18 @@ export default function Index({ }) {
 
   const { width: windowWidth } = useWindowDimensions();
 
-  // responsividade para a imagem
+ 
   const largura_imagem = windowWidth < 600 ? windowWidth * 0.6 : 300;
   const altura_imagem = windowWidth < 600 ? windowWidth * 0.45 : 100;
   const marginBottom_imagem = windowWidth < 600 ? windowWidth * 0.05 : 0;
 
-  // responsividade para o texto
+  
   const fontSize_texto = windowWidth < 600 ? windowWidth * 0.08 : 30;
   const marginTop_texto = windowWidth < 600 ? windowWidth * 0 : 10;
   const marginBottom_texto = windowWidth < 600 ? windowWidth * 0 : 0;
   const marginTop_imagem = windowWidth < 600 ? windowWidth * 0.07 : 10;
 
-  // responsividae para listras
+  
   const stripeWidth = windowWidth * 2.2;
   const stripeHeight = 150;
   const leftOffset = -windowWidth * 0.7;
@@ -71,7 +71,7 @@ export default function Index({ }) {
           marginBottom: marginBottom_texto,
         }
       ]}>Bem-vindo, aluno!</Text>
-      {/* Colocar um parâmetro para puxar o nome do usuário pelo token */}
+      
 
       <CustomButton
         title="Jogar"
@@ -99,12 +99,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000000",
-    justifyContent: "flex-start", // alinha tudo no topo
+    justifyContent: "flex-start", 
     alignItems: "center",
     paddingTop: 10,
     paddingHorizontal: 0,
     paddingBottom: 0,
-    flexDirection: 'column', // Garantir que os itens se organizem verticalmente
+    flexDirection: 'column', 
   },
   image: {
     resizeMode: 'contain',

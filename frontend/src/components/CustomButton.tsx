@@ -16,7 +16,7 @@ type Props = {
 const CustomButton = ({ title, onPress, width, height, borderRadius, marginVertical, marginTop, padding, textStyle }: Props) => {
     const { width: windowWidth } = useWindowDimensions(); 
     
-    // responsividade do button
+    
     const width_button = windowWidth < 600 ? windowWidth * 0.5 : 200;
     const height_button = windowWidth < 600 ? windowWidth * 0.15 : 70;
     const borderRadius_button = windowWidth < 600 ? windowWidth * 0.02 : 10;
@@ -24,13 +24,10 @@ const CustomButton = ({ title, onPress, width, height, borderRadius, marginVerti
     const marginTop_button = windowWidth < 600 ? windowWidth * 0.12 : 50;
     const padding_button = windowWidth < 600 ? windowWidth * 0 : 5;
 
-    // responsividade do texto
+    
     const fontSize_text = windowWidth < 600 ? windowWidth * 0.06 : 20;
 
-    // Colocar condição nas telas TelaOpcoesDificuldade e TelaModoAleatorio que só irá ir para a proxima página caso o usuário tenha selecionado algum deck e exibir feedback ao usuario
-
-    // arrumar o input do login e cadastro
-
+   
     return (
         <TouchableOpacity
             style={[
