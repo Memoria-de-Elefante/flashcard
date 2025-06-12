@@ -99,19 +99,11 @@ const Flashcard = forwardRef<FlashcardHandle, Props>(({
         switch (flashcardType) {
             case "edicao":
                 return(
-                    <><View style={styles.iconRow}>
-                        <TouchableOpacity onPress={onPickImage} style={{ marginLeft: 10 }}>
-                            <Image source={require('../../assets/images/camera.png')} style={styles.image} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={onDelete} style={{ marginLeft: 10 }}>
-                            <Image source={require('../../assets/images/IconDeletar.png')} style={styles.image} />
-                        </TouchableOpacity>
-                    </View><View style={styles.buttonRowAleatorio}>
+                    <View style={styles.buttonRowAleatorio}>
                             <CustomButton title="Fácil" onPress={() => handleSetDificuldade("fácil")} width={80} height={45} borderRadius={10} />
                             <CustomButton title="Médio" onPress={() => handleSetDificuldade("médio")} width={80} height={45} borderRadius={10} />
                             <CustomButton title="Difícil" onPress={() => handleSetDificuldade("difícil")} width={80} height={45} borderRadius={10} />
                         </View>
-                    </>
                 );
             case "aleatorio":
                 if (isFlipped) {
@@ -154,6 +146,7 @@ const Flashcard = forwardRef<FlashcardHandle, Props>(({
                     borderRadius={borderRadius}
                     onPress={onPress}
                     onDelete={onDelete}
+                    onPickImage={onPickImage}
                     cardType={cardType}
                     editable={editable}
                     imageURI={imageURI}

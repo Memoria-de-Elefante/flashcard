@@ -1,5 +1,5 @@
 import React, { useState, useRef, useImperativeHandle, forwardRef, useEffect } from "react";
-import { View, Text, TextInput, StyleSheet, ScrollView, Animated, TouchableWithoutFeedback, useWindowDimensions, Image, TouchableOpacity, Image } from "react-native";
+import { View, Text, TextInput, StyleSheet, ScrollView, Animated, TouchableWithoutFeedback, useWindowDimensions, Image, TouchableOpacity} from "react-native";
 import Flashcard from "./Flashcard";
 
 type Props = {
@@ -15,6 +15,7 @@ type Props = {
     editable?: boolean;
     onPress?: () => void;
     onDelete?: () => void;
+    onPickImage?: () => void,
     imageURI: string;
 };
 
@@ -26,7 +27,7 @@ const Card = forwardRef(function Card(
     props: Props,
     ref: React.ForwardedRef<{ flipCard: () => void }>
 ) {
-    const { frontText, backText, width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop, cardType, editable, onPress, onDelete, imageURI } = props;
+    const { frontText, backText, width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop, cardType, editable, onPress, onPickImage, onDelete, imageURI } = props;
 
     const [front, setFront] = useState(frontText);
     const [back, setBack] = useState(backText);
@@ -50,7 +51,7 @@ const Card = forwardRef(function Card(
             case "edicao":
                 return (
                     <View style={styles.iconRow}>
-                        <TouchableOpacity onPress={() => alert('Adiciona imagem')} style={{ marginLeft: 10 }}>
+                        <TouchableOpacity onPress={onPickImage} style={{ marginLeft: 10 }}>
                             <Image source={require('../../assets/images/camera.png')} style={styles.image} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onDelete} style={{ marginLeft: 10 }}>
@@ -190,7 +191,7 @@ const Card = forwardRef(function Card(
                             )}
                         </View>
                     </TouchableWithoutFeedback>
-                    <Image source={{ uri: imageURI }} style={styles.image} />
+                    <Image source={{ uri: imageURI }} style={styles.imageCard} />
                 </Animated.View>
 
                 {/* Back do card */}
@@ -316,11 +317,17 @@ const styles = StyleSheet.create({
         gap: 10,
         zIndex: 2,
     },
-    image: {
+    imageCard: {
         marginBottom: 5,
         width: 100,
         height: 100,
     },
+    image: {
+        width: 24,
+        height: 24,
+        resizeMode: 'contain',
+        marginBottom: 0,
+    }
 });
 
 export default Card;
