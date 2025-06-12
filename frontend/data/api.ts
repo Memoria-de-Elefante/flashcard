@@ -37,7 +37,7 @@ export interface User {
 
 export const cadastroUser = async (set:Partial<User>) => {
   try {
-    const response = await api.post('http://192.168.15.6:3000/cadastro_usuario', {nome: set.nome,  email: set.email, senha: set.senha });
+    const response = await api.post('http://10.2.127.95:8081/cadastro_usuario', {nome: set.nome,  email: set.email, senha: set.senha });
     console.log(response.data);
 
     if (!response.data) {
@@ -57,7 +57,7 @@ export const cadastroUser = async (set:Partial<User>) => {
 
 export const loginUser = async (set: Partial<User>) => {
   try {
-    const response = await api.post('http://192.168.15.6:3000/login_usuario', { email: set.email, senha: set.senha });
+    const response = await api.post('http://10.2.127.95:8081/login_usuario', { email: set.email, senha: set.senha });
     const { user: { email, nome, xata_id }, token } = response.data;
     const userData = { user: { email, nome, xata_id }, token };
     await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
@@ -70,7 +70,7 @@ export const loginUser = async (set: Partial<User>) => {
 
 export const criarBackup = async (json: any) => {
   try {
-    const response = await api.post('http://192.168.15.6:3000/login_usuario', json)
+    const response = await api.post('http://10.2.127.95:8081/backup', json)
 
     if (!response.data) {
       console.error("response.data está indefinido. A API não retornou dados.");
@@ -85,7 +85,7 @@ export const criarBackup = async (json: any) => {
 
 export const receberBackup = async () => {
   try {
-    const response = await api.get('http://192.168.15.6:3000/login_usuario')
+    const response = await api.post('http://10.2.127.95:8081/backup')
 
     if (!response.data) {
       console.error("response.data está indefinido. A API não retornou dados.");

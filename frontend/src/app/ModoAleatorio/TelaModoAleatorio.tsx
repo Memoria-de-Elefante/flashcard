@@ -116,13 +116,6 @@ export default function TelaModoDificuldade() {
           }
         }}
       />
-      <CustomButton
-        title="Ver Estatísticas"
-        width={250}
-        borderRadius={10}
-        marginVertical={60}
-        onPress={() => router.navigate("../estatisticas")}
-      />
     </SafeAreaView>
   );
 }
