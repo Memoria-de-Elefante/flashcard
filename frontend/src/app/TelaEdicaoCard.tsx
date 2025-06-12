@@ -117,7 +117,6 @@ export default function edicao() {
                 backgroundColor: "#37b1bf",
             }} />
             <Flashcard
-                ref={cardRef}
                 frontText={pergunta}
                 backText={resposta}
                 onChangeFrontText={(text) => setPergunta(text)}
@@ -127,6 +126,7 @@ export default function edicao() {
                 borderRadius={10}
                 editable={true}
                 flashcardType="edicao"
+                cardType="edicao"
                 showFlipButton={true}
                 onChangeDificuldade={(dificuldade) => setDificuldade(dificuldade)}
                 onPickImage={pickImage}
@@ -150,23 +150,5 @@ const styles = StyleSheet.create({
         justifyContent: "space-evenly",
         alignItems: "center",
         backgroundColor: "#000000",
-    },
-    arrowText: {
-        fontSize: 24,
-        color: 'white',
-    },
-    arrowLeft: {
-        position: 'absolute',
-        left: '30%',
-        top: '50%',
-        transform: [{ translateY: -12 }],
-        zIndex: 1,
-    },
-    arrowRight: {
-        position: 'absolute',
-        right: '30%',
-        top: '50%',
-        transform: [{ translateY: -12 }],
-        zIndex: 1,
     },
 });

@@ -11,12 +11,12 @@ export default function TelaModoDificuldade() {
 
   const { width, height } = useWindowDimensions();
 
-  // Responsividade para o texto
+ 
   const fontSize_texto = width < 600 ? width * 0.06 : 30;
   const marginTop_texto = width < 600 ? 40 : 0;
   const marginBottom_texto = width < 600 ? 40 : 10;
 
-  // responsividae para listras
+ 
   const stripeWidth = width * 2.2;
   const stripeHeight = 150;
   const leftOffset = -width * 0.7;
@@ -67,7 +67,7 @@ export default function TelaModoDificuldade() {
         }
       ]}>Selecione o deck que você deseja estudar</Text>
 
-      {/* Caixa invisível para scrollar os decks */}
+      
       <View style={{
         flexGrow: 1,
         maxHeight: width < 600 ? height * 0.45 : height * 0.6,
@@ -88,7 +88,9 @@ export default function TelaModoDificuldade() {
 
       <CustomButton
         title="Estudar"
-        marginVertical={42}
+        width={250}
+        borderRadius={10}
+        marginVertical={60}
         marginTop={60}
         onPress={() => {
           if (selectedOption) {
@@ -113,6 +115,13 @@ export default function TelaModoDificuldade() {
             }
           }
         }}
+      />
+      <CustomButton
+        title="Ver Estatísticas"
+        width={250}
+        borderRadius={10}
+        marginVertical={60}
+        onPress={() => router.navigate("../estatisticas")}
       />
     </SafeAreaView>
   );

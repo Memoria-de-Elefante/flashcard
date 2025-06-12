@@ -2,19 +2,19 @@ import React, { useEffect, useState} from 'react';
 import { Text, Alert, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View, Platform } from "react-native";
 import CustomButton from "../components/CustomButton";
 import EdicaoButton from "../components/EdicaoButton";
-import { buscarMaterias, deletarMateria, adicionarMateria, retornaJson } from "../scripts/comandosJson"
+import { buscarMaterias, deletarMateria, adicionarMateria, retornaJson, salvarBackup } from "../scripts/comandosJson"
 import { router } from "expo-router";
 import { useIsFocused } from '@react-navigation/native';
 import { criarBackup, receberBackup } from '@/data/api';
 
 export default function edicao() {    
     const { width, height } = useWindowDimensions();
-    // Responsividade para o texto
+    
     const fontSize_texto = width < 600 ? width * 0.06 : 30;
     const marginTop_texto = width < 600 ? 40 : 0;
     const marginBottom_texto = width < 600 ? 40 : 10;
 
-    // responsividae para listras
+    
     const stripeWidth = width * 2.2;
     const stripeHeight = 150;
     const leftOffset = -width * 0.7;

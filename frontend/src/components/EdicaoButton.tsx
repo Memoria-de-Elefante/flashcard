@@ -10,17 +10,17 @@ const EdicaoButton = ({ title, onPress, onDelete }: Props) => {
 
   const { width: windowWidth } = useWindowDimensions();
 
-  // Responsividade do button
+  
   const padding_button = windowWidth < 600 ? windowWidth * 0.05 : 40;
   const borderRadius_button = windowWidth < 600 ? windowWidth * 0.02 : 5;
   const marginVertical_button = windowWidth < 600 ? windowWidth * 0.03 : 30;
   const width_button = windowWidth < 600 ? windowWidth * 0.77 : 550;
   const height_button = windowWidth < 600 ? windowWidth * 0.18 : 70;
 
-  // Responsividade do text
+ 
   const fontSize_text = windowWidth < 600 ? windowWidth * 0.06 : 30;
 
-  // responsividade para a imagem
+ 
   const width_imagem = windowWidth < 600 ? windowWidth * 0.1 : 40;
   const height_imagem = windowWidth < 600 ? windowWidth * 0.1 : 40;
   const marginBottom_imagem = windowWidth < 600 ? windowWidth * 0 : 0;
@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
   innerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center', // Isso garante que o texto e imagem fiquem alinhados verticalmente
-    height: '100%', // Isso garante que o conteúdo use toda a altura do botão
+    alignItems: 'center', 
+    height: '100%', 
   },
 
   iconGroup: {

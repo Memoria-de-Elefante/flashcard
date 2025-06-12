@@ -5,7 +5,6 @@ import { Link, router } from 'expo-router';
 import SenhaButton from "../components/SenhaButton";
 import { cadastroUser } from '@/data/api';
 
-// const { width } = Dimensions.get('window');
 
 export default function TelaCadastro({ }) {
     const [email, setEmail] = useState('');
@@ -31,23 +30,23 @@ export default function TelaCadastro({ }) {
 
     const { width: windowWidth } = useWindowDimensions();
 
-    // responsividade para a imagem
+  
     const width_imagem = windowWidth < 600 ? windowWidth * 0.6 : 300;
     const height_imagem = windowWidth < 600 ? windowWidth * 0.45 : 100;
     const marginBottom_imagem = windowWidth < 600 ? windowWidth * 0.05 : 0;
     const marginTop_imagem = windowWidth < 600 ? windowWidth * 0.07 : 10;
 
-    // responsividade para o texto
+
     const fontSize_texto = windowWidth < 600 ? windowWidth * 0.1 : 30;
     const marginTop_texto = windowWidth < 600 ? windowWidth * -0.1 : 10;
 
-    // responsividade para o texto (label)
+    
     const fontSize_textoLabel = windowWidth < 600 ? windowWidth * 0.05 : 20;
     const marginTop_textoLabel = windowWidth < 600 ? windowWidth * 0.05 : 10;
     const padding_textoLabel = windowWidth < 600 ? windowWidth * 0.01 : 5;
     const paddingLeft_textoLabel = windowWidth < 600 ? windowWidth * 0.17 : 520;
 
-    // responsividade para o input 
+   
     const width_input = windowWidth < 600 ? windowWidth * 0.7 : 500;
     const height_input = windowWidth < 600 ? windowWidth * 0.1 : 30;
     const borderRadius_input = windowWidth < 600 ? windowWidth * 10 : 30;
@@ -56,7 +55,7 @@ export default function TelaCadastro({ }) {
     const paddingHorizontal_input = windowWidth < 600 ? windowWidth * 0.05 : 25;
     const paddingLeft_input = windowWidth < 600 ? windowWidth * 0.03 : 25;
 
-    // responsividae para listras
+   
     const stripeWidth = windowWidth * 2.2;
     const stripeHeight = 150;
     const leftOffset = -windowWidth * 0.7;

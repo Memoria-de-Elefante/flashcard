@@ -12,7 +12,7 @@ export default function FlashcardDificuldade() {
 
   const { width: windowWidth } = useWindowDimensions();
 
-  // responsividae para listras
+ 
   const stripeWidth = windowWidth * 2.2;
   const stripeHeight = 150;
   const leftOffset = -windowWidth * 0.7;

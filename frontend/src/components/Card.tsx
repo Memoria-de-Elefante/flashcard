@@ -1,5 +1,6 @@
 import React, { useState, useRef, useImperativeHandle, forwardRef, useEffect } from "react";
-import { View, Text, TextInput, StyleSheet, ScrollView, Animated, TouchableWithoutFeedback, useWindowDimensions, Image } from "react-native";
+import { View, Text, TextInput, StyleSheet, ScrollView, Animated, TouchableWithoutFeedback, useWindowDimensions, Image, TouchableOpacity, Image } from "react-native";
+import Flashcard from "./Flashcard";
 
 type Props = {
     frontText: string;
@@ -10,8 +11,10 @@ type Props = {
     height: number;
     borderRadius: number;
     paddingTop?: number;
+    cardType?: "edicao";
     editable?: boolean;
     onPress?: () => void;
+    onDelete?: () => void;
     imageURI: string;
 };
 
@@ -23,7 +26,7 @@ const Card = forwardRef(function Card(
     props: Props,
     ref: React.ForwardedRef<{ flipCard: () => void }>
 ) {
-    const { frontText, backText, width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop, editable, onPress, imageURI } = props;
+    const { frontText, backText, width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop, cardType, editable, onPress, onDelete, imageURI } = props;
 
     const [front, setFront] = useState(frontText);
     const [back, setBack] = useState(backText);
@@ -40,6 +43,26 @@ const Card = forwardRef(function Card(
         }).start();
         setFlipped(!flipped);
     };
+
+    const renderEdicao = () => {
+        if (!cardType) return null;
+        switch (cardType) {
+            case "edicao":
+                return (
+                    <View style={styles.iconRow}>
+                        <TouchableOpacity onPress={() => alert('Adiciona imagem')} style={{ marginLeft: 10 }}>
+                            <Image source={require('../../assets/images/camera.png')} style={styles.image} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onDelete} style={{ marginLeft: 10 }}>
+                            <Image source={require('../../assets/images/IconDeletar.png')} style={styles.image} />
+                        </TouchableOpacity>
+                    </View>
+                );
+            default:
+                return null;
+
+        }
+    }
 
     useImperativeHandle(ref, () => ({
         flipCard,
@@ -62,49 +85,49 @@ const Card = forwardRef(function Card(
 
     const { width: windowWidth } = useWindowDimensions();
 
-    // responsividade para o cardFace 
+    
     const borderRadius_cardFace = windowWidth < 600 ? windowWidth * 0.02 : 5;
     const padding_cardFace = windowWidth < 600 ? windowWidth * 0 : 0;
 
-    // responsividade para o clickableArea 
-    const padding_clickableArea = windowWidth < 600 ? windowWidth * 0.028 : 30; // alterar o valor do padding caso não de para digitar, como não testei na tela do Edu fiz um chute com o chatGPT
+    
+    const padding_clickableArea = windowWidth < 600 ? windowWidth * 0.028 : 30; 
 
-    // responsividade para o text 
+    
     const fontSize_text = windowWidth < 600 ? windowWidth * 0.05 : 20;
 
-    // responsividade para o input 
+    
     const fontSize_input = windowWidth < 600 ? windowWidth * 0.05 : 25;
-    const padding_input = windowWidth < 600 ? windowWidth * 0.028 : 30; // mesma coisa que o clickableArea
+    const padding_input = windowWidth < 600 ? windowWidth * 0.028 : 30; 
     const borderRadius_input = windowWidth < 600 ? windowWidth * 0.02 : 5;
     const minWidth_input = windowWidth < 600 ? windowWidth * 0.28 : 30;
 
-    // responsividade para o scrollContent 
+    
     const paddingBottom_scrollContent = windowWidth < 600 ? windowWidth * 0.28 : 30;
 
-    // responsividade para o inputContainer 
+     
     const maxHeight_inputContainer = windowWidth < 600 ? windowWidth * 0.6 : 30;
 
-    // responsividade para o sideLabel 
+    
     const top_sideLabel = windowWidth < 600 ? windowWidth * 0.028 : 0;
     const left_sideLabel = windowWidth < 600 ? windowWidth * 0.028 : 5;
     const fontSize_sideLabel = windowWidth < 600 ? windowWidth * 0.045 : 20;
 
     useEffect(() => {
-    setFront(frontText);
+        setFront(frontText);
     }, [frontText]);
 
     useEffect(() => {
-    setBack(backText);
+        setBack(backText);
     }, [backText]);
-    // Envolve tudo com Touchable para permitir navegação quando não for editable
+    
     return (
         <TouchableWithoutFeedback
             onPress={() => {
-                if (!editable && onPress) onPress();
+                if (!editable && !cardType && onPress) onPress();
             }}
         >
             <View style={[styles.card, { width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop }]}>
-                {/* Front do card */}
+                
                 <Animated.View
                     pointerEvents={flipped ? 'none' : 'auto'}
                     style={[styles.cardFace,
@@ -116,14 +139,15 @@ const Card = forwardRef(function Card(
                     }
                     ]}
                 >
-                    <TouchableWithoutFeedback onPress={() => editable ? setEditingFront(true) : props.onPress?.()}>
+                    <TouchableWithoutFeedback onPress={() => editable && cardType && cardType ? setEditingFront(true) : props.onPress?.()}>
                         <View style={styles.clickableArea}>
                             <Text style={[styles.sideLabel, {
-                                    top: top_sideLabel,
-                                    left: left_sideLabel,
-                                    fontSize: fontSize_sideLabel,
-                                }
+                                top: top_sideLabel,
+                                left: left_sideLabel,
+                                fontSize: fontSize_sideLabel,
+                            }
                             ]}>FRONT</Text>
+                            {renderEdicao()}
                             {editingFront ? (
                                 <ScrollView
                                     style={[
@@ -181,18 +205,19 @@ const Card = forwardRef(function Card(
                     }
                     ]}
                 >
-                    <TouchableWithoutFeedback onPress={() => editable ? setEditingBack(true) : props.onPress?.()}>
+                    <TouchableWithoutFeedback onPress={() => editable && cardType ? setEditingBack(true) : props.onPress?.()}>
                         <View style={[styles.clickableArea,
                         {
                             padding: padding_clickableArea,
                         }
                         ]}>
                             <Text style={[styles.sideLabel, {
-                                    top: top_sideLabel,
-                                    left: left_sideLabel,
-                                    fontSize: fontSize_sideLabel,
-                                }
+                                top: top_sideLabel,
+                                left: left_sideLabel,
+                                fontSize: fontSize_sideLabel,
+                            }
                             ]}>BACK</Text>
+                            {renderEdicao()}
                             {editingBack ? (
                                 <ScrollView
                                     style={[
@@ -282,6 +307,14 @@ const styles = StyleSheet.create({
     textWrapper: {
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    iconRow: {
+        position: 'absolute',
+        top: 30,
+        right: 10,
+        flexDirection: 'row',
+        gap: 10,
+        zIndex: 2,
     },
     image: {
         marginBottom: 5,

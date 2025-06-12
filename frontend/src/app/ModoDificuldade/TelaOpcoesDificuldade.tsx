@@ -9,12 +9,12 @@ export default function TelaOpcoesDificuldade() {
 
   const { width: windowWidth } = useWindowDimensions();
 
-  // responsividade para o texto
+ 
   const fontSize_texto = windowWidth < 600 ? windowWidth * 0.075 : 30;
   const marginTop_texto = windowWidth < 600 ? 40 : 0;
   const marginBottom_texto = windowWidth < 600 ? 40 : 10;
 
-  // responsividae para listras
+
   const stripeWidth = windowWidth * 2.2;
   const stripeHeight = 150;
   const leftOffset = -windowWidth * 0.7;
@@ -75,7 +75,17 @@ export default function TelaOpcoesDificuldade() {
       />
       <CustomButton
         title="Estudar"
+        width={250}
+        borderRadius={10}
+        marginVertical={60}
         onPress={() => router.navigate({pathname: './TelaModoDificuldade', params: { dificuldade: selectedOption}})}
+      />
+      <CustomButton
+        title="Ver Estatísticas"
+        width={250}
+        borderRadius={10}
+        marginVertical={60}
+        onPress={() => router.navigate("../estatisticas")}
       />
     </SafeAreaView>
   );
@@ -85,12 +95,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000000",
-    justifyContent: "flex-start", // Alinha tudo no topo
+    justifyContent: "flex-start", 
     alignItems: "center",
     paddingTop: 10,
     paddingHorizontal: 0,
     paddingBottom: 0,
-    flexDirection: 'column', // Garantir que os itens se organizem verticalmente
+    flexDirection: 'column', 
   },
   text: {
     color: "#FFFFFF",

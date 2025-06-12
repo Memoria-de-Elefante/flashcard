@@ -15,6 +15,7 @@ type Props = {
     borderRadius: number;
     flashcardType?: "edicao" | "aleatorio" | "desafio" | "dificuldade";
     showFlipButton?: boolean;
+    cardType?: "edicao";
     editable?: boolean;
     onChangeFrontText?: (text: string) => void;
     onChangeBackText?: (text: string) => void;
@@ -38,6 +39,7 @@ const Flashcard = forwardRef<FlashcardHandle, Props>(({
     onPress,
     onPickImage,
     onDelete,
+    cardType,
     editable,
     style,
     onChangeFrontText,
@@ -151,6 +153,8 @@ const Flashcard = forwardRef<FlashcardHandle, Props>(({
                     height={height}
                     borderRadius={borderRadius}
                     onPress={onPress}
+                    onDelete={onDelete}
+                    cardType={cardType}
                     editable={editable}
                     imageURI={imageURI}
                 />
