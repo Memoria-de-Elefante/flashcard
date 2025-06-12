@@ -54,7 +54,8 @@ export default function FlashcardAleatorio() {
         cardAtual.pergunta,
         cardAtual.resposta,
         dificuldadeSelecionada,
-        cardAtual.imagem
+        cardAtual.imagem,
+		cardAtual.backImage
       );
     }
 
@@ -147,6 +148,7 @@ export default function FlashcardAleatorio() {
             proximoCard(dif)
           }}
           imageURI={cardAtual.imagem}
+		  backImage={cardAtual.backImage}
         />
       )}
     </SafeAreaView>

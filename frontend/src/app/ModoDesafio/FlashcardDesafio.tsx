@@ -121,6 +121,7 @@ export default function FlashcardDesafio() {
             proximoCard(acerto)
           }}
           imageURI={cardAtual.imagem}
+		  backImage={cardAtual.backImage}
         />
       )}
     </SafeAreaView>
