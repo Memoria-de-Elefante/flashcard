@@ -47,9 +47,7 @@ app.get('/get_all_data', async (req: Request, res: Response): Promise<void> => {
 app.post('/cadastro_usuario', async (req: Request, res: Response): Promise<void> => {
     const newUser: Omit<UsersRecord, 'xata_id' | 'senha'> = req.body; // Recebe todos os dados, exceto senha (trataremos a senha separadamente)
     const senha = req.body.senha; // Extrai a senha do corpo da requisição
-    console.log(1)
     try {
-        console.log(2)
         if (!newUser.nome || !newUser.email) {
             res.status(400).json({ error: 'Por favor, forneça nome, email e senha.' });
             return;
@@ -57,7 +55,6 @@ app.post('/cadastro_usuario', async (req: Request, res: Response): Promise<void>
             res.status(400).json({ error: 'Por favor, forneça nome, email e senha.' });
             return;
         }
-        console.log(3)
         // 1. Checa e o email inserido já existe
         const existingUser = await client.db.users.filter({
             email: newUser.email
@@ -68,11 +65,9 @@ app.post('/cadastro_usuario', async (req: Request, res: Response): Promise<void>
             res.status(409).json({error: 'Este email já está cadastrado! Por favor, utilize outro email ou faça login.'});
             return; // Retorno para a execução desse código
         }
-        console.log(4)
         // 1. Criptografar a senha usando bcrypt
         const saltRounds = 5; // Número de rounds para o hash (mais alto = mais seguro, mais lento)
         const hashedPassword = await bcrypt.hash(senha, saltRounds);
-        console.log(5)
         // 2. Criar o novo usuário com a senha criptografada
         const createUser = await client.db.users.create({ ...newUser, senha: hashedPassword });
         const { senha: hashedPasswordSentBack, ...userCreatedWithoutPassword } = createUser;

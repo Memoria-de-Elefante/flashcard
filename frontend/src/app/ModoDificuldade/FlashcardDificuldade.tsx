@@ -1,8 +1,14 @@
-import React from "react";
-import { SafeAreaView, StyleSheet, useWindowDimensions, View } from "react-native";
-import Flashcard from "../../components/Flashcard";
+import React, { useEffect, useRef, useState } from "react";
+import { Alert, Platform, SafeAreaView, StyleSheet, useWindowDimensions, View } from "react-native";
+import Flashcard, { FlashcardHandle } from "../../components/Flashcard";
+import { router, useLocalSearchParams } from "expo-router";
+import { buscarMaterias, buscarTodosFlashcards, Card, foiAcerto } from "@/src/scripts/comandosJson";
 
 export default function FlashcardDificuldade() {
+  const { dificuldade } = useLocalSearchParams<{ dificuldade: string }>()
+  const [cards, setCards] = useState<Card[]>([])
+  const [cardAtual, setCardAtual] = useState<Card | null>(null)
+  const flashcardRef = useRef<FlashcardHandle>(null)
 
   const { width: windowWidth } = useWindowDimensions();
 
@@ -10,6 +16,70 @@ export default function FlashcardDificuldade() {
   const stripeWidth = windowWidth * 2.2;
   const stripeHeight = 150;
   const leftOffset = -windowWidth * 0.7;
+
+  const importCards = async () => {
+    const auxMats = await buscarMaterias()
+    if (!auxMats) return
+
+    let flashcards: Card[] = []
+    for (const materia of auxMats) {
+      const cards = await buscarTodosFlashcards(materia)
+      if (cards) {
+        let auxCards: Card[] = []
+        for (const card of cards) {
+          if (card.dificuldade === dificuldade) auxCards = auxCards.concat(card)
+        }
+        const cardsComMateria = auxCards.map(card => ({ ...card, materia }))
+        flashcards = flashcards.concat(cardsComMateria)
+      }
+    }
+    if (flashcards && flashcards.length > 0) {
+      flashcards.sort(() => Math.random() - 0.5);
+      setCards(flashcards);
+      setCardAtual(flashcards[0]);
+    }
+  }
+
+  const proximoCard = async (acertoSelecionado: boolean) => {
+    if (cardAtual) {
+      await foiAcerto(cardAtual.materia, cardAtual.id, acertoSelecionado)
+    }
+
+    const novosCards = [...cards];
+    novosCards.shift();
+    setCards(novosCards);
+    setTimeout(() => {
+      flashcardRef.current?.flipCard()
+    }, 300)
+
+    if (novosCards.length > 0) {
+      setCardAtual(novosCards[0]);
+    }
+    else {
+      if (Platform.OS === "web") {
+        alert("Você chegou ao fim de seus flashcards!");
+        router.back(); router.back()
+      }
+      else {
+        Alert.alert(
+          "Parabéns",
+          "Você chegou ao fim de seus flashcards!",
+          [
+            {
+              text: "Continuar",
+              onPress: () => { router.back(); router.back() },
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+    }
+  }
+
+  useEffect(() => {
+    importCards()
+  }, [])
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{
@@ -39,17 +109,24 @@ export default function FlashcardDificuldade() {
         top: stripeHeight * 2.4,
         backgroundColor: "#37b1bf",
       }} />
-      <Flashcard
-        frontText="Pergunta Dificuldade"
-        backText="Resposta"
-        width={300}
-        height={400}
-        borderRadius={10}
-        flashcardType="dificuldade" // Passando o tipo para o Flashcard
-        showFlipButton={true} // Caso queira que o botão flip apareça ou não
-        editable={false}
-        style={{ marginTop: 60 }}
-      />
+
+      {cardAtual && (
+        <Flashcard
+          ref={flashcardRef}
+          frontText={cardAtual.pergunta}
+          backText={cardAtual.resposta}
+          width={300}
+          height={400}
+          borderRadius={10}
+          flashcardType="dificuldade" 
+          showFlipButton={true}
+          editable={false}
+          style={{ marginTop: 60 }}
+          onChangeAcerto={(acerto) => {
+            proximoCard(acerto)
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 }

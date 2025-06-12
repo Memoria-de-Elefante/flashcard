@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {Alert, Platform, SafeAreaView, StyleSheet, useWindowDimensions, View} from "react-native";
-import Flashcard from "../../components/Flashcard";
+import Flashcard, { FlashcardHandle } from "../../components/Flashcard";
 import { router, useLocalSearchParams } from "expo-router";
 import { buscarTodosFlashcards, Card, editarFlashcard } from "@/src/scripts/comandosJson";
 
@@ -9,6 +9,8 @@ export default function FlashcardAleatorio() {
   const [cards, setCards] = useState<Card[]>([]);
   const [cardAtual, setCardAtual] = useState<Card | null>(null);
   const [dificuldade, setDificuldade] = useState("");
+  const flashcardRef = useRef<FlashcardHandle>(null)
+
   const { width: windowWidth } = useWindowDimensions();
 
   // Responsividade para listras coloridas
@@ -16,7 +18,6 @@ export default function FlashcardAleatorio() {
   const stripeHeight = 150;
   const leftOffset = -windowWidth * 0.7;
 
-  // Importa e embaralha os cards
   const importCards = async () => {
     const flashcards = await buscarTodosFlashcards(materia);
     if (flashcards && flashcards.length > 0) {
@@ -24,9 +25,27 @@ export default function FlashcardAleatorio() {
       setCards(flashcards);
       setCardAtual(flashcards[0]);
     }
-  };
+    else {
+      if (Platform.OS === "web") {
+        alert("O deck escolhido deve possuir ao menos um flashcard para prosseguir.")
+        router.back()
+      } 
+      else {
+        Alert.alert(
+          "Aviso",
+          "O deck escolhido deve possuir ao menos um flashcard para prosseguir.",
+          [
+            {
+              text: "Voltar",
+              onPress: () => {router.back()},
+            },
+          ],
+          { cancelable: false }
+        )
+      }
+    }
+  }
 
-  // Avança para o próximo card ou finaliza
   const proximoCard = async (dificuldadeSelecionada: string) => {
     if (cardAtual) {
       await editarFlashcard(
@@ -40,16 +59,21 @@ export default function FlashcardAleatorio() {
     }
 
     const novosCards = [...cards];
-    novosCards.shift(); // Remove o card atual
+    novosCards.shift();
     setCards(novosCards);
+    setTimeout(() => {
+      flashcardRef.current?.flipCard()
+    }, 300)
 
     if (novosCards.length > 0) {
       setCardAtual(novosCards[0]);
-    } else {
+    } 
+    else {
       if (Platform.OS === "web") {
         alert("Você chegou ao fim de seus flashcards!");
-        router.back();
-      } else {
+        router.back(); router.back()
+      } 
+      else {
         Alert.alert(
           "Parabéns",
           "Você chegou ao fim de seus flashcards!",
@@ -108,6 +132,7 @@ export default function FlashcardAleatorio() {
 
       {cardAtual && (
         <Flashcard
+          ref={flashcardRef}
           frontText={cardAtual.pergunta}
           backText={cardAtual.resposta}
           width={300}
@@ -118,8 +143,8 @@ export default function FlashcardAleatorio() {
           editable={false}
           style={{ marginTop: 60 }}
           onChangeDificuldade={(dif) => {
-            setDificuldade(dif);
-            proximoCard(dif);
+            setDificuldade(dif)
+            proximoCard(dif)
           }}
         />
       )}

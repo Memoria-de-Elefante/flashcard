@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View } from "react-native";
+import { Text, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View, Platform, Alert } from "react-native";
 import CustomButton from "../../components/CustomButton";
 import OptionButton from "../../components/OptionButton";
 import { router } from "expo-router";
@@ -23,13 +23,13 @@ export default function TelaModoDificuldade() {
 
   const importMaterias = async () => {
     const materias = await buscarMaterias()
-    
+
     if (materias != undefined) {
       setMaterias(materias)
     }
   }
 
-  useEffect(() => {importMaterias()}, [])
+  useEffect(() => { importMaterias() }, [])
   return (
     <SafeAreaView style={styles.container}>
       <View style={{
@@ -73,7 +73,7 @@ export default function TelaModoDificuldade() {
         maxHeight: width < 600 ? height * 0.45 : height * 0.6,
         width: width < 600 ? width * 0.8 : 600,
       }}>
-        
+
         <ScrollView>
           {materias.map(materia => (
             <OptionButton
@@ -90,7 +90,29 @@ export default function TelaModoDificuldade() {
         title="Estudar"
         marginVertical={42}
         marginTop={60}
-        onPress={() => router.navigate({pathname: './FlashcardAleatorio', params:{materia: selectedOption}})} 
+        onPress={() => {
+          if (selectedOption) {
+            router.navigate({ pathname: './FlashcardAleatorio', params: { materia: selectedOption } })
+          }
+          else {
+            if (Platform.OS === "web") {
+              alert("É necessário selecionar um deck para prosseguir.")
+            }
+            else {
+              Alert.alert(
+                "Aviso",
+                "É necessário selecionar um deck para prosseguir.",
+                [
+                  {
+                    text: "Confirmar",
+                    onPress: () => {},
+                  },
+                ],
+                { cancelable: false }
+              );
+            }
+          }
+        }}
       />
     </SafeAreaView>
   );

@@ -58,24 +58,24 @@ export default function TelaOpcoesDificuldade() {
       <OptionButton
         label="Questões Fáceis"
         value="facil"
-        isSelected={selectedOption === 'facil'}
-        onPress={setSelectedOption}
+        isSelected={selectedOption === 'fácil'}
+        onPress={() => setSelectedOption('fácil')}
       />
       <OptionButton
         label="Questões Médias"
-        value="medio"
-        isSelected={selectedOption === 'medio'}
-        onPress={setSelectedOption}
+        value="médio"
+        isSelected={selectedOption === 'médio'}
+        onPress={() => setSelectedOption('médio')}
       />
       <OptionButton
         label="Questões Difíceis"
-        value="dificil"
-        isSelected={selectedOption === 'dificil'}
-        onPress={setSelectedOption}
+        value="difícil"
+        isSelected={selectedOption === 'difícil'}
+        onPress={() => setSelectedOption('difícil')}
       />
       <CustomButton
         title="Estudar"
-        onPress={() => router.navigate('./TelaModoDificuldade')}
+        onPress={() => router.navigate({pathname: './TelaModoDificuldade', params: { dificuldade: selectedOption}})}
       />
     </SafeAreaView>
   );
