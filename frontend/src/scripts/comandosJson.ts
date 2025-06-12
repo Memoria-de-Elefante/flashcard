@@ -36,6 +36,15 @@ export async function retornaJson() {
     return json
 }
 
+export async function salvarBackup(jsonBackup: any) {
+    if (eWeb) {
+        await localStorage.setItem(chaveStorage, JSON.stringify(jsonBackup)) 
+    }
+    else {
+        await fileSystem.writeAsStringAsync(filePath, JSON.stringify(jsonBackup))
+    }
+}
+
 // Este código é responsável por adicionar novos elementos matérias no cardsJson
 export async function adicionarMateria(materia: string) {
     try {

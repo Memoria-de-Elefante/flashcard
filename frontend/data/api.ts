@@ -78,7 +78,22 @@ export const criarBackup = async (json: any) => {
     }
 
     console.log("Dados salvos no BD como backup")
-  } catch {
+  } catch (err) {
+    console.error(err)
+  }
+}
 
+export const receberBackup = async () => {
+  try {
+    const response = await api.get('http://192.168.15.6:3000/login_usuario')
+
+    if (!response.data) {
+      console.error("response.data está indefinido. A API não retornou dados.");
+      throw new Error("Dados da API não encontrados.");
+    }
+
+    return response
+  } catch (err) {
+    console.error(err)
   }
 }

@@ -5,7 +5,7 @@ import EdicaoButton from "../components/EdicaoButton";
 import { buscarMaterias, deletarMateria, adicionarMateria, retornaJson } from "../scripts/comandosJson"
 import { router } from "expo-router";
 import { useIsFocused } from '@react-navigation/native';
-import { criarBackup } from '@/data/api';
+import { criarBackup, receberBackup } from '@/data/api';
 
 export default function edicao() {    
     const { width, height } = useWindowDimensions();
@@ -70,6 +70,10 @@ export default function edicao() {
     const fazerBackup = () => {
         const json = retornaJson()
         if (json) criarBackup(json)
+    }
+    const puxarBackup = () => {
+        const jsonBackup = receberBackup()
+        if (jsonBackup) salvarBackup(jsonBackup)
     }
 
     const isFocused = useIsFocused()
