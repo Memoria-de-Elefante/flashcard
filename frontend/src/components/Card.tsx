@@ -1,5 +1,5 @@
 import React, { useState, useRef, useImperativeHandle, forwardRef, useEffect } from "react";
-import { View, Text, TextInput, StyleSheet, ScrollView, Animated, TouchableWithoutFeedback, useWindowDimensions } from "react-native";
+import { View, Text, TextInput, StyleSheet, ScrollView, Animated, TouchableWithoutFeedback, useWindowDimensions, Image } from "react-native";
 
 type Props = {
     frontText: string;
@@ -12,6 +12,7 @@ type Props = {
     paddingTop?: number;
     editable?: boolean;
     onPress?: () => void;
+    imageURI: string;
 };
 
 export type CardRef = {
@@ -22,7 +23,7 @@ const Card = forwardRef(function Card(
     props: Props,
     ref: React.ForwardedRef<{ flipCard: () => void }>
 ) {
-    const { frontText, backText, width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop, editable, onPress } = props;
+    const { frontText, backText, width: cardWidth, height: cardHeight, borderRadius, paddingTop: cardPaddingTop, editable, onPress, imageURI } = props;
 
     const [front, setFront] = useState(frontText);
     const [back, setBack] = useState(backText);
@@ -165,6 +166,7 @@ const Card = forwardRef(function Card(
                             )}
                         </View>
                     </TouchableWithoutFeedback>
+                    <Image source={{ uri: imageURI }} style={styles.image} />
                 </Animated.View>
 
                 {/* Back do card */}
@@ -280,6 +282,11 @@ const styles = StyleSheet.create({
     textWrapper: {
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    image: {
+        marginBottom: 5,
+        width: 100,
+        height: 100,
     },
 });
 

@@ -17,8 +17,10 @@ type Props = {
     onChangeDificuldade?: (dificuldade: string) => void
     onChangeAcerto?: (acerto: boolean) => void
     onPress?: () => void;
+    onPickImage?: () => void;
     onDelete?: () => void
     style?: StyleProp<ViewStyle>;
+    imageURI: string;
 };
 
 export default function Flashcard({ 
@@ -30,13 +32,15 @@ export default function Flashcard({
     flashcardType, 
     showFlipButton, 
     onPress, 
+    onPickImage,
     onDelete, 
     editable, 
     style, 
     onChangeFrontText, 
     onChangeBackText, 
     onChangeDificuldade, 
-    onChangeAcerto 
+    onChangeAcerto,
+    imageURI,
 }: Props) {
     const cardRef = useRef<{ flipCard: () => void }>(null);
     const [isFlipped, setIsFlipped] = useState(false);
@@ -72,7 +76,7 @@ export default function Flashcard({
             case "edicao":
                 return(
                     <><View style={styles.iconRow}>
-                        <TouchableOpacity onPress={() => alert('Adiciona imagem')} style={{ marginLeft: 10 }}>
+                        <TouchableOpacity onPress={onPickImage} style={{ marginLeft: 10 }}>
                             <Image source={require('../../assets/images/camera.png')} style={styles.image} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onDelete} style={{ marginLeft: 10 }}>
@@ -133,6 +137,7 @@ export default function Flashcard({
                     borderRadius={borderRadius}
                     onPress={onPress}
                     editable={editable}
+                    imageURI={imageURI}
                 />
 
                 {/* Botões de feedback */}

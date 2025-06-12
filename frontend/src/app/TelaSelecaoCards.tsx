@@ -199,6 +199,7 @@ export default function TelaSelecaoCards({ }) {
                                     params: { id: item.id, materia }
                                 })
                             }
+                            imageURI={item.imagem}
                         />
                     </View>
                 )}
