@@ -128,6 +128,15 @@ app.post('/login_usuario', async (req: Request, res: Response) => {
     }
 })
 
+app.post('/backup', async (req: Request, res: Response) => {
+    const {json} = req.body
+
+    if (!json) res.status(404).json({message: 'Json não foi encontrado!'})
+    
+    const createBackup = await client.db.backup.create({JSON: json})
+    res.status(200).json({ message: 'Backup realizado com sucesso!' })
+})
+
 // Ouvindo porta:
 app.listen (PORT, () => {
     console.log(`Ouvindo porta ${PORT}`);

@@ -2,9 +2,10 @@ import React, { useEffect, useState} from 'react';
 import { Text, Alert, SafeAreaView, StyleSheet, useWindowDimensions, ScrollView, View, Platform } from "react-native";
 import CustomButton from "../components/CustomButton";
 import EdicaoButton from "../components/EdicaoButton";
-import { buscarMaterias, deletarMateria, adicionarMateria } from "../scripts/comandosJson"
+import { buscarMaterias, deletarMateria, adicionarMateria, retornaJson } from "../scripts/comandosJson"
 import { router } from "expo-router";
 import { useIsFocused } from '@react-navigation/native';
+import { criarBackup } from '@/data/api';
 
 export default function edicao() {    
     const { width, height } = useWindowDimensions();
@@ -66,6 +67,11 @@ export default function edicao() {
         }
     }
     
+    const fazerBackup = () => {
+        const json = retornaJson()
+        if (json) criarBackup(json)
+    }
+
     const isFocused = useIsFocused()
     useEffect(() => {if (isFocused) {importMaterias()}}, [isFocused])
     return (

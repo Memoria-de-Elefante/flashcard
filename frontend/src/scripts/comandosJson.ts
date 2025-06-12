@@ -25,6 +25,17 @@ export async function criarJson() {
     }
 }
 
+export async function retornaJson() {
+    let json = null;
+    if (eWeb) {
+        json = await localStorage.getItem(chaveStorage); 
+    }
+    else {
+        json = await fileSystem.getInfoAsync(filePath);
+    }
+    return json
+}
+
 // Este código é responsável por adicionar novos elementos matérias no cardsJson
 export async function adicionarMateria(materia: string) {
     try {

@@ -1,5 +1,5 @@
 {
-  "databaseURL": "https://PII---Poliedro---2025-s-workspace-crv4k8.us-east-1.xata.sh/db/PI",
+  "databaseURL": "https://PII---Poliedro---2025-s-workspace-crv4k8.us-east-1.xata.sh/db/PI:main",
   "codegen": {
     "output": "src/xata.ts"
   }

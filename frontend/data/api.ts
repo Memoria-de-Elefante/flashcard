@@ -67,3 +67,18 @@ export const loginUser = async (set: Partial<User>) => {
     throw error;
   }
 };
+
+export const criarBackup = async (json: any) => {
+  try {
+    const response = await api.post('http://192.168.15.6:3000/login_usuario', json)
+
+    if (!response.data) {
+      console.error("response.data está indefinido. A API não retornou dados.");
+      throw new Error("Dados da API não encontrados.");
+    }
+
+    console.log("Dados salvos no BD como backup")
+  } catch {
+
+  }
+}
