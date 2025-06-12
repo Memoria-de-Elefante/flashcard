@@ -26,7 +26,9 @@ type Props = {
     onDelete?: () => void
     style?: StyleProp<ViewStyle>;
     imageURI: string;
-    flipped?: boolean | (() => boolean);
+	backImage: string;
+	flipped?: boolean | (() => boolean);
+	onFlip?: (flipped: boolean) => void;
 };
 
 const Flashcard = forwardRef<FlashcardHandle, Props>(({
@@ -48,18 +50,21 @@ const Flashcard = forwardRef<FlashcardHandle, Props>(({
     onChangeDificuldade,
     onChangeAcerto,
     imageURI,
-    flipped,
+	backImage,
+	flipped,
+	onFlip,
 }, ref) => {
     const cardRef = useRef<{ flipCard: () => void }>(null);
     const [isFlipped, setIsFlipped] = useState(false);
-    const [dificuldade, setDificuldade] = useState("médio");
-    const [acerto, setAcerto] = useState(false);
+    const [dificuldade, setDificuldade] = useState("médio"); const [acerto, setAcerto] = useState(false);
     const { width: windowWidth } = useWindowDimensions();
 
     useImperativeHandle(ref, () => ({
         flipCard: () => {
+			const newFlipped = !isFlipped;
             cardRef.current?.flipCard();
-            setIsFlipped(prev => !prev);
+            setIsFlipped(newFlipped);
+			onFlip?.(newFlipped);
         }
     }));
 
@@ -74,8 +79,10 @@ const Flashcard = forwardRef<FlashcardHandle, Props>(({
     const marginRight_buttonRow = windowWidth < 600 ? 70 : 0;
 
     const handleFlip = () => {
+		const newFlipped = !isFlipped;
         cardRef.current?.flipCard();
-        setIsFlipped(prev => !prev);
+        setIsFlipped(newFlipped);
+		onFlip?.(newFlipped);
     };
 
     const handleSetDificuldade = (dif: string) => {
@@ -152,7 +159,8 @@ const Flashcard = forwardRef<FlashcardHandle, Props>(({
                     cardType={cardType}
                     editable={editable}
                     imageURI={imageURI}
-                    flipped={isFlipped}
+					backImage={backImage}
+					flipped={isFlipped}
                 />
 
                 {renderButtons()}
