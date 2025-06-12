@@ -17,6 +17,7 @@ type Props = {
     onDelete?: () => void;
     onPickImage?: () => void,
     imageURI: string;
+    flipped: boolean;
 };
 
 export type CardRef = {

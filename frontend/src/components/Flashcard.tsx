@@ -26,6 +26,7 @@ type Props = {
     onDelete?: () => void
     style?: StyleProp<ViewStyle>;
     imageURI: string;
+    flipped?: boolean | (() => boolean);
 };
 
 const Flashcard = forwardRef<FlashcardHandle, Props>(({
@@ -47,6 +48,7 @@ const Flashcard = forwardRef<FlashcardHandle, Props>(({
     onChangeDificuldade,
     onChangeAcerto,
     imageURI,
+    flipped,
 }, ref) => {
     const cardRef = useRef<{ flipCard: () => void }>(null);
     const [isFlipped, setIsFlipped] = useState(false);
@@ -150,6 +152,7 @@ const Flashcard = forwardRef<FlashcardHandle, Props>(({
                     cardType={cardType}
                     editable={editable}
                     imageURI={imageURI}
+                    flipped={isFlipped}
                 />
 
                 {renderButtons()}
